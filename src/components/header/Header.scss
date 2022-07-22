@@ -1,0 +1,76 @@
+@use "@/styles/app" as *;
+
+// // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // /
+// // // header // // // 
+// // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // /
+#header {
+  font-size: 16px;
+  @include media(min, 2500px) {font-size: 19px !important}
+  @include media(max, 1000px) {font-size: 14px !important}
+  #headerApp {
+    transition: 0.4s ease-in-out;
+    animation: movedown .5s $ease-return;
+    @include media(min, small) {margin-inline: 3em}
+    .v-toolbar__content {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding-inline: 2em;
+    }
+  }
+
+
+
+// // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // /
+// // // menu header // // // 
+// // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // /
+  #menuHeader {
+    .v-navigation-drawer {
+      width: 300px !important;
+      @include media(max,x-small) {width: 100vw !important}
+    }
+    .v-navigation-drawer__content {
+      & > :is(.v-expansion-panels, .v-list .v-list-item) {
+        span, img {
+          font-weight: 400;
+          color: #FFFFFF;
+        }
+      }
+      .v-expansion-panels > .v-list {padding: 0;
+      .v-list-item {margin-top: 2em}}
+      .container-header {
+        padding: 1em;
+        padding-top: 2em;
+      }
+      .container-footer {
+        margin-block: 170px 2em;
+        // @include absolute(0,auto,0,2em)
+      }
+    }
+    .conttitle {
+      max-width: 60%;
+      margin-inline: auto;
+      padding: 0;
+    }
+    .v-expansion-panel {
+      background-color: transparent;
+      .icon {width: 28px;aspect-ratio: 1 / 1;border-radius: 50%}
+      &::after, &::before {display: none !important}
+      .v-expansion-panel-header {
+        padding: 0 clamp(1em, 1vw, 1.5em);
+        .icon {
+          background-color: $clr-text-btn;
+          border: 3px solid $clr-text-btn;
+        }
+      }
+      .v-expansion-panel-content__wrap {padding-inline: 0}
+      .v-list {
+        background-color: transparent;
+        .v-list-item {
+          background-color: transparent;
+          padding-inline: clamp(1em, 1vw, 1.5em);
+        }
+      }
+    }
+  }
+}

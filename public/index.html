@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width,initial-scale=1.0" />
+    <link rel="icon" type="image/png" href="<%= BASE_URL %>favicon.png" />
+    <link id="theme" rel="stylesheet" href="<%= BASE_URL %>themes/light/theme.css" />
+    <title>Web3 Music</title>
+    <!-- icons-default -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@mdi/font@latest/css/materialdesignicons.min.css" />
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet" />
+    <!-- fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+      <!-- league gothic -->
+      <link href="https://fonts.googleapis.com/css2?family=League+Gothic&display=swap" rel="stylesheet">
+  </head>
+  <body>
+    <noscript>
+      <strong
+        >We're sorry but <%= htmlWebpackPlugin.options.title %> doesn't work
+        properly without JavaScript enabled. Please enable it to
+        continue.</strong
+      >
+    </noscript>
+    <div id="app"></div>
+    <!-- built files will be auto injected -->
+    <script type="text/javascript" src="vanilla-tilt.js"></script>
+  </body>
+</html>
+
+<style>
+/*
+default settings
+*/
+@font-face {
+  font-family: 'Lekton';
+  src: local('Lektom'),
+       url(fonts/Lekton-400.ttf) format('truetype'),
+       url(fonts/Lekton-Bold.ttf) format('truetype'),
+       url(fonts/Lekton-Italic.ttf) format('truetype'),
+       url(fonts/Lekton-Regular.ttf) format('truetype');
+}
+:is(html, body) {
+  font-size: 16px;
+  scroll-behavior: smooth;
+  scroll-padding-top: 2em;
+}
+:is(#app, #layout, #error, #login) {font-family: var(--font1)}
+/*
+delete-config-default-vuetify
+*/
+:is(.theme--light,.theme--dark) {box-shadow: none}
+:is(.v-list,.v-sheet,.v-dialog) {box-shadow: none !important}
+/* card */
+div.v-card:is([class*="div"], [class*="space"], [class*="center"], [class*="start"], [class*="end"], [class*="wrap"]):not([class^="t"])
+{display: flex}
+div.v-card:is([class*="grid"]) {display: grid}
+div.v-card::before {background: transparent !important}
+/* .v-overlay__scrim {background: transparent !important} */
+</style>

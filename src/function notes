@@ -1,0 +1,83 @@
+export default {
+  mounted() {
+    /* 1- scroll horizontal (simple) */
+    const el = document.querySelectorAll(".scrollx");
+    el.forEach((el) => {el.addEventListener("wheel", (e) => {
+      e.preventDefault();el.scrollLeft += e.deltaY
+    })})
+    
+    /* 2- scroll horizontal (dynamic - not working for now, need personalize -) */
+    (function () {
+      init();
+
+      var g_containerInViewport;
+      function init() {
+        setStickyContainersSize();
+        bindEvents();
+      }
+
+      function bindEvents() {
+        window.addEventListener("wheel", wheelHandler);
+      }
+
+      function setStickyContainersSize() {
+        document
+          .querySelectorAll(".sticky-container")
+          .forEach(function (container) {
+            const stikyContainerHeight =
+              container.querySelector("main").scrollWidth;
+            container.setAttribute(
+              "style",
+              `height: ${stikyContainerHeight}px`
+            );
+          });
+      }
+
+      function isElementInViewport(el) {
+        const rect = el.getBoundingClientRect();
+        return (
+          rect.top <= 0 && rect.bottom > document.documentElement.clientHeight
+        );
+      }
+
+      function wheelHandler(evt) {
+        const containerInViewPort = Array.from(
+          document.querySelectorAll(".sticky-container")
+        ).filter(function (container) {
+          return isElementInViewport(container);
+        })[0];
+
+        if (!containerInViewPort) {return}
+
+        var isPlaceHolderBelowTop =
+          containerInViewPort.offsetTop < document.documentElement.scrollTop;
+        var isPlaceHolderBelowBottom =
+          containerInViewPort.offsetTop + containerInViewPort.offsetHeight >
+          document.documentElement.scrollTop;
+        let g_canScrollHorizontally =
+          isPlaceHolderBelowTop && isPlaceHolderBelowBottom;
+
+        if (g_canScrollHorizontally) {
+          containerInViewPort.querySelector("main").scrollLeft += evt.deltaY;
+        }
+      }
+    })();
+
+    /* 3- search function */
+    const search = document.getElementById('search')
+    const filterItems = document.querySelectorAll('.filterItems')
+    search.addEventListener('keyup',e=>{
+      filterItems.forEach(item=>{
+        item.textContent.toLowerCase().includes(e.target.value.toLowerCase())
+        ?item.style.display='block':item.style.display='none'
+        if (e.key=='Escape') {e.target.value = ''}
+        // to delete at empty text field
+        if (e.target.value == '') {item.style.display='none'}
+      })
+    })
+    // to delete for default
+    document.querySelectorAll('.filterItems').forEach(item=>{
+      if (search.textContent == '') {item.style.display='none'}
+    })
+  },
+};

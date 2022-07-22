@@ -1,0 +1,104 @@
+@import '~vuetify/src/styles/styles.sass';
+
+:root {
+  /* // // color // // */
+  --primary: #EAE823;
+  --secondary: #000000;
+  --active: var(--primary);
+  --error: #ff4081;
+  --warning: #FFC260;
+  --success: #3CD4A0;
+  --c: var(--clr);
+  --stroke: none;
+  /* // // fonts // // */
+  --font1: 'League Gothic', sans-serif;
+  --font2: 'Lekton', sans-serif;
+  /* // // sizes // // */
+  --margin-global: 9em;
+  --parent: 1600px;
+  --subparent: 1900px;
+  /* // // rem // // */
+  --step--7: clamp(0.31rem, calc(0.39rem + -0.10vw), 0.37rem);
+  --step--6: clamp(0.39rem, calc(0.46rem + -0.09vw), 0.44rem);
+  --step--5: clamp(0.49rem, calc(0.54rem + -0.07vw), 0.53rem);
+  --step--4: clamp(0.61rem, calc(0.64rem + -0.04vw), 0.63rem);
+  --step--3: clamp(0.76rem, calc(0.76rem + 0.02vw), 0.77rem);
+  --step--2: clamp(0.91rem, calc(0.89rem + 0.10vw), 0.96rem);
+  --step--1: clamp(1.09rem, calc(1.05rem + 0.21vw), 1.20rem);
+  --step-0: clamp(1.31rem, calc(1.24rem + 0.37vw), 1.50rem);
+  --step-1: clamp(1.58rem, calc(1.46rem + 0.59vw), 1.88rem);
+  --step-2: clamp(1.89rem, calc(1.71rem + 0.89vw), 2.34rem);
+  --step-3: clamp(2.27rem, calc(2.01rem + 1.29vw), 2.93rem);
+  --step-4: clamp(2.72rem, calc(2.36rem + 1.83vw), 3.66rem);
+  --step-5: clamp(3.27rem, calc(2.75rem + 2.56vw), 4.58rem);
+  --step-6: clamp(3.92rem, calc(3.22rem + 3.52vw), 5.72rem);
+  --step-7: clamp(4.70rem, calc(3.75rem + 4.78vw), 7.15rem);
+  --step-8: clamp(5.64rem, calc(4.36rem + 6.43vw), 8.94rem);
+  /* // // em // // */ 
+  --step-em--7: clamp(0.31em, calc(0.39em + -0.10vw), 0.37em);
+  --step-em--6: clamp(0.39em, calc(0.46em + -0.09vw), 0.44em);
+  --step-em--5: clamp(0.49em, calc(0.54em + -0.07vw), 0.53em);
+  --step-em--4: clamp(0.61em, calc(0.64em + -0.04vw), 0.63em);
+  --step-em--3: clamp(0.76em, calc(0.76em + 0.02vw), 0.77em);
+  --step-em--2: clamp(0.91em, calc(0.89em + 0.10vw), 0.96em);
+  --step-em--1: clamp(1.09em, calc(1.05em + 0.21vw), 1.20em);
+  --step-em-0: clamp(1.31em, calc(1.24em + 0.37vw), 1.50em);
+  --step-em-1: clamp(1.58em, calc(1.46em + 0.59vw), 1.88em);
+  --step-em-2: clamp(1.89em, calc(1.71em + 0.89vw), 2.34em);
+  --step-em-3: clamp(2.27em, calc(2.01em + 1.29vw), 2.93em);
+  --step-em-4: clamp(2.72em, calc(2.36em + 1.83vw), 3.66em);
+  --step-em-5: clamp(3.27em, calc(2.75em + 2.56vw), 4.58em);
+  --step-em-6: clamp(3.92em, calc(3.22em + 3.52vw), 5.72em);
+  --step-em-7: clamp(4.70em, calc(3.75em + 4.78vw), 7.15em);
+  --step-em-8: clamp(5.64em, calc(4.36em + 6.43vw), 8.94em);
+}
+
+// Sidebar //
+$drawer-items-padding:                     32px !default;
+$navigation-drawer-mini-variant-width:     96px!important;
+
+// Layout //
+$body-bg: #20232C !default;
+$content-padding:                           24px;
+$sombra-filter: drop-shadow(0px 4px 1px rgba(0, 0, 0, 0.3));
+
+// Colors //
+$primary:           #EAE823;
+$secondary:         #000000;
+$error:             #ff4081;
+$warning:           #FFC260;
+$success:           #3CD4A0;
+$info:              #9013FE;
+$label:             #6e6e6e;
+$text-grey:         #b9b9b9;
+$title-grey:        #4a4a4a;
+$clr-btn:           #EAE823;
+// $clr-btn-pressed:   #AD0FD5;
+// $clr-btn-inactive:  #AD0FD5;
+$clr-text-btn:      #000000;
+$clr-hover:         hsl(288 90% 10%);
+$card-title-color:  $label;
+
+// Typography //
+$h1-font-size:                3rem !default;      // 28px
+$h2-font-size:                2rem !default;       // 24px
+$h3-font-size:                1.64rem !default;     // 22px
+$h4-font-size:                1.5rem !default;     // 20px
+$h5-font-size:                1.285rem !default;         // 16px
+$h6-font-size:                1.142rem !default;     // 14px
+
+// Card //
+$card-shadow: 0 3px 11px 0 #111011, 0 3px 3px -2px #B2B2B21A, 0 1px 8px 0 #9A9A9A1A;
+$sombra-card: 0px 4px 4px rgba(0, 0, 0, 0.25);
+$border-card: 4vmax;
+
+// Buttons //
+$button-shadow: 0px 3px 11px 0px #E8EAFC, 0 3px 3px -2px #B2B2B21A, 0 1px 8px 0 #9A9A9A1A;
+$sombra-btn: 0px 4px 4px rgba(0, 0, 0, 0.25);
+$border-btn: 2vmax;
+
+// hover //
+$ease: cubic-bezier(0.23, 1, 0.32, 1);
+$ease-return: cubic-bezier(0.445, 0.05, 0.55, 0.95);
+$skew-right: skewX(12deg) translateX(1px);
+$skew-left: skewX(-12deg) translateX(-1px);

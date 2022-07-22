@@ -1,0 +1,30 @@
+/* 1- parallax mouse effect */
+import Parallax from 'parallax-js'
+/* 2- parallax card effect */
+import VanillaTilt from "vanilla-tilt";
+
+export default {
+  mounted() {
+    /* 1- parallax mouse effect */
+    var scene = this.$refs.parallax_target;
+    var parallaxInstance = new Parallax(scene, {relativeInput: true, hoverOnly: true});
+    parallaxInstance.friction(0.2, 0.5);
+    //example//
+    // <div ref="parallax_target">
+    //   <img data-depth="0.5">
+    // </div>
+
+    /* 2- parallax card effect */
+    VanillaTilt.init(document.querySelectorAll(".parallax_target"), {
+      max: 25,
+      speed: 400,
+      perspective: 1000,
+      gyroscope: true,
+      easing: "cubic-bezier(.03,.98,.52,.99)",
+      glare: true,
+      "max-glare": 0.5,
+    });
+    //example//
+    // <div class="parallax_target"></div>
+  },
+};
