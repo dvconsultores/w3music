@@ -30,21 +30,23 @@
       @include media(max,x-small) {width: 100vw !important}
     }
     .v-navigation-drawer__content {
-      & > :is(.v-expansion-panels, .v-list .v-list-item) {
-        span, img {
-          font-weight: 400;
-          color: #FFFFFF;
+      & .container-content {
+        height: calc(100% - (84px));
+        & > :is(.v-expansion-panels, .v-list .v-list-item) {
+          span, img {
+            font-weight: 400;
+            color: #FFFFFF;
+          }
         }
       }
-      .v-expansion-panels > .v-list {padding: 0;
-      .v-list-item {margin-top: 2em}}
       .container-header {
         padding: 1em;
         padding-top: 2em;
       }
-      .container-footer {
-        margin-block: 170px 2em;
-        // @include absolute(0,auto,0,2em)
+      .container-footer {margin-bottom: 2em}
+      .v-expansion-panels > .v-list {
+        padding: 0;
+        .v-list-item {margin-top: 2em}
       }
     }
     .conttitle {

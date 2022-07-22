@@ -18,56 +18,59 @@
         </v-btn>
       </section>
 
-      <v-expansion-panels focusable accordion class="anim_moveleft divcol_inv">
-        <template v-if="dataDrawer.list">
-          <v-list class="fill_w">
-            <!-- ciclo for items -->
-            <v-list-item v-for="(item,i) in dataDrawer.list" :key="i" link :to="(item.to)">
-              <v-list-item-content>
+      <section class="container-content divcol jspace gap2">
+        <v-expansion-panels focusable accordion class="anim_moveleft">
+          <template v-if="dataDrawer.expansion">
+            <v-expansion-panel v-for="(item, index) in dataDrawer.expansion" :key="index">
+              <!-- title -->
+              <v-expansion-panel-header hide-actions @click="item.active?item.active=!item.active:dataDrawer.expansion.forEach(e=>{e.active=false;item.active=true})">
                 <v-col class="conttitle acenter gap1 h10_em">
-                  <img :src="require(`@/assets/icons/${item.icon}.svg`)" :alt="item.alt">
-                  <span style="max-width: max-content">
-                    {{ item.name }}
-                  </span>
+                  <img :src="require(`@/assets/icons/${item.icon}.svg`)" :alt="item.alt" class="icon">
+                  <span class="normal" style="max-width: max-content">{{ item.name }}</span>
+                  <v-icon small color="#ffffff" :style="item.active?'transform:rotate(0deg)':'transform:rotate(180deg)'">mdi-menu-down</v-icon>
                 </v-col>
-              </v-list-item-content>
-            </v-list-item>
-          </v-list>
-        </template>
+              </v-expansion-panel-header>
 
-        <template v-if="dataDrawer.expansion">
-          <v-expansion-panel v-for="(item, index) in dataDrawer.expansion" :key="index">
-            <!-- title -->
-            <v-expansion-panel-header hide-actions @click="item.active?item.active=!item.active:dataDrawer.expansion.forEach(e=>{e.active=false;item.active=true})">
-              <v-col class="conttitle acenter gap1 h10_em">
-                <img :src="require(`@/assets/icons/${item.icon}.svg`)" :alt="item.alt" class="icon">
-                <span class="normal" style="max-width: max-content">{{ item.name }}</span>
-                <v-icon small color="#ffffff" :style="item.active?'transform:rotate(0deg)':'transform:rotate(180deg)'">mdi-menu-down</v-icon>
-              </v-col>
-            </v-expansion-panel-header>
+              <v-expansion-panel-content>
+                <v-list>
+                  <!-- ciclo for items -->
+                  <v-list-item v-for="(item2,i) in item.selection" :key="i" @click="CambiarLanguage(item2.key)">
+                    <v-list-item-title class="center h10_em">
+                      <span class="normal">{{ item2.name}}</span>
+                    </v-list-item-title>
+                  </v-list-item>
+                </v-list>
+              </v-expansion-panel-content>
+            </v-expansion-panel>
+          </template>
 
-            <v-expansion-panel-content>
-              <v-list>
-                <!-- ciclo for items -->
-                <v-list-item v-for="(item2,i) in item.selection" :key="i" @click="CambiarLanguage(item2.key)">
-                  <v-list-item-title class="center h10_em">
-                    <span class="normal">{{ item2.name}}</span>
-                  </v-list-item-title>
-                </v-list-item>
-              </v-list>
-            </v-expansion-panel-content>
-          </v-expansion-panel>
-        </template>
-      </v-expansion-panels>
 
-      <section class="container-footer divcol center gap2">
-        <v-btn class="btn" style="--max-w:9.1875em;--p:0 1.2em">LOG IN WITH NEAR</v-btn>
+          <template v-if="dataDrawer.list">
+            <v-list class="fill_w">
+              <!-- ciclo for items -->
+              <v-list-item v-for="(item,i) in dataDrawer.list" :key="i" link :to="(item.to)">
+                <v-list-item-content>
+                  <v-col class="conttitle acenter gap1 h10_em">
+                    <img :src="require(`@/assets/icons/${item.icon}.svg`)" :alt="item.alt">
+                    <span style="max-width: max-content">
+                      {{ item.name }}
+                    </span>
+                  </v-col>
+                </v-list-item-content>
+              </v-list-item>
+            </v-list>
+          </template>
+        </v-expansion-panels>
 
-        <div class="center">
-          <v-btn v-for="(item,i) in dataSocial" :key="i" icon :href="item.url" target="_blank">
-            <img :src="require(`@/assets/icons/${item.icon}.svg`)" alt="social red">
-          </v-btn>
-        </div>
+        <section class="container-footer divcol center gap2">
+          <v-btn class="btn" style="--max-w:9.1875em;--p:0 1.2em">LOG IN WITH NEAR</v-btn>
+
+          <div class="center">
+            <v-btn v-for="(item,i) in dataSocial" :key="i" icon :href="item.url" target="_blank">
+              <img :src="require(`@/assets/icons/${item.icon}.svg`)" alt="social red">
+            </v-btn>
+          </div>
+        </section>
       </section>
     </v-navigation-drawer>
   </section>
