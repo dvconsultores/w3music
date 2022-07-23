@@ -30,6 +30,11 @@ export default new Router({
       children: [
         {
           path: '/',
+          name: 'landing',
+          component: () => import('@/pages/landing/Landing'),
+        },
+        {
+          path: '/home',
           name: 'home',
           component: () => import('@/pages/home/Home'),
         },

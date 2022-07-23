@@ -11,8 +11,8 @@
   overflow: hidden;
   // margins modifiable
   & .with {
-    padding-block: 120px 0 !important;
+    padding-block: 120px 50px !important;
     @include media(max, x-small) {padding-bottom: 0 !important}
   }
-  & .without {padding-bottom: 0em !important}
+  & .without {padding-block: 120px 0 !important}
 }
