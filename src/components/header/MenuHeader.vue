@@ -27,7 +27,7 @@
                 <v-col class="conttitle acenter gap1 h10_em">
                   <img :src="require(`@/assets/icons/${item.icon}.svg`)" :alt="item.alt" class="icon">
                   <span class="normal" style="max-width: max-content">{{ item.name }}</span>
-                  <v-icon small color="#ffffff" :style="item.active?'transform:rotate(0deg)':'transform:rotate(180deg)'">mdi-menu-down</v-icon>
+                  <v-icon small color="#ffffff" :class="{active_rotate: item.active}">mdi-menu-down</v-icon>
                 </v-col>
               </v-expansion-panel-header>
 
@@ -73,6 +73,21 @@
         </section>
       </section>
     </v-navigation-drawer>
+
+    <!-- menu market -->
+    <v-menu activator=".openMenuMarket" right offset-x>
+      <v-list id="menuMarket" class="font2">
+        <v-list-item-group active-class="activeClass">
+          <v-list-item disabled>
+            <v-list-item-title>MARKETPLACE</v-list-item-title>
+          </v-list-item>
+
+          <v-list-item v-for="(item,i) in dataDrawer.expansion[0].selection" :key="i">
+            <v-list-item-title>{{item.name}}</v-list-item-title>
+          </v-list-item>
+        </v-list-item-group>
+      </v-list>
+    </v-menu>
   </section>
 </template>
 
@@ -120,10 +135,8 @@ export default {
             name: "MARKETPLACE",
             active: false,
             selection: [
-              {name: "1", key: "1"},
-              {name: "2", key: "2"},
-              {name: "3", key: "3"},
-              {name: "4", key: "4"},
+              {name: "Buy", key: "buy"},
+              {name: "Sell", key: "sell"},
             ],
           },
         ],

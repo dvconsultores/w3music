@@ -1,11 +1,19 @@
 <template>
   <section id="header">
     <MenuHeader ref="menu"></MenuHeader>
-    <v-app-bar id="headerApp" color="transparent" height="100px" fixed class="font2">
-      <aside class="acenter gap2 containmobile">
-        <v-btn icon style="--bg:var(--primary)" @click="$refs.menu.drawer=true">
-          <img src="@/assets/icons/menu.svg" alt="toggle">
-        </v-btn>
+    <v-app-bar id="headerApp" color="transparent" height="100px" fixed class="font2 isolate">
+      <aside class="acenter gap2" style="padding-left:calc(48px + 2em">
+        <aside class="sidebar divcol acenter jspace isolate" :class="{active: sidebar}">
+          <v-btn icon @click="toggleFunc()">
+            <img :src="require(`@/assets/icons/menu${positionFocus==0||positionFocus==16?'':'-active-sidebar'}.svg`)" alt="toggle">
+          </v-btn>
+
+          <div class="focus" :style="`--distance:${positionFocus}px`" />
+
+          <v-btn v-show="sidebar" v-for="(item,i) in dataSidebar" :key="i" icon @click="positionFocus=item.position" :class="{openMenuMarket: item.key=='market'}">
+            <img :src="require(`@/assets/icons/${item.icon}.svg`)" alt="side bar icons">
+          </v-btn>
+        </aside>
 
         <v-text-field id="search" hide-details solo style="--max-w: 14.6875em;--p: 0 1.5em" class="eliminarmobile">
           <template v-slot:append>
@@ -65,6 +73,15 @@ export default {
       accountId: null,
       user: true,
       messages: 1,
+      sidebar: false,
+      positionFocus: 0,
+      dataSidebar: [
+        { key:"market", icon: "market-active", position: 135 },
+        { key:"stats", icon: "stats", position: 255 },
+        { key:"chats", icon: "chats", position: 375 },
+        { key:"settings", icon: "settings", position: 495  },
+        { key:"faq", icon: "faq", position: 615  },
+      ]
     };
   },
   mounted() {
@@ -94,6 +111,15 @@ export default {
     })
   },
   methods: {
+    toggleFunc() {
+      if (window.innerWidth <= 880) {
+        this.$refs.menu.drawer=true
+      } else {
+        this.sidebar=!this.sidebar
+        if (this.sidebar==false) {this.positionFocus=0}
+        else {this.positionFocus=16}
+      }
+    },
     // responsive() {
     //   if (window.innerWidth <= 880) {
     //     console.log('mobile')

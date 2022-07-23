@@ -16,6 +16,41 @@
       justify-content: space-between;
       align-items: center;
       padding-inline: 2em;
+      .sidebar {
+        @include absolute(32px,27px);
+        .focus {
+          @include absolute(0,calc(var(--distance)),0);
+          width: 48px;
+          height: 48px;
+          border-radius: 50%;
+          background-color: $primary;
+          transition: top .6s $ease-return;
+          z-index: -1;
+        }
+        &.active {
+          transition: background-color .5s $ease-return;
+          transform: translate(-14px, -16px);
+          width: 76px;
+          height: 678px;
+          background: #000000;
+          box-shadow: 7px 4px 6px rgba(0, 0, 0, 0.25);
+          border-radius: 40px;
+          padding: 16px;
+          @include animation(.5s $ease-return) {
+            from {height: 48px}
+            to {height: 678px}
+          }
+        }
+      }
+      // .sidebar {
+      //   @include absolute(0,0,0);
+      //   transform: translate(-12px, -32px);
+      //   width: 76px;
+      //   background: #000000;
+      //   box-shadow: 7px 4px 6px rgba(0, 0, 0, 0.25);
+      //   border-radius: 40px;
+      //   z-index: -1;
+      // }
     }
   }
 
@@ -72,6 +107,27 @@
           background-color: transparent;
           padding-inline: clamp(1em, 1vw, 1.5em);
         }
+      }
+    }
+  }
+}
+
+#menuMarket {
+  --width: 20px;
+  background-color: #000000;
+  margin-left: calc(var(--width) * 2);
+  position: relative;
+  // triangule
+  &::before {
+    content: "";
+    @include absolute(calc(var(--width) * -1));
+    border-block: var(--width) solid transparent;
+    border-right: calc(var(--width) * 2) solid #000000;
+  }
+  & .v-list {
+    &-item {
+      &__title {
+        color: #FFFFFF;
       }
     }
   }

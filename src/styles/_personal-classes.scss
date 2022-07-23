@@ -293,6 +293,7 @@
 .tfirst::first-letter {text-transform: uppercase !important}
 .aspect {--aspect: 1 / 1;aspect-ratio: var(--aspect)}
 .active_rotate {transform: rotate(180deg)}
+.isolate {isolation: isolate}
 
 
 
@@ -587,6 +588,7 @@
   .tfirstmobile::first-letter {text-transform: uppercase !important}
   .aspectmobile {--aspect: 1 / 1;aspect-ratio: var(--aspect) !important}
   .active_rotatemobile {transform: rotate(180deg) !important}
+  .isolatemobile {isolation: isolate !important}
 }
 
 // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // /

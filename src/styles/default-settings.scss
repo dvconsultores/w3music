@@ -415,3 +415,9 @@ img:not(.not_html, .not) {
   @include card;
 }
 
+//- active class -//
+.activeClass {
+  background-color: var(--clr-btn) !important;
+  color: var(--clr-text-btn) !important;
+  & * {color: var(--clr-text-btn) !important}
+}
