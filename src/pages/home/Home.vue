@@ -49,7 +49,7 @@
       </aside>
     </section>
 
-    <section class="space">
+    <section class="fwrap gap2">
       <aside class="divcol">
         <h2>TRENDING NOW</h2>
 
@@ -75,7 +75,8 @@
 
           <template v-slot:[`item.plays`]="{ item }">
             <div class="acenter" style="gap:.5em">
-              <img class="play" src="@/assets/icons/play.svg" alt="play icon" style="--w:3.095625em">
+              <img class="play" :src="require(`@/assets/icons/${item.play?'pause':'play'}.svg`)" alt="play icon" style="--w:3.095625em"
+                @click="item.play?item.play=!item.play:dataTable.forEach(e=>{e.play=false;item.play=true})">
               <span>{{item.plays}}</span>
             </div>
           </template>
@@ -90,6 +91,17 @@
 
       <aside class="divcol">
         <h2>NEW BEATS</h2>
+
+        <section class="grid" style="--gtc:repeat(auto-fit,minmax(min(100%,12.5em),1fr));gap:2em">
+          <blockquote v-for="(item,i) in dataNewBeats" :key="i">
+            <img :src="item.img" alt="track image" style="--w:max(100%,12.5625em)">
+            <h6 class="p">{{item.name}}</h6>
+          </blockquote>
+        </section>
+
+        <v-btn class="btn marginaleft margin2top font2">
+          EXPLORE
+        </v-btn>
       </aside>
     </section>
   </section>
@@ -109,8 +121,8 @@ export default {
       headersTable: [
         { value:"track", text:"TRACK/ARTIST", align:"center" },
         { value:"gender", text:"GENDER", align:"center" },
-        { value:"plays", text:"PLAYS", align:"center" },
-        { value:"add", text:"ADD", align:"center" },
+        { value:"plays", text:"PLAYS", align:"center", sortable:false },
+        { value:"add", text:"ADD", align:"center", sortable:false },
       ],
       dataTable: [
         {
@@ -119,6 +131,7 @@ export default {
           track: "Sunset dream",
           gender: "POP DANCE",
           plays: 4.007,
+          play: false,
         },
         {
           img: require("@/assets/miscellaneous/track.jpg"),
@@ -126,6 +139,7 @@ export default {
           track: "Sunset dream",
           gender: "POP DANCE",
           plays: 4.007,
+          play: false,
         },
         {
           img: require("@/assets/miscellaneous/track.jpg"),
@@ -133,6 +147,7 @@ export default {
           track: "Sunset dream",
           gender: "POP DANCE",
           plays: 4.007,
+          play: false,
         },
         {
           img: require("@/assets/miscellaneous/track.jpg"),
@@ -140,6 +155,7 @@ export default {
           track: "Sunset dream",
           gender: "POP DANCE",
           plays: 4.007,
+          play: false,
         },
         {
           img: require("@/assets/miscellaneous/track.jpg"),
@@ -147,6 +163,7 @@ export default {
           track: "Sunset dream",
           gender: "POP DANCE",
           plays: 4.007,
+          play: false,
         },
         {
           img: require("@/assets/miscellaneous/track.jpg"),
@@ -154,6 +171,7 @@ export default {
           track: "Sunset dream",
           gender: "POP DANCE",
           plays: 4.007,
+          play: false,
         },
         {
           img: require("@/assets/miscellaneous/track.jpg"),
@@ -161,6 +179,7 @@ export default {
           track: "Sunset dream",
           gender: "POP DANCE",
           plays: 4.007,
+          play: false,
         },
         {
           img: require("@/assets/miscellaneous/track.jpg"),
@@ -168,6 +187,7 @@ export default {
           track: "Sunset dream",
           gender: "POP DANCE",
           plays: 4.007,
+          play: false,
         },
         {
           img: require("@/assets/miscellaneous/track.jpg"),
@@ -175,6 +195,7 @@ export default {
           track: "Sunset dream",
           gender: "POP DANCE",
           plays: 4.007,
+          play: false,
         },
         {
           img: require("@/assets/miscellaneous/track.jpg"),
@@ -182,7 +203,14 @@ export default {
           track: "Sunset dream",
           gender: "POP DANCE",
           plays: 4.007,
+          play: false,
         },
+      ],
+      dataNewBeats: [
+        { img: require("@/assets/miscellaneous/track-white.png"), name: "TRAVIS POLL" },
+        { img: require("@/assets/miscellaneous/track-white.png"), name: "TRAVIS POLL" },
+        { img: require("@/assets/miscellaneous/track-white.png"), name: "TRAVIS POLL" },
+        { img: require("@/assets/miscellaneous/track-white.png"), name: "TRAVIS POLL" },
       ],
     }
   },
