@@ -77,11 +77,11 @@ export default {
       initialFocus: 0,
       positionFocus: 0,
       dataSidebar: [
-        { key:"market", icon: "market-active", position: 135 },
-        { key:"stats", icon: "stats", position: 255 },
-        { key:"chats", icon: "chats", position: 375 },
-        { key:"settings", icon: "settings", position: 495  },
-        { key:"faq", icon: "faq", position: 615  },
+        { key:"market", icon: "market-active", position: 120 },
+        { key:"stats", icon: "stats", position: 240 },
+        { key:"chats", icon: "chats", position: 360 },
+        { key:"settings", icon: "settings", position: 480  },
+        { key:"faq", icon: "faq", position: 600  },
       ]
     };
   },
