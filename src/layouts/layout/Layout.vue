@@ -24,7 +24,7 @@ export default {
       if (this.$router.currentRoute.name=='landing') {this.wrapperSpace=false}
       else {this.wrapperSpace=true}
       //
-      if (this.$router.currentRoute.name=='home') {this.footerStyle=true}
+      if (this.$router.currentRoute.name!=='landing') {this.footerStyle=true}
       else {this.footerStyle=false}
     },
   }

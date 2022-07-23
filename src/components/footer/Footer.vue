@@ -25,16 +25,15 @@ _<template>
           </v-btn>
         </aside>
 
-        <aside class="center gap1" style="width:min(100%,18.6875em)">
+        <aside class="center gap1 font2" style="width:min(100%,18.6875em)">
           <span>{{sliderValue}}</span>
           <v-slider
             v-model="sliderValue"
             color="#000000"
-            :min="1"
+            :min="0"
             :max="sliderMax"
             hide-details
             track-color="hsl(0, 0%, 0%, .22)"
-            class="font2"
           ></v-slider>
           <span>{{sliderMax}}</span>
         </aside>
@@ -44,7 +43,7 @@ _<template>
           <v-slider
             v-model="soundValue"
             color="#000000"
-            :min="1"
+            :min="0"
             :max="100"
             :thumb-label="soundValue"
             hide-details

@@ -10,6 +10,7 @@ export default new Vuex.Store({
     theme: "light",
     overlay: { opacity: 0.2, color: "black" },
     user: {
+      img: require("@/assets/avatars/a1.jpg"),
       perfil: "",
       initials: 'JD',
       fullName: 'John Doe',

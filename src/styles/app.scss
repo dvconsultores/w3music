@@ -10,6 +10,17 @@
 
 ///////////////////// global ///////////////////////
 
+//- play -//
+.play {
+  cursor: pointer;
+  transition: .2s $ease-return;
+  &:hover {transform: scale(1.1)}
+  &.rotate {
+    transform: rotate(-180deg);
+    &:hover {transform: scale(1.1) rotate(-180deg)}
+  }
+}
+
 //- close -//
 .close {
   --top: 0;
@@ -17,89 +28,5 @@
   position: absolute;
   top: var(--top);
   right: var(--right);
-}
-
-//- theme buttons -//
-@include reducedMotion {
-  .themeButtonDark {
-    position: relative;
-    width: 4.911875em !important;
-    height: 2.546875em !important;
-    background: #191919;
-    border-radius: 20px;
-    z-index: 1;
-    animation: aparecer 1s $ease;
-    filter: $sombra-filter;
-    &::before {
-      content: "";
-      position: absolute;
-      width: 80%;
-      height: 100%;
-      left: 0;
-      background: #3D3737;
-      opacity: 0.5;
-      border-radius: 20px;
-      z-index: 2;
-    }
-    &::after {
-      content: "";
-      position: absolute;
-      width: 65%;
-      height: 100%;
-      left: 0;
-      background: #3D3737;
-      opacity: 0.8;
-      border-radius: 20px;
-      z-index: 3;
-    }
-    img {
-      position: absolute;
-      left: 5%;
-      width: 2.1375em;
-      z-index: 4;
-      animation: moveright 0.5s ease;
-    }
-  }
-  .themeButtonLight {
-    position: relative;
-    width: 4.911875em !important;
-    height: 2.546875em !important;
-    background: #0F43D5;
-    border-radius: 20px;
-    z-index: 1;
-    animation: aparecer 1s $ease;
-    filter: $sombra-filter;
-    &::before {
-      content: "";
-      position: absolute;
-      width: 80%;
-      height: 100%;
-      right: 0;
-      background: #FFFFFF;
-      opacity: 0.2;
-      border-radius: 20px;
-      z-index: 2;
-      margin-left: auto;
-    }
-    &::after {
-      content: "";
-      position: absolute;
-      width: 65%;
-      height: 100%;
-      right: 0;
-      background: #FFFFFF;
-      opacity: 0.4;
-      border-radius: 20px;
-      z-index: 3;
-      margin-left: auto;
-    }
-    img {
-      position: absolute;
-      right: 5%;
-      width: 2.1375em;
-      z-index: 4;
-      animation: moveleft 0.5s ease;
-    }
-  }
 }
 

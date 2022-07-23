@@ -6,7 +6,7 @@
           <!-- content -->
           <h1 class="p bold">404</h1>
           <span class="h5_em bold">{{$t('errorTitle')}}</span>
-          <v-btn href="#" :to="'/'" class="h7_em bold">{{$t('buttonTitle')}}</v-btn>
+          <v-btn href="#" :to="'/'" class="font2 h7_em bold">{{$t('buttonTitle')}}</v-btn>
         </v-col>
       </v-row>
     </v-container>

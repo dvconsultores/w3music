@@ -82,7 +82,7 @@
             <v-list-item-title>MARKETPLACE</v-list-item-title>
           </v-list-item>
 
-          <v-list-item v-for="(item,i) in dataDrawer.expansion[0].selection" :key="i">
+          <v-list-item v-for="(item,i) in dataDrawer.expansion[0].selection" :key="i" :to="`/${item.key}`">
             <v-list-item-title>{{item.name}}</v-list-item-title>
           </v-list-item>
         </v-list-item-group>

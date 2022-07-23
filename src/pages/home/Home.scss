@@ -6,15 +6,6 @@
 #home {
   font-size: 16px;
   h1 {max-width: 20ch}
-  .play {
-    cursor: pointer;
-    transition: .2s $ease-return;
-    &:hover {transform: scale(1.1)}
-    &.rotate {
-      transform: rotate(-180deg);
-      &:hover {transform: scale(1.1) rotate(-180deg)}
-    }
-  }
   .contup {
     display: flex;
     gap: .2em;

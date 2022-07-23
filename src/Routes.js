@@ -38,6 +38,11 @@ export default new Router({
           name: 'home',
           component: () => import('@/pages/home/Home'),
         },
+        {
+          path: '/buy',
+          name: 'buy',
+          component: () => import('@/pages/buy/Buy'),
+        },
       ],
     },
     // path 3
