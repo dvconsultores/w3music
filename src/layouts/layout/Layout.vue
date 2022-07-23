@@ -2,9 +2,9 @@
   <v-app id="layout" class="relative">
     <Header ref="header" />
     <v-main :class="wrapperSpace?'with':'without'" class="parent">
-      <router-view @WrapperSpace="WrapperSpace()"></router-view>
+      <router-view @RouteValidator="RouteValidator()"></router-view>
     </v-main>
-    <Footer ref="footer"></Footer>
+    <Footer :footerStyle="footerStyle" ref="footer"></Footer>
   </v-app>
 </template>
 
@@ -17,13 +17,16 @@ export default {
   name: "layout",
   components: { Header, Footer },
   data() {
-    return { wrapperSpace: true }
+    return { wrapperSpace: true, footerStyle: false }
   },
   methods: {
-    WrapperSpace() {
+    RouteValidator() {
       if (this.$router.currentRoute.name=='landing') {this.wrapperSpace=false}
       else {this.wrapperSpace=true}
-    }
+      //
+      if (this.$router.currentRoute.name=='home') {this.footerStyle=true}
+      else {this.footerStyle=false}
+    },
   }
 }
 </script>

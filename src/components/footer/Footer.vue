@@ -1,8 +1,14 @@
 _<template>
-  <v-footer id="footer" color="var(--primary)" fixed>
+  <v-footer id="footer" :color="footerStyle?'var(--primary)':'transparent'" fixed>
     <v-row no-gutters class="align">
       <!-- content -->
-      <section class="fill_w space gap2">
+      <div v-if="!footerStyle" class="marginaleft center">
+        <v-btn v-for="(item,i) in dataSocial" :key="i" icon :href="item.url" target="_blank">
+          <img :src="require(`@/assets/icons/${item.icon}.svg`)" :alt="`${item.icon} icons`" style="--w:1.5625em">
+        </v-btn>
+      </div>
+
+      <section v-else class="fill_w space gap2">
         <blockquote class="center gap1">
           <img src="@/assets/miscellaneous/track-white.png" alt="track image" style="--w:3.06625em">
           <div class="divcol">
@@ -53,8 +59,16 @@ _<template>
 
 <script>
 export default {
+  props: {
+    footerStyle: Boolean,
+  },
   data() {
     return {
+      dataSocial: [
+        { icon:"twitter", url:"#" },
+        { icon:"instagram", url:"#" },
+        { icon:"twitch", url:"#" },
+      ],
       dataActions: [
         { keY:"shuffle", icon:"shuffle" },
         { key:"previous", icon:"next-music" },

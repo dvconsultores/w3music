@@ -215,7 +215,7 @@ export default {
     }
   },
   mounted() {
-    this.$emit('WrapperSpace')
+    this.$emit('RouteValidator')
     const el = document.querySelectorAll(".scrollx");
     el.forEach((el) => {el.addEventListener("wheel", (e) => {
       e.preventDefault();el.scrollLeft += e.deltaY

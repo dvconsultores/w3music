@@ -18,7 +18,7 @@ export default {
     }
   },
   mounted() {
-    this.$emit('WrapperSpace')
+    this.$emit('RouteValidator')
   },
   methods: {
   }
