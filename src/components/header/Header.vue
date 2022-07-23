@@ -27,8 +27,8 @@
       </v-btn>
 
       <aside class="acenter gap2">
-        <v-btn class="btn eliminarmobile">LOG IN WITH NEAR</v-btn>
-        <v-btn icon>
+        <v-btn class="btn eliminarmobile" @click="$router.push('/login')">LOG IN WITH NEAR</v-btn>
+        <v-btn icon @click="$router.push('/login')">
           <img :src="require(`@/assets/icons/account.svg`)" alt="account" class="eliminarmobile">
           <img :src="require(`@/assets/icons/account-mobile.svg`)" alt="account" class="vermobile">
         </v-btn>

@@ -4,58 +4,28 @@
 // // // login // // // 
 // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // /
 #login {
-  background: var(--bg-ap);
+  background: center no-repeat fixed;
+  background-image: url(../../assets/images/bg.jpg);
+  @include media(max, small) {background-image: url(../../assets/images/bg-mobile.jpg)};
+  background-size: cover;
+  overflow: hidden;
   .v-main__wrap {
-    padding: 4rem $content-padding 70px $content-padding;
+    padding-block: 120px 0px !important;
   }
-}
 
-////////////////////////////////////////////////////
-////////////////////////////////////////////////////
-.containerLogoLogin {
-  position: relative;
-  width: clamp(8rem, 20vw + 1rem, 14rem);
-  height: clamp(10.625rem, 20vw + 1rem, 16rem);
-}
-.logoLogin {
-  width: clamp(8rem, 20vw + 1rem, 14rem);
-}
-.containerLogin {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-}
-#botonLogin {
-  font-family: "inter", sans-serif;
-  background-color: #6667AB;
-  color: #FFFFFF;
-  padding: 2.1875rem 5rem !important;
-  border-radius: 35px !important;
-  letter-spacing: normal;
-  text-transform: capitalize;
-  box-shadow: 0px 2px 4px 2px #6667ab71 !important;
-}
-.containerOptionsLogin {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-}
-.containerInput {
-  .v-input__slot {
-    padding: 1.5rem 2.5rem !important;
-    border-radius: 30px !important;
-    box-shadow:
-      1px 1px 1px #FFFFFF70,
-      -1px 1px 2px #70707070,
-      1px 1px 5px #70707070 !important;
+  #audio {
+    // @include absolute(auto,-135px,-140px);
+    @include absolute(auto,-200px,-140px);
+    z-index: 2;
   }
-}
-
-.soporte {
-  position: absolute;
-  text-decoration: none;
-  text-align: center;
-  bottom: 5%;
-  left: 0;
-  right: 0;
+  #back {
+    cursor: pointer;
+    transition: .5s $ease-return;
+    &:hover {transform: translateX(-10px)}
+  }
+  #records {
+    z-index: 2;
+    @include fixed(0,2em,0);
+    animation: .5s $ease-return movedown;
+  }
 }
