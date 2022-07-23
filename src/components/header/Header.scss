@@ -19,12 +19,13 @@
       .sidebar {
         @include absolute(32px,27px);
         .focus {
-          @include absolute(0,calc(var(--distance)),0);
+          @include absolute(0,var(--distanceInitial),0);
+          transform: translateY(calc(var(--distance)));
           width: 48px;
           height: 48px;
           border-radius: 50%;
           background-color: $primary;
-          transition: top .6s $ease-return;
+          transition: transform .6s $ease-return;
           z-index: -1;
         }
         &.active {

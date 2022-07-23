@@ -8,7 +8,7 @@
             <img :src="require(`@/assets/icons/menu${positionFocus==0||positionFocus==16?'':'-active-sidebar'}.svg`)" alt="toggle">
           </v-btn>
 
-          <div class="focus" :style="`--distance:${positionFocus}px`" />
+          <div class="focus" :style="`--distanceInitial:${initialFocus};--distance:${positionFocus}px`" />
 
           <v-btn v-show="sidebar" v-for="(item,i) in dataSidebar" :key="i" icon @click="positionFocus=item.position" :class="{openMenuMarket: item.key=='market'}">
             <img :src="require(`@/assets/icons/${item.icon}.svg`)" alt="side bar icons">
@@ -74,6 +74,7 @@ export default {
       user: true,
       messages: 1,
       sidebar: false,
+      initialFocus: 0,
       positionFocus: 0,
       dataSidebar: [
         { key:"market", icon: "market-active", position: 135 },
@@ -116,8 +117,9 @@ export default {
         this.$refs.menu.drawer=true
       } else {
         this.sidebar=!this.sidebar
-        if (this.sidebar==false) {this.positionFocus=0}
-        else {this.positionFocus=16}
+        this.positionFocus=0
+        if (this.sidebar==false) {this.initialFocus=0}
+        else {this.initialFocus=16}
       }
     },
     // responsive() {
