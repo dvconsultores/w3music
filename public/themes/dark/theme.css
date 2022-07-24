@@ -18,6 +18,10 @@
   /*--/ badge /--*/
   --clr-badge: var(--primary);
   --clr-text-badge: #000000;
+  /*--/ line /--*/
+  --clr-line: hsl(59, 83%, 53%, .5);
+  /*--/ gradient /--*/
+  --clr-gradient: linear-gradient(to right top,#356D74,#2A505C,#21394A,#1A293D,#172035,#161D33,#161E34,#192539,#1E3143,#244251,#2D5862,#387378,#449492,#53B9B1,#63E2D2);
 }
 
 /*-- personal clases --*/
@@ -33,5 +37,5 @@
 .clr_svg_inv {fill: var(--clr-inv) !important}
 .flr {filter: invert(100%) !important}
 .flr_inv {filter: invert(0%) !important}
+.clr-gradient {background: var(--clr-gradient) !important}
 .clr_card_2 {background-color: var(--clr-card-2) !important}
-
