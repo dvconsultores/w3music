@@ -9,7 +9,9 @@
   --warning: #FFC260;
   --success: #3CD4A0;
   --c: var(--clr);
-  --stroke: none;
+  --stroke: var(--stroke-size) var(--stroke-color);
+  --stroke-size: none;
+  --stroke-color: none;
   /* // // fonts // // */
   --font1: 'League Gothic', sans-serif;
   --font2: 'Lekton', sans-serif;

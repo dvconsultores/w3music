@@ -1,7 +1,7 @@
 <template>
   <section id="header">
     <MenuHeader ref="menu"></MenuHeader>
-    <v-app-bar id="headerApp" color="transparent" height="100px" fixed class="font2 isolate">
+    <v-app-bar id="headerApp" color="transparent" height="100px" absolute class="font2 isolate">
       <aside class="acenter gap2" style="padding-left:calc(48px + 2em">
         <aside class="sidebar divcol acenter jspace isolate" :class="{active: sidebar}">
           <v-btn icon @click="toggleFunc()">
@@ -103,9 +103,9 @@ export default {
     // this.responsive()
     // document.addEventListener('resize', this.responsive())
 
-    // this.isSigned()
-    // this.getData()
-    // this.LogState();
+    this.isSigned()
+    this.getData()
+    this.LogState();
     
     /* search function */
     const search = document.getElementById('search')

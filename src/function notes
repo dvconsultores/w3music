@@ -79,5 +79,10 @@ export default {
     document.querySelectorAll('.filterItems').forEach(item=>{
       if (search.textContent == '') {item.style.display='none'}
     })
+
+    /* 4- scroll to top */
+    setTimeout(()=> {
+      window.scrollTo(0, 1);
+    }, 0);
   },
 };

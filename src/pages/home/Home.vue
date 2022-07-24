@@ -27,7 +27,7 @@
                   <img src="@/assets/icons/like.svg" alt="like">
                 </v-btn>
               </div>
-              <p class="p font2" style="font-size:1em">Lorem Ipsum is simply dummy text of the printing and typesetting industry.</p>
+              <p class="p font2" style="font-size:1em;">Lorem Ipsum is simply dummy text of the printing and typesetting industry.</p>
             </div>
           </div>
         </div>

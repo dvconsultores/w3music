@@ -5,19 +5,19 @@
   --clr: #FFFFFF;
   --clr-inv: #111011;
   --clr-hover: hsl(288 90% 90%);
-  --clr-scroll: #AD0FD5;
-  --clr-bg-scroll: #B7B89F;
+  --clr-scroll: var(--primary);
+  --clr-bg-scroll: var(--secondary);
   /*--/ cards /--*/
   --clr-card: #191919;
   --clr-card-inv: #FFFFFF;
   /*--/ buttons /--*/
-  --clr-btn: #AD0FD5;
+  --clr-btn: var(--primary);
   /*--clr-btn-pressed: #AD0FD5;
   --clr-btn-inactive: #AD0FD5;*/
   --clr-text-btn: #FFFFFF;
   /*--/ badge /--*/
-  --clr-badge: #FFFFFF;
-  --clr-text-badge: #AD0FD5;
+  --clr-badge: var(--primary);
+  --clr-text-badge: #000000;
 }
 
 /*-- personal clases --*/

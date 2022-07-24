@@ -7,7 +7,8 @@
       transition="slide-Y-reverse-transition"
       :style="`--color-snackbar: ${item.color}`"
     >
-      <img :src="item.icon" :alt="`${item.key} Icon`">
+      <!-- <v-icon :style="`color: ${item.color} !important`" size="2.5rem">{{ item.icon }}</v-icon> -->
+      <img :src="require(`@/assets/icons/${item.icon}.svg`)" :alt="`${item.key} Icon`">
       <div class="divcol">
         <h3 class="font1">{{$t(item.title)}}</h3>
         <p class="font2 p">{{$t(item.desc)}}</p>
@@ -23,32 +24,61 @@ export default {
   data() {
     return {
       alert: true,
-      dataAlerts: [
-        {
-          key: "success",
-          title: "success",
-          desc: "textSuccess",
-          icon: require('@/assets/icons/success.svg'),
-          color: "#0F43D5",
-          model: false,
-        },
-        {
-          key: "cancel",
-          title: "cancel",
-          desc: "textCancel",
-          icon: require('@/assets/icons/cancel.svg'),
-          color: "#F16211",
-          model: false,
-        }
-      ]
+      dataAlerts: []
     };
   },
   methods: {
+    ClearAlerts() {this.dataAlerts=[]},
     Alerts(key, title, desc) {
-      const index = this.dataAlerts.findIndex(data=>data.key==key);
-      this.dataAlerts[index].model = true
-      if (title) {this.dataAlerts[index].title=title}
-      if (desc) {this.dataAlerts[index].desc=desc}
+
+      // clear alerts
+      setTimeout(() => {
+        this.ClearAlerts()
+      }, 5000);
+
+      // create alert
+      if (title&&desc) {
+        var alert = {
+          key: key,
+          title: title,
+          desc: desc,
+          // icon: key=='success'?'mdi-check-circle':key=='cancel'?'mdi-close-circle':null,
+          icon: key=='success'?'success':key=='cancel'?'cancel':null,
+          color: key=='success'?'#A4FDDF':key=='cancel'?'rgb(200, 0, 0)':null,
+          model: true,
+        }
+      } else if (title) {
+        var alert = {
+          key: key,
+          title: title,
+          desc: `text${key.replace(/^\w/, (c) => c.toUpperCase())}`,
+          // icon: key=='success'?'mdi-check-circle':key=='cancel'?'mdi-close-circle':null,
+          icon: key=='success'?'success':key=='cancel'?'cancel':null,
+          color: key=='success'?'#A4FDDF':key=='cancel'?'rgb(200, 0, 0)':null,
+          model: true,
+        }
+      } else if (desc) {
+        var alert = {
+          key: key,
+          title: key,
+          desc: desc,
+          // icon: key=='success'?'mdi-check-circle':key=='cancel'?'mdi-close-circle':null,
+          icon: key=='success'?'success':key=='cancel'?'cancel':null,
+          color: key=='success'?'#A4FDDF':key=='cancel'?'rgb(200, 0, 0)':null,
+          model: true,
+        }
+      } else {
+        var alert = {
+          key: key,
+          title: key,
+          desc: `text${key.replace(/^\w/, (c) => c.toUpperCase())}`,
+          // icon: key=='success'?'mdi-check-circle':key=='cancel'?'mdi-close-circle':null,
+          icon: key=='success'?'success':key=='cancel'?'cancel':null,
+          color: key=='success'?'#A4FDDF':key=='cancel'?'rgb(200, 0, 0)':null,
+          model: true,
+        }
+      }
+      this.dataAlerts.push(alert)
     },
   }
 };
