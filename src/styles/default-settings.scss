@@ -176,9 +176,11 @@ img:not(.not_html, .not) {
   --bg: ;
   --p: ;
   --br: 50%;
+  --b: ;
   background: var(--bg);
   padding: var(--p);
   border-radius: var(--br);
+  border: var(--b);
 }
 
 // normal class
@@ -224,12 +226,14 @@ img:not(.not_html, .not) {
   // normal
   --fs: 1.2em;
   --fw: 400;
+  --ff: var(--font2);
   --tt: none;
   --ls: normal;
   --lh: 1;
   // label
   --fs-label: calc(var(--fs) - .15em);
   --fw-label: var(--fw);
+  --ff-label: var(--font1);
   --tt-label: var(--tt);
   --ls-label: var(--ls);
   --lh-label: var(--lh);
@@ -237,11 +241,12 @@ img:not(.not_html, .not) {
   --stroke-size-label: var(--stroke-size);
   --stroke-color-label: var(--stroke-color);
   // placeholder
-  --fs-holder: var(--fs);
-  --fw-holder: var(--fw);
-  --tt-holder: var(--tt);
-  --ls-holder: var(--ls);
-  --lh-holder: var(--lh);
+  --fs-place: var(--fs);
+  --fw-place: var(--fw);
+  --ff-place: var(--ff);
+  --tt-place: var(--tt);
+  --ls-place: var(--ls);
+  --lh-place: var(--lh);
   --stroke-place: var(--stroke-size-place) var(--stroke-color-place);
   --stroke-size-place: var(--stroke-size);
   --stroke-color-place: var(--stroke-color);
@@ -266,10 +271,11 @@ img:not(.not_html, .not) {
     transform: var(--t);
     filter: var(--f);
   }
-  & :is(input[type], button[type], .v-select__selection) {
+  & :is(input[type], button[type], textarea, .v-select__selection) {
     color: var(--c);
     font-size: var(--fs);
     font-weight: var(--fw);
+    font-family: var(--ff);
     text-transform: var(--tt);
     letter-spacing: var(--ls);
     line-height: var(--lh);
@@ -278,12 +284,13 @@ img:not(.not_html, .not) {
     -ms-text-stroke: var(--stroke);
     -o-text-stroke: var(--stroke);
     &::placeholder {
-      color: var(--place);
-      font-size: var(--fs);
-      font-weight: var(--fw);
-      text-transform: var(--tt);
-      letter-spacing: var(--ls);
-      line-height: var(--lh);
+      color: var(--c-place);
+      font-size: var(--fs-place);
+      font-weight: var(--fw-place);
+      font-family: var(--ff-place);
+      text-transform: var(--tt-place);
+      letter-spacing: var(--ls-place);
+      line-height: var(--lh-place);
       -webkit-text-stroke: var(--stroke-place);
       -moz-text-stroke: var(--stroke-place);
       -ms-text-stroke: var(--stroke-place);
@@ -294,6 +301,7 @@ img:not(.not_html, .not) {
     color: var(--c-label);
     font-size: var(--fs-label);
     font-weight: var(--fw-label);
+    font-family: var(--ff-label);
     text-transform: var(--tt-label);
     letter-spacing: var(--ls-label);
     line-height: var(--lh-label);

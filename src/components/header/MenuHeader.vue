@@ -88,6 +88,17 @@
         </v-list-item-group>
       </v-list>
     </v-menu>
+
+    <!-- menu login -->
+    <v-menu activator=".openMenuLogin" right offset-x :offset-y="responsive">
+      <v-list id="menuLogin" class="font2">
+        <v-list-item-group active-class="activeClass">
+          <v-list-item v-for="(item,i) in dataMenuLogin" :key="i" :to="item.to" @click="Logout(item.key)">
+            <v-list-item-title>{{item.name}}</v-list-item-title>
+          </v-list-item>
+        </v-list-item-group>
+      </v-list>
+    </v-menu>
   </section>
 </template>
 
@@ -102,6 +113,7 @@ export default {
   // },
   data() {
     return {
+      responsive: false,
       messages: 1,
       drawer: false,
       dataDrawer: {
@@ -145,10 +157,29 @@ export default {
         { icon:"twitter", url:"#" },
         { icon:"instagram", url:"#" },
         { icon:"twitch", url:"#" }
-      ]
+      ],
+      dataMenuLogin: [
+        { key:"profile", name:"Profile", to:"/profile" },
+        { key:"logout", name:"Log out" },
+      ],
     };
   },
+  mounted() {
+    // responsive
+    this.Responsive()
+    document.addEventListener('resize', this.Responsive());
+  },
   methods: {
+    Logout(key) {
+      if (key=='logout') {localStorage.setItem('logKey', 'out');this.$router.push('/');this.$router.go()}
+    },
+    Responsive() {
+      if (window.innerWidth <= 880) {
+        this.responsive = true
+      } else {
+        this.responsive = false
+      }
+    },
     CambiarLanguage(lang) {
       if (lang === "ES") {
         localStorage.language = lang;

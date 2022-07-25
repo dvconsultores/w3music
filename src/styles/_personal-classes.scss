@@ -294,6 +294,7 @@
 .aspect {--aspect: 1 / 1;aspect-ratio: var(--aspect)}
 .active_rotate {transform: rotate(180deg)}
 .isolate {isolation: isolate}
+.pointer {cursor: pointer}
 
 
 
@@ -589,6 +590,7 @@
   .aspectmobile {--aspect: 1 / 1;aspect-ratio: var(--aspect) !important}
   .active_rotatemobile {transform: rotate(180deg) !important}
   .isolatemobile {isolation: isolate !important}
+  .pointermobile {cursor: pointer !important}
 }
 
 // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // /

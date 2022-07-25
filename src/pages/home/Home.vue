@@ -60,7 +60,7 @@
           hide-default-footer
         >
           <template v-slot:[`item.track`]="{ item }">
-            <div class="center gap2">
+            <div class="center gap2" @click="$router.push('/artist-details')" style="cursor:pointer;-border-radius:4vmax">
               <div class="astart gap1">
                 <h3>{{dataTable.indexOf(item)>8?null:0}}{{dataTable.indexOf(item)+1}}</h3>
                 <img :src="item.img" alt="track image" style="--w:4.1875em">
@@ -74,8 +74,8 @@
           </template>
 
           <template v-slot:[`item.plays`]="{ item }">
-            <div class="acenter" style="gap:.5em">
-              <img class="play" :src="require(`@/assets/icons/${item.play?'pause':'play'}.svg`)" alt="play icon" style="--w:3.095625em"
+            <div class="center" style="gap:.5em">
+              <img class="play" :src="require(`@/assets/icons/${item.play?'pause':'play'}.svg`)" alt="play/pause icon" style="--w:3.095625em"
                 @click="item.play?item.play=!item.play:dataTable.forEach(e=>{e.play=false;item.play=true})">
               <span>{{item.plays}}</span>
             </div>
@@ -120,7 +120,7 @@ export default {
       ],
       headersTable: [
         { value:"track", text:"TRACK/ARTIST", align:"center" },
-        { value:"gender", text:"GENDER", align:"center" },
+        { value:"genre", text:"GENRE", align:"center" },
         { value:"plays", text:"PLAYS", align:"center", sortable:false },
         { value:"add", text:"ADD", align:"center", sortable:false },
       ],
@@ -129,7 +129,7 @@ export default {
           img: require("@/assets/miscellaneous/track.jpg"),
           name: "TRAVIS POLL",
           track: "Sunset dream",
-          gender: "POP DANCE",
+          genre: "POP DANCE",
           plays: 4.007,
           play: false,
         },
@@ -137,7 +137,7 @@ export default {
           img: require("@/assets/miscellaneous/track.jpg"),
           name: "TRAVIS POLL",
           track: "Sunset dream",
-          gender: "POP DANCE",
+          genre: "POP DANCE",
           plays: 4.007,
           play: false,
         },
@@ -145,7 +145,7 @@ export default {
           img: require("@/assets/miscellaneous/track.jpg"),
           name: "TRAVIS POLL",
           track: "Sunset dream",
-          gender: "POP DANCE",
+          genre: "POP DANCE",
           plays: 4.007,
           play: false,
         },
@@ -153,7 +153,7 @@ export default {
           img: require("@/assets/miscellaneous/track.jpg"),
           name: "TRAVIS POLL",
           track: "Sunset dream",
-          gender: "POP DANCE",
+          genre: "POP DANCE",
           plays: 4.007,
           play: false,
         },
@@ -161,7 +161,7 @@ export default {
           img: require("@/assets/miscellaneous/track.jpg"),
           name: "TRAVIS POLL",
           track: "Sunset dream",
-          gender: "POP DANCE",
+          genre: "POP DANCE",
           plays: 4.007,
           play: false,
         },
@@ -169,7 +169,7 @@ export default {
           img: require("@/assets/miscellaneous/track.jpg"),
           name: "TRAVIS POLL",
           track: "Sunset dream",
-          gender: "POP DANCE",
+          genre: "POP DANCE",
           plays: 4.007,
           play: false,
         },
@@ -177,7 +177,7 @@ export default {
           img: require("@/assets/miscellaneous/track.jpg"),
           name: "TRAVIS POLL",
           track: "Sunset dream",
-          gender: "POP DANCE",
+          genre: "POP DANCE",
           plays: 4.007,
           play: false,
         },
@@ -185,7 +185,7 @@ export default {
           img: require("@/assets/miscellaneous/track.jpg"),
           name: "TRAVIS POLL",
           track: "Sunset dream",
-          gender: "POP DANCE",
+          genre: "POP DANCE",
           plays: 4.007,
           play: false,
         },
@@ -193,7 +193,7 @@ export default {
           img: require("@/assets/miscellaneous/track.jpg"),
           name: "TRAVIS POLL",
           track: "Sunset dream",
-          gender: "POP DANCE",
+          genre: "POP DANCE",
           plays: 4.007,
           play: false,
         },
@@ -201,7 +201,7 @@ export default {
           img: require("@/assets/miscellaneous/track.jpg"),
           name: "TRAVIS POLL",
           track: "Sunset dream",
-          gender: "POP DANCE",
+          genre: "POP DANCE",
           plays: 4.007,
           play: false,
         },

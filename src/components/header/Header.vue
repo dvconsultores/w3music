@@ -12,9 +12,9 @@
 
           <v-tooltip v-for="(item,i) in dataSidebar" :key="i" right color="var(--primary)">
             <template v-slot:activator="{ on, attrs}">
-              <v-btn v-show="sidebar" icon @click="positionFocus=item.position; dataSidebar.forEach(e=>{e.active=false});item.active=true"
+              <v-btn v-show="sidebar" icon @click="positionFocus=item.position;activeSidebarIcons(item)"
                 :class="{openMenuMarket: item.key=='market', active: item.active}" v-on="item.active?null:on" v-bind="item.active?null:attrs">
-                <img :src="require(`@/assets/icons/${item.icon}.svg`)" alt="side bar icons">
+                <img :src="require(`@/assets/icons/${item.icon}${item.active?'-active':''}.svg`)" alt="side bar icons">
               </v-btn>
             </template>
 
@@ -34,16 +34,16 @@
       </v-btn>
 
       <aside class="acenter gap2">
-        <v-btn v-show="!user" class="btn eliminarmobile" @click="$router.push('/login')">LOG IN WITH NEAR</v-btn>
+        <v-btn v-show="!$store.state.user.login" class="btn eliminarmobile" @click="$router.push('/login')">LOG IN WITH NEAR</v-btn>
 
-        <div :class="{acenter: user, contents: !user}" style="cursor:pointer;border-radius:4vmax" @click="()=>{console.log('hola')}">
-          <v-btn icon @click="user?null:$router.push('/login')">
-            <img :src="user?$store.state.user.img:require(`@/assets/icons/account.svg`)" alt="account" class="eliminarmobile"
-              :style="`--w:3em;${user?'--br:50%;--b:2px solid #000000;--p:4px':null}`">
-            <img :src="user?$store.state.user.img:require(`@/assets/icons/account-mobile.svg`)" alt="account" class="vermobile"
-              :style="`--w:3em;${user?'--br:50%;--b:2px solid #000000;--p:4px':null}`">
+        <div :class="{acenter: $store.state.user.login, contents: !$store.state.user.login}" style="cursor:pointer;border-radius:4vmax" class="openMenuLogin">
+          <v-btn icon @click="$store.state.user.login?null:$router.push('/login')">
+            <img :src="$store.state.user.login?$store.state.user.img:require(`@/assets/icons/account.svg`)" alt="account" class="eliminarmobile"
+              :style="`--w:3em;${$store.state.user.login?'--br:50%;--b:2px solid #000000;--p:4px':null}`">
+            <img :src="$store.state.user.login?$store.state.user.img:require(`@/assets/icons/account-mobile.svg`)" alt="account" class="vermobile"
+              :style="`--w:3em;${$store.state.user.login?'--br:50%;--b:2px solid #000000;--p:4px':null}`">
           </v-btn>
-          <v-icon v-show="user">mdi-menu-down</v-icon>
+          <v-icon v-show="$store.state.user.login">mdi-menu-down</v-icon>
         </div>
       </aside>
     </v-app-bar>
@@ -52,21 +52,7 @@
 
 <script>
 import MenuHeader from "./MenuHeader.vue"
-import * as nearAPI from 'near-api-js'
-
 const theme = localStorage.getItem("theme");
-
-const { connect, keyStores, WalletConnection } = nearAPI
-
-const keyStore = new keyStores.BrowserLocalStorageKeyStore()
-const config = {
-  networkId: "testnet",
-  keyStore, 
-  nodeUrl: "https://rpc.testnet.near.org",
-  walletUrl: "https://wallet.testnet.near.org",
-  helperUrl: "https://helper.testnet.near.org",
-  explorerUrl: "https://explorer.testnet.near.org",
-};
 
 export default {
   name: "header",
@@ -84,13 +70,12 @@ export default {
   data() {
     return {
       accountId: null,
-      user: true,
       messages: 1,
       sidebar: false,
       initialFocus: 0,
       positionFocus: 0,
       dataSidebar: [
-        { key:"market", icon: "market-active", name:"Marketplace", position: 120, active: false },
+        { key:"market", icon: "market", name:"Marketplace", position: 120, active: false },
         { key:"stats", icon: "stats", name:"stats", position: 240, active: false },
         { key:"chats", icon: "chats", name:"chats", position: 360, active: false },
         { key:"settings", icon: "settings", name:"settings", position: 480, active: false  },
@@ -102,9 +87,6 @@ export default {
     // responsive
     // this.responsive()
     // document.addEventListener('resize', this.responsive())
-
-    this.isSigned()
-    this.getData()
     this.LogState();
     
     /* search function */
@@ -125,6 +107,12 @@ export default {
     })
   },
   methods: {
+    activeSidebarIcons(item) {
+      this.dataSidebar.forEach(e=>{e.active=false});
+      setTimeout(() => {
+        item.active=true
+      }, 500);
+    },
     toggleFunc() {
       if (window.innerWidth <= 880) {
         this.$refs.menu.drawer=true
@@ -143,59 +131,14 @@ export default {
     //     console.log('desktop')
     //   }
     // },
-    CambiarTheme(theme) {
-      this.$store.dispatch("CambiarTheme", { theme, element: this.element });
-      this.themeButton = !this.themeButton;
-    },
-    async getData () {
-      this.account = {}
-      // connect to NEAR
-      const near = await connect(config);
-      // create wallet connection
-      const wallet = new WalletConnection(near)
-      this.accountId= wallet.getAccountId()
-
-      if (wallet.isSignedIn()) {
-        const url = "api/v1/profile/?wallet=" + this.accountId
-        this.axios.defaults.headers.common.Authorization='token'
-        this.axios.get(url)
-          .then((response) => {
-            if (response.data[0]){
-              this.avatar = response.data[0].avatar
-              this.$store.commit("Avatar", this.avatar)
-            }
-        }).catch((error) => {
-          console.log(error)
-        })
-      }
-    },
+    // CambiarTheme(theme) {
+    //   this.$store.dispatch("CambiarTheme", { theme, element: this.element });
+    //   this.themeButton = !this.themeButton;
+    // },
     // use for update account log states
     LogState() {
-      if (localStorage.getItem('logKey') == 'in') {this.user = false}
-      if (localStorage.getItem('logKey') == 'out') {this.user = true}
-    },
-    async signIn () {
-      const near = await connect(config);
-      const wallet = new WalletConnection(near)
-      wallet.requestSignIn(
-        'contract.nearbase.testnet'
-      )
-    },
-    async isSigned () {
-      const near = await connect(config);
-      const wallet = new WalletConnection(near)
-      if (wallet.isSignedIn()) {
-        localStorage.setItem('logKey', 'in')
-        this.user = false
-      }
-    },
-    async signOut () {
-      const near = await connect(config);
-      const wallet = new WalletConnection(near)
-      wallet.signOut()
-      localStorage.setItem('logKey', 'out')
-      this.user = true
-      this.$router.push({ path: '/' })
+      if (localStorage.getItem('logKey') == 'out') {this.$store.state.user.login = false}
+      if (localStorage.getItem('logKey') == 'in') {this.$store.state.user.login = true}
     },
   },
 };

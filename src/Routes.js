@@ -34,14 +34,24 @@ export default new Router({
           component: () => import('@/pages/landing/Landing'),
         },
         {
-          path: '/home',
+          path: '/home:id?',
           name: 'home',
           component: () => import('@/pages/home/Home'),
         },
         {
-          path: '/buy',
-          name: 'buy',
-          component: () => import('@/pages/buy/Buy'),
+          path: '/profile',
+          name: 'profile',
+          component: () => import('@/pages/profile/Profile'),
+        },
+        // {
+        //   path: '/buy',
+        //   name: 'buy',
+        //   component: () => import('@/pages/buy/Buy'),
+        // },
+        {
+          path: '/artist-details:id?',
+          name: 'artistDetails',
+          component: () => import('@/pages/artistDetails/ArtistDetails'),
         },
       ],
     },

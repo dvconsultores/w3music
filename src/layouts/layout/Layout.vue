@@ -19,13 +19,18 @@ export default {
   data() {
     return { wrapperSpace: true, footerStyle: false }
   },
+  computed: {
+    route() {
+      return this.$router.currentRoute.name
+    },
+  },
   methods: {
     RouteValidator() {
-      if (this.$router.currentRoute.name=='landing') {this.wrapperSpace=false}
+      if (this.route=='landing') {this.wrapperSpace=false}
       else {this.wrapperSpace=true}
       //
-      if (this.$router.currentRoute.name!=='landing') {this.footerStyle=true}
-      else {this.footerStyle=false}
+      if (this.route=='landing'||this.route=='profile') {this.footerStyle=false}
+      else {this.footerStyle=true}
     },
   }
 }
