@@ -17,12 +17,18 @@
             </div>
           </div>
 
-          <div class="divcol jspace gap1" style="max-width:42.5em;margin-bottom:6em">
-            <h3 style="font-size:2.63125em">NEW TRACKS release</h3>
+          <div class="divcol jspace" style="max-width:42.5em;margin-bottom:6em;gap:clamp(2em, 3vw, 3em)">
+            <div class="divcol">
+              <h3 style="font-size:2.63125em;line-height:.7" class="p">NEW TRACKS</h3>
+              <span style="font-size:2.63125em">release</span>
+            </div>
 
             <div class="divcol">
               <div class="acenter">
-                <h4 class="p">MANDY BAXTER ARROW</h4>
+                <div class="divcol">
+                  <h4 class="p" style="line-height:.7">MANDY BAXTER</h4>
+                  <span style="font-size: 1.5em">arrow</span>
+                </div>
                 <v-btn icon @click="like=!like">
                   <img :src="require(`@/assets/icons/like${like?'-active':''}.svg`)" alt="like">
                 </v-btn>
