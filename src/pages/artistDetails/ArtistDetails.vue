@@ -21,10 +21,10 @@
 
         <aside class="wrap gap1 font1">
           <div class="acenter gap1">
-            <span class="acenter" style="gap:.2em">
-              <img src="@/assets/logos/near.svg" alt="near">
-              0x4050...1f56
-            </span>
+            <div class="acenter" style="gap:.2em">
+              <img src="@/assets/icons/near.svg" alt="near" style="--w:1.4em">
+              <span>0x4050...1f56</span>
+            </div>
             <span>Joined April 2022</span>
           </div>
           <div class="acenter">
