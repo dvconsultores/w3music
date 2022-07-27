@@ -88,6 +88,12 @@ export default {
     // this.responsive()
     // document.addEventListener('resize', this.responsive())
     this.LogState();
+
+    const el = document.querySelector(".sidebar");
+    document.addEventListener("click", (e) => {
+      // if click outisde
+      if (!el.contains(e.target)&&this.sidebar==true) {this.toggleFunc()}
+    })
     
     /* search function */
     const search = document.getElementById('search')
