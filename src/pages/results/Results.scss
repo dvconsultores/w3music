@@ -1,0 +1,48 @@
+@use "@/styles/app" as *;
+
+// // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // /
+/* // // results // // */ 
+// // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // /
+#results {
+  font-size: 16px;
+  h1 {max-width: 20ch}
+  .container-header {
+    span {font-size: 1.25em}
+  }
+  //
+  .container-content {
+    position: relative;
+    justify-content: center;
+    transform: translateX(-10%);
+    h3 {
+      max-width: 15ch;
+      font-weight: 400;
+      font-size: 2.5em;
+      letter-spacing: 0.03em;
+    }
+    .v-card {
+      --w: min(100%, 34.08375em);
+      --h: max-content;
+      justify-content: flex-end;
+      z-index: -1;
+      @include absoluteCenter;
+      transform: translateX(40%);
+    }
+  }
+  .container-content.errorClass {
+    margin-block: 200px;
+    transform: translateX(0);
+    & > img {
+      @include absoluteCenter;
+      transform: translateX(25%);
+      @include media(min,1000px) {transform: translateX(35%)}
+      @include media(max, 900px,min,800px) {transform: translateX(30%)}
+    }
+    .v-card {
+      position: static;
+      justify-content: flex-start;
+      transform: translateX(0%);
+      @include media(min,small) {transform: translateX(-20%)}
+    }
+  }
+}

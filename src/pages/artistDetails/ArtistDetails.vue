@@ -1,7 +1,7 @@
 <template>
   <section id="artistDetails" class="divcol margin_global gap2 isolate">
     <section class="container-header divcol" style="gap:2em">
-      <img class="pointer" src="@/assets/icons/back.svg" alt="back" style="--w:100px" @click="$router.push('/home')">
+      <img class="pointer back" src="@/assets/icons/back.svg" alt="back" style="--w:100px" @click="$router.push('/home')">
 
       <div class="acenter" style="gap:3em">
         <v-avatar size="7.3125em">
@@ -48,7 +48,7 @@
         hide-default-footer
       >
         <template v-slot:[`item.price`]="{ item }">
-          <div class="center gap2">
+          <div class="center gap2 tstart">
             <img :src="item.img" alt="track image" style="--w:4.1875em">
             <span>{{item.price}}</span>
           </div>
@@ -101,7 +101,7 @@ export default {
         { key:"following", name:"FOLLOWING", amount: "20", active: false },
       ],
       headersTable: [
-        { value:"price", text:"TRACK/ARTIST", align:"center" },
+        { value:"price", text:"PRICE", align:"center" },
         { value:"genre", text:"GENRE", align:"center" },
         { value:"plays", text:"PLAYS", align:"center" },
         { value:"to", text:"TO", align:"center" },

@@ -59,14 +59,14 @@
           :items="dataTable"
           hide-default-footer
         >
-          <template v-slot:[`item.track`]="{ item }">
+          <template v-slot:[`item.name`]="{ item }">
             <div class="center gap2" @click="$router.push('/artist-details')" style="cursor:pointer;-border-radius:4vmax">
               <div class="astart gap1">
                 <h3>{{dataTable.indexOf(item)>8?null:0}}{{dataTable.indexOf(item)+1}}</h3>
                 <img :src="item.img" alt="track image" style="--w:4.1875em">
               </div>
 
-              <div class="divcol">
+              <div class="divcol tstart">
                 <h6 class="font1 p">{{item.name}}</h6>
                 <span>{{item.track}}</span>
               </div>
@@ -119,7 +119,7 @@ export default {
         { img: "", name: "SUSY MILLER", play: false },
       ],
       headersTable: [
-        { value:"track", text:"TRACK/ARTIST", align:"center" },
+        { value:"name", text:"TRACK/ARTIST", align:"center" },
         { value:"genre", text:"GENRE", align:"center" },
         { value:"plays", text:"PLAYS", align:"center", sortable:false },
         { value:"add", text:"ADD", align:"center", sortable:false },

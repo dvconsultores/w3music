@@ -12,7 +12,7 @@
 
           <v-tooltip v-for="(item,i) in dataSidebar" :key="i" right color="var(--primary)">
             <template v-slot:activator="{ on, attrs}">
-              <v-btn v-show="sidebar" icon @click="positionFocus=item.position;activeSidebarIcons(item)"
+              <v-btn v-show="sidebar" icon @click="positionFocus=item.position;activeSidebarIcons(item)" :to="item.to"
                 :class="{openMenuMarket: item.key=='market', active: item.active}" v-on="item.active?null:on" v-bind="item.active?null:attrs">
                 <img :src="require(`@/assets/icons/${item.icon}${item.active?'-active':''}.svg`)" alt="side bar icons">
               </v-btn>
@@ -76,8 +76,8 @@ export default {
       positionFocus: 0,
       dataSidebar: [
         { key:"market", icon: "market", name:"Marketplace", position: 120, active: false },
-        { key:"stats", icon: "stats", name:"stats", position: 240, active: false },
-        { key:"chats", icon: "chats", name:"chats", position: 360, active: false },
+        { key:"stats", icon: "stats", name:"stats", to:"/stats", position: 240, active: false },
+        { key:"chats", icon: "chats", name:"chats", to: "/chats", position: 360, active: false },
         { key:"settings", icon: "settings", name:"settings", position: 480, active: false  },
         { key:"faq", icon: "faq", name:"faq", position: 600, active: false  },
       ]

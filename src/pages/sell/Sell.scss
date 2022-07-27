@@ -1,0 +1,38 @@
+@use "@/styles/app" as *;
+
+// // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // /
+/* // // sell // // */ 
+// // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // /
+#sell {
+  font-size: 16px;
+  h1 {max-width: 20ch}
+  h2 {font-size: 4em}
+  .container-header {
+    span {font-size: 1.25em}
+  }
+  //
+  .container-content {
+    .v-card {
+      width: 9.9375em !important;
+      height: 9.9375em !important;
+      max-width: 9.9375em !important;
+      max-height: 9.9375em !important;
+      --bg: transparent !important;
+      --b: 1px solid #000000;
+      &.active {
+        --bg: #ffffff !important;
+        --b: none;
+        img {--w:9.199375em}
+      }
+    }
+    label {
+      font-weight: 400;
+      font-size: 2em;
+      letter-spacing: 0.03em;
+    }
+    .v-input {--b:1px solid #000000;--c-place:#000000}
+    #description {
+      min-height:9.375em;
+    }
+  }
+}

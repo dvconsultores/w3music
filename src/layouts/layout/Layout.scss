@@ -8,7 +8,6 @@
   background-image: url(../../assets/images/bg.jpg);
   @include media(max, small) {background-image: url(../../assets/images/bg-mobile.jpg)};
   background-size: cover;
-  overflow: hidden;
   // margins modifiable
   & .with {
     padding-block: 120px 100px !important;

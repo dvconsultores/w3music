@@ -1,0 +1,175 @@
+@use "@/styles/app" as *;
+
+// // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // /
+/* // // chats // // */ 
+// // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // /
+#chats {
+  font-size: 16px;
+  padding-bottom: 4em;
+  h2 {font-size: 4em}
+  .container-header {
+    span {font-size: 1.25em}
+  }
+  //
+  .container-actions {
+    @include media(max, 500px) {
+      margin-bottom: 4em;
+    };
+    .clickable {
+      &.inactive {
+        --bg: transparent;
+        --b: 1px solid #000000;
+        --bs: none;
+      }
+    }
+  }
+  .v-input {
+    --bg: hsl(0, 0%, 96%, .20) !important;
+    --b: 1px solid #000000;
+    font-size: 1em;
+    --f: var(--font2);
+    --c-label: #000000;
+    --p: 0 1em;
+    &.active {
+      --bg: var(--primary) !important;
+      --bs: 0px 4px 4px rgba(0, 0, 0, 0.25) !important;
+      --b: none;
+    }
+    :is(.primary--text, button[type].primary--text) {
+      color: #000000 !important;
+      & :is(span, i) {color: #000000 !important}
+    }
+  }
+  .container-content {
+    #section-left {
+      padding-bottom: 64px;
+      .v-card.chat {
+        --bg: transparent;
+        --br: 2.5vmax;
+        --p: 1em;
+        --bs: none;
+        transition: .2s $ease-return;
+        &.active {
+          --bg: hsl(0, 0%, 96%, .20);
+          --b: 3px solid var(--primary);
+          --bs: 4px 4px 9px rgba(0, 0, 0, 0.25);
+        }
+        & + .v-card {margin-top:2em}
+        &:not(.active):hover {
+          background-color: rgba(225,225,225,.5) !important;
+        }
+        :is(h6, .preview-text) {font-size: 1.25em}
+        h6 {font-weight: 700}
+      }
+      #new-chats {
+        margin-left: auto;
+        position: sticky;
+        right: 1em;
+        bottom: 1em;
+      }
+    }
+    #section-right {
+      position: sticky;
+      top: 10%;
+      height: 646px;
+
+      // chat //
+      #content-chat {
+        height: 32.375em;
+        overflow: auto;
+        overflow-x: hidden;
+        padding-right: 22px;
+        position: relative;
+        margin-bottom: 48px;
+        blockquote {
+          display: flex !important;
+          & + blockquote {margin-top:1em}
+        }
+        .v-card {
+          --moveX: 10px;
+          --bg: hsl(201, 26%, 87%, .6);
+          --p: 1.5em;
+          --br: 0 1.2vmax 1.2vmax 1.2vmax;
+          --bs: none;
+          --t: translateX(var(--moveX));
+          float: left;
+          // triangule
+          &::after {
+            --width: 8px;
+            content: "";
+            @include absolute(calc(var(--moveX) * -1.6),0);
+            border-top: 0 solid transparent;
+            border-bottom: calc(var(--width) + 3px) solid transparent;
+            border-right: calc(var(--width) * 2) solid hsl(201, 26%, 87%, .6);
+          }
+          &.user {
+            --br: 1.2vmax 0 1.2vmax 1.2vmax;
+            --bg: hsl(59, 83%, 53%, .9);
+            margin-left: auto;
+            &::after {
+              @include absolute(auto,0,calc(var(--moveX) * -1.6));
+              border-top: 0 solid transparent;
+              border-bottom: calc(var(--width) + 3px) solid transparent;
+              border-left: calc(var(--width) * 2) solid hsl(59, 83%, 53%, .9);
+              border-right: none;
+            }
+          }
+          //
+          p {font-size: 1.25em}
+          #ago {
+            font-size: 0.9375em;
+            @include absolute(auto,auto,var(--p),calc(var(--p) / 3));
+          }
+        }
+      }
+      #control-chat {
+        @include absolute(0,auto,0,0);
+      }
+    }
+  }
+}
+// .vac-card-window {
+//   background-color: transparent !important;
+//   box-shadow: none !important;
+//   // container //
+//   .vac-chat-container {
+//     display: flex !important;
+//     justify-content: space-between;
+//     gap: 2em;
+//     // left //
+//     .vac-rooms-container {
+//       background-color: transparent !important;border: none !important;
+//       .vac-box-search {}
+//       #rooms-list {}
+//     }
+
+//     // right //
+//     .vac-col-messages {
+//       // header
+//       .vac-room-header {}
+
+//       // body
+//       .messages-list {
+//         .vac-messages-container {
+//           .vac-message-wrapper {
+//             .vac-message-container {
+//               .vac-message-card {
+//                 .vac-reply-message {
+//                   .vac-reply-username {}
+//                   .vac-image-reply-container {}
+//                   .vac-reply-content {}
+//                 }
+//                 .vac-message-files-container {}
+//                 .vac-text-timestamp {}
+//                 .vac-message-actions-wrapper {}
+//               }
+//             }
+//           }
+//         }
+//       }
+
+//       // footer
+//       .vac-box-footer, & > * {background-color: transparent !important;}
+//     }
+//   }
+// }

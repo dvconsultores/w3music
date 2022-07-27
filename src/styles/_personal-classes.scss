@@ -133,19 +133,19 @@
   --fb: 1 1;
   display: flex;
   flex-wrap: wrap;
-  & > * {flex: var(--fb)}
+  & > *:not(.not_fwrap) {flex: var(--fb)}
 }
 .fwrap_inv {
   --fb: 1 1;
   display: flex;
   flex-wrap: wrap-reverse;
-  & > * {flex: var(--fb)}
+  & > *:not(.not_fwrap_inv) {flex: var(--fb)}
 }
 .fnowrap {
   --fb: 1 1;
   display: flex;
   flex-wrap: nowrap;
-  & > * {flex: var(--fb)}
+  & > *:not(.not_fnowrap) {flex: var(--fb)}
 }
 .twrap {white-space: initial}
 .twrapa {word-break: break-all}
@@ -429,19 +429,19 @@
     --fb: 1 1;
     display: flex !important;
     flex-wrap: wrap !important;
-    & > * {flex: var(--fb) !important}
+    & > *:not(.not_fwrapmobile) {flex: var(--fb) !important}
   }
   .fwrap_invmobile {
     --fb: 1 1;
     display: flex !important;
     flex-wrap: wrap-reverse !important;
-    & > * {flex: var(--fb) !important}
+    & > *:not(.not_fwrap_invmobile) {flex: var(--fb) !important}
   }
-  .fnowrap {
+  .fnowrapmobile {
     --fb: 1 1;
     display: flex !important;
     flex-wrap: nowrap !important;
-    & > * {flex: var(--fb) !important}
+    & > *:not(.not_fnowrapmobile) {flex: var(--fb) !important}
   }
   .twrapmobile {white-space: initial !important}
   .twrapamobile {word-break: break-all !important}

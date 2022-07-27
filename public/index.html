@@ -51,8 +51,8 @@ default settings
 /*
 delete-config-default-vuetify
 */
-:is(.theme--light,.theme--dark) {box-shadow: none}
-:is(.v-list,.v-sheet,.v-dialog) {box-shadow: none !important}
+:is(.theme--light,.theme--dark):not(.card) {box-shadow: none}
+:is(.v-list,.v-sheet,.v-dialog):not(.card) {box-shadow: none !important}
 /* card */
 div.v-card:is([class*="div"], [class*="space"], [class*="center"], [class*="start"], [class*="end"], [class*="wrap"]):not([class^="t"])
 {display: flex}

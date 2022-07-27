@@ -50,21 +50,23 @@
       .v-card {
         display: flex !important;
         align-items: flex-end;
-        background: center no-repeat url(../../assets/miscellaneous/track.png),#ffffff;
+        background: top no-repeat url(../../assets/miscellaneous/track.png),#ffffff;
         background-size: contain;
-        @include media(min, small) {max-width: 16.25em}
+        // @include media(min, small) {max-width: 16.25em}
         height: 18.75em;
+        box-shadow: 5px 4px 11px rgba(0, 0, 0, 0.25) !important;
         #play {
           --b: 1.8px solid #000000;
           @include absolute(auto,.5em,.5em);
           box-shadow: $sombra-btn;
         }
         .v-sheet {
-          height: 50%;
+          height: 60%;
+          padding-top: calc(97px/2.5);
         }
         .v-avatar {
           @include absoluteCenter;
-          transform: translateY(-10px);
+          transform: translateY(-30px);
           z-index: 3;
           // lines
           &::before {

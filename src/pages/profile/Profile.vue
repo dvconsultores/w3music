@@ -1,7 +1,7 @@
 <template>
   <section id="profile" class="divcol margin_global gap2 isolate">
     <section class="container-header divcol" style="gap:3em">
-      <img class="pointer" src="@/assets/icons/back.svg" alt="back" style="--w:100px" @click="$router.push('/home')">
+      <img class="pointer back" src="@/assets/icons/back.svg" alt="back" style="--w:100px" @click="$router.push('/home')">
 
       <div class="space gap2 wrap">
         <div class="acenter" style="gap:80px">
@@ -9,7 +9,7 @@
             <img :src="$store.state.user.login?$store.state.user.img:require(`@/assets/icons/account.svg`)" alt="profile image">
 
             <v-btn icon>
-              <img src="@/assets/icons/camera.svg" alt="camera icon">
+              <img src="@/assets/icons/camera-circle.svg" alt="camera icon">
             </v-btn>
           </v-avatar>
 

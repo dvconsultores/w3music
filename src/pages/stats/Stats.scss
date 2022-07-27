@@ -1,0 +1,51 @@
+@use "@/styles/app" as *;
+
+// // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // /
+/* // // stats // // */ 
+// // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // /
+#stats {
+  font-size: 16px;
+  h2 {font-size: 4em}
+  .container-header {
+    span {font-size: 1.25em}
+  }
+  //
+  .v-input {
+    --bg: hsl(0, 0%, 96%, .20) !important;
+    --b: 1px solid #000000;
+    font-size: 1em;
+    --f: var(--font2);
+    --c-label: #000000;
+    --p: 0 1em;
+    &.active {
+      --bg: var(--primary) !important;
+      --bs: 0px 4px 4px rgba(0, 0, 0, 0.25) !important;
+      --b: none;
+    }
+    :is(.primary--text, button[type].primary--text) {
+      color: #000000 !important;
+      & :is(span, i) {color: #000000 !important}
+    }
+  }
+  #dataTable {
+    background-color: transparent;
+    font-family: var(--font2);
+    table {border-spacing: 0 1em}
+    thead {
+      tr {
+        th {font-size: 1.25em; border-bottom: 2px solid #000000}
+      }
+    }
+    tbody {
+      tr {
+        td {
+          &:is(:nth-of-type(2):nth-of-type(4),:nth-of-type(5)) {font-size: 1em}
+          &:is(:nth-of-type(1),:nth-of-type(3)) {span {font-size: 1.2em};h6 {font-size: 1.4em !important}}
+          padding-bottom: 1em;
+          border-bottom: 2px solid #000000;
+        }
+        &:hover {background-color: transparent}
+      }
+    }
+  }
+}

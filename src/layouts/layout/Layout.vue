@@ -26,10 +26,10 @@ export default {
   },
   methods: {
     RouteValidator() {
-      if (this.route=='landing') {this.wrapperSpace=false}
+      if (this.route=='landing'||this.route=='results'||this.route=='chats') {this.wrapperSpace=false}
       else {this.wrapperSpace=true}
       //
-      if (this.route=='landing'||this.route=='profile') {this.footerStyle=false}
+      if (this.route=='landing'||this.route=='profile'||this.route=='results'||this.route=='chats') {this.footerStyle=false}
       else {this.footerStyle=true}
     },
   }

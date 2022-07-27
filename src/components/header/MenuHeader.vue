@@ -160,6 +160,7 @@ export default {
       ],
       dataMenuLogin: [
         { key:"profile", name:"Profile", to:"/profile" },
+        { key:"library", name:"Library", to:"/library" },
         { key:"logout", name:"Log out" },
       ],
     };

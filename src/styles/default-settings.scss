@@ -177,10 +177,12 @@ img:not(.not_html, .not) {
   --p: ;
   --br: 50%;
   --b: ;
+  --bs: ;
   background: var(--bg);
   padding: var(--p);
   border-radius: var(--br);
   border: var(--b);
+  box-shadow: var(--bs) !important;
 }
 
 // normal class
@@ -233,7 +235,7 @@ img:not(.not_html, .not) {
   // label
   --fs-label: calc(var(--fs) - .15em);
   --fw-label: var(--fw);
-  --ff-label: var(--font1);
+  --ff-label: var(--ff);
   --tt-label: var(--tt);
   --ls-label: var(--ls);
   --lh-label: var(--lh);
@@ -342,12 +344,12 @@ img:not(.not_html, .not) {
 
 //- menu select (desplegable menu) -//
 .v-select-list {
-  font-family: var(--font2) !important;background: var(--clr-btn) !important;
+  font-family: var(--font2) !important;background: var(--secondary) !important;
   border-radius: 0 $border-btn $border-btn $border-btn !important;overflow: hidden;
-  span {color: var(--clr-text-btn) !important;&::first-letter {text-transform: uppercase}}
+  :is(.v-list-item__title, span) {color: #ffffff !important;&::first-letter {text-transform: uppercase}}
   .v-list-item--active {
     background: $clr-btn !important;
-    span {color: $clr-text-btn !important}
+    :is(.v-list-item__title, span) {color: $clr-text-btn !important}
   }
 }
 
@@ -457,9 +459,9 @@ img:not(.not_html, .not) {
   background: var(--bg) !important;
   color: var(--c) !important;
   box-shadow: var(--bs) !important;
-  border-radius: var(--br);
+  border-radius: var(--br) !important;
   padding: var(--p);
-  border: var(--b);
+  border: var(--b) !important;
   transform: var(--t);
   filter: var(--f);
 }
@@ -470,6 +472,12 @@ img:not(.not_html, .not) {
 //- active class -//
 .activeClass {
   background-color: var(--clr-btn) !important;
+  color: var(--clr-text-btn) !important;
+  & * {color: var(--clr-text-btn) !important}
+}
+.activeClass2 {
+  background-color: var(--clr-btn) !important;
+  border: 1px solid #000000 !important;
   color: var(--clr-text-btn) !important;
   & * {color: var(--clr-text-btn) !important}
 }
