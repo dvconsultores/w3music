@@ -31,8 +31,8 @@
             <v-btn icon>
               <img src="@/assets/icons/share.svg" alt="share button">
             </v-btn>
-            <v-btn icon>
-              <img src="@/assets/icons/like.svg" alt="like button">
+            <v-btn icon @click="like=!like">
+              <img :src="require(`@/assets/icons/like${like?'-active':''}.svg`)" alt="like button">
             </v-btn>
           </div>
         </aside>
@@ -93,6 +93,7 @@ export default {
   name: "artistDetails",
   data() {
     return {
+      like: false,
       avatar: require("@/assets/avatars/a2.jpg"),
       dataActions: [
         { key:"tracks", name:"TRACKS", active: true },

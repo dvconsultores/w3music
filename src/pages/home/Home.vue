@@ -22,9 +22,9 @@
 
             <div class="divcol">
               <div class="acenter">
-                <h4 class="p">MANDY BAXTER arrow</h4>
-                <v-btn icon>
-                  <img src="@/assets/icons/like.svg" alt="like">
+                <h4 class="p">MANDY BAXTER ARROW</h4>
+                <v-btn icon @click="like=!like">
+                  <img :src="require(`@/assets/icons/like${like?'-active':''}.svg`)" alt="like">
                 </v-btn>
               </div>
               <p class="p font2" style="font-size:1em;">Lorem Ipsum is simply dummy text of the printing and typesetting industry.</p>
@@ -81,9 +81,9 @@
             </div>
           </template>
 
-          <template v-slot:[`item.add`]>
-            <v-btn icon>
-              <img src="@/assets/icons/like.svg" alt="like">
+          <template v-slot:[`item.add`]="{ item }">
+            <v-btn icon @click="item.like=!item.like">
+              <img :src="require(`@/assets/icons/like${item.like?'-active':''}.svg`)" alt="like button">
             </v-btn>
           </template>
         </v-data-table>
@@ -112,6 +112,7 @@ export default {
   name: "home",
   data() {
     return {
+      like: false,
       playMusic: false,
       dataRecentRelease: [
         { img: "", name: "TRAVIS POLL", play: false },
@@ -132,6 +133,7 @@ export default {
           genre: "POP DANCE",
           plays: 4.007,
           play: false,
+          like: false,
         },
         {
           img: require("@/assets/miscellaneous/track.jpg"),
@@ -140,6 +142,7 @@ export default {
           genre: "POP DANCE",
           plays: 4.007,
           play: false,
+          like: false,
         },
         {
           img: require("@/assets/miscellaneous/track.jpg"),
@@ -148,6 +151,7 @@ export default {
           genre: "POP DANCE",
           plays: 4.007,
           play: false,
+          like: false,
         },
         {
           img: require("@/assets/miscellaneous/track.jpg"),
@@ -156,6 +160,7 @@ export default {
           genre: "POP DANCE",
           plays: 4.007,
           play: false,
+          like: false,
         },
         {
           img: require("@/assets/miscellaneous/track.jpg"),
@@ -164,6 +169,7 @@ export default {
           genre: "POP DANCE",
           plays: 4.007,
           play: false,
+          like: false,
         },
         {
           img: require("@/assets/miscellaneous/track.jpg"),
@@ -172,6 +178,7 @@ export default {
           genre: "POP DANCE",
           plays: 4.007,
           play: false,
+          like: false,
         },
         {
           img: require("@/assets/miscellaneous/track.jpg"),
@@ -180,6 +187,7 @@ export default {
           genre: "POP DANCE",
           plays: 4.007,
           play: false,
+          like: false,
         },
         {
           img: require("@/assets/miscellaneous/track.jpg"),
@@ -188,6 +196,7 @@ export default {
           genre: "POP DANCE",
           plays: 4.007,
           play: false,
+          like: false,
         },
         {
           img: require("@/assets/miscellaneous/track.jpg"),
@@ -196,6 +205,7 @@ export default {
           genre: "POP DANCE",
           plays: 4.007,
           play: false,
+          like: false,
         },
         {
           img: require("@/assets/miscellaneous/track.jpg"),
@@ -204,6 +214,7 @@ export default {
           genre: "POP DANCE",
           plays: 4.007,
           play: false,
+          like: false,
         },
       ],
       dataNewBeats: [
