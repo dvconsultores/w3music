@@ -78,11 +78,20 @@ export default {
     // to delete for default
     document.querySelectorAll('.filterItems').forEach(item=>{
       if (search.textContent == '') {item.style.display='none'}
-    })
+    });
 
     /* 4- scroll to top */
     setTimeout(()=> {
       window.scrollTo(0, 1);
     }, 0);
+
+    /* 5- click outside */
+    const el = document.querySelector(".sidebar");
+    document.addEventListener("click", (e) => {
+      // if click outisde
+      if (!el.contains(e.target)) {
+        // do some thing
+      }
+    });
   },
 };
