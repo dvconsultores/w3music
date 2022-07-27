@@ -1,5 +1,5 @@
 <template>
-  <section id="results" class="divcol margin_global">
+  <section id="results" class="divcol overflow margin_global">
     <section class="container-header divcol" style="gap:2em">
       <img class="pointer back" src="@/assets/icons/back-market.svg" alt="back" style="--w:231px" @click="$router.push('/buy')">
 
@@ -25,7 +25,7 @@ export default {
   name: "results",
   data() {
     return {
-      results: true,
+      results: false,
     }
   },
   mounted() {
