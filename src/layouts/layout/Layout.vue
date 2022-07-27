@@ -19,17 +19,13 @@ export default {
   data() {
     return { wrapperSpace: true, footerStyle: false }
   },
-  computed: {
-    route() {
-      return this.$router.currentRoute.name
-    },
-  },
   methods: {
     RouteValidator() {
-      if (this.route=='landing'||this.route=='results'||this.route=='chats') {this.wrapperSpace=false}
+      const route = this.$router.currentRoute.name
+      if (route=='landing'||route=='results'||route=='chats') {this.wrapperSpace=false}
       else {this.wrapperSpace=true}
       //
-      if (this.route=='landing'||this.route=='profile'||this.route=='results'||this.route=='chats') {this.footerStyle=false}
+      if (route=='landing'||route=='profile'||route=='results'||route=='chats') {this.footerStyle=false}
       else {this.footerStyle=true}
     },
   }

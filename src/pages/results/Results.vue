@@ -1,7 +1,7 @@
 <template>
   <section id="results" class="divcol margin_global">
     <section class="container-header divcol" style="gap:2em">
-      <img class="pointer" src="@/assets/icons/back-market.svg" alt="back" style="--w:231px" @click="$router.push('/buy')">
+      <img class="pointer back" src="@/assets/icons/back-market.svg" alt="back" style="--w:231px" @click="$router.push('/buy')">
 
       <div class="divcol">
         <span class="font2">{{results?'YOUR PURCHASE WAS':'THERE IS AN'}}</span>
