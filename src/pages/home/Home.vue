@@ -24,14 +24,14 @@
             </div>
 
             <div class="divcol">
-              <div class="acenter">
-                <div class="divcol">
-                  <h4 class="p" style="line-height:.7">MANDY BAXTER</h4>
-                  <span style="font-size: 1.5em">arrow</span>
+              <div class="divcol">
+                <div class="acenter">
+                  <h4 class="p">MANDY BAXTER</h4>
+                  <v-btn icon @click="like=!like">
+                    <img :src="require(`@/assets/icons/like${like?'-active':''}.svg`)" alt="like">
+                  </v-btn>
                 </div>
-                <v-btn icon @click="like=!like">
-                  <img :src="require(`@/assets/icons/like${like?'-active':''}.svg`)" alt="like">
-                </v-btn>
+                <span style="font-size: 1.5em;transform:translateY(-5px)">arrow</span>
               </div>
               <p class="p font2" style="font-size:1em;">Lorem Ipsum is simply dummy text of the printing and typesetting industry.</p>
             </div>
