@@ -7,6 +7,11 @@
   font-size: 16px;
   @include media(max, 600px) {font-size: 14px}
   @include media(max, 500px) {font-size: 12px}
+  @include media(max, small) {
+    section.fwrap {
+      flex-wrap: nowrap !important;
+    }
+  }
   h1 {max-width: 20ch;font-size: clamp(2.5em, 4vw, 4em) !important}
   .contup {
     display: flex;
