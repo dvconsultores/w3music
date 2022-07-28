@@ -9,6 +9,10 @@
   h2 {font-size: 4em}
   .container-header {
     span {font-size: 1.25em}
+    @include media(max, 600px) {font-size: 14px}
+    @include media(max, 500px) {font-size: 12px}
+    @include media(max, 430px) {font-size: 10px}
+    @include media(max, 350px) {font-size: 8px}
   }
   //
   .container-actions {

@@ -1,3 +1,4 @@
+@use "mixins" as *;
 @import '~vuetify/src/styles/styles.sass';
 
 :root {
@@ -17,6 +18,8 @@
   --font2: 'Lekton', sans-serif;
   /* // // sizes // // */
   --margin-global: 9em;
+  @include media(max,small) {--margin-global: clamp(3em, 4vw, 4em)}
+  @include media(max,x-small) {--margin-global: 1em}
   --parent: 1600px;
   --subparent: 1900px;
   /* // // rem // // */

@@ -5,6 +5,8 @@
 // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // /
 #chats {
   font-size: 16px;
+  @include media(max, small) {font-size: 14px}
+  @include media(max, x-small) {font-size: 12px}
   padding-bottom: 4em;
   h2 {font-size: 4em}
   .container-header {
@@ -41,6 +43,8 @@
     }
   }
   .container-content {
+    &#desktop {@include media(max,1127px) {display: none !important}}
+    &#mobile {@include media(min,1128px) {display: none !important}}
     #section-left {
       padding-bottom: 64px;
       .v-card.chat {
@@ -66,6 +70,10 @@
         position: sticky;
         right: 1em;
         bottom: 1em;
+        @include media(max, 1128px) {
+          right: 0em;
+          bottom: 3.5em;
+        }
       }
     }
     #section-right {

@@ -1,15 +1,15 @@
 <template>
-  <section id="stats" class="divcol margin_global gap2 isolate">
+  <section id="stats" class="divcol margin_global overflow gap2 isolate">
     <section class="container-header divcol" style="gap:2em">
       <img class="pointer back" src="@/assets/icons/back.svg" alt="back" style="--w:100px" @click="$router.push('/home')">
       
       <div class="divcol">
-        <span class="font2">STATS</span>
+        <span class="font2" style="font-size: 16px">STATS</span>
         <h1 class="p">HOTTEST TRACKS</h1>
       </div>
     </section>
 
-    <aside class="wrap gap1 font2">
+    <aside class="container-actions wrap gap1 font2">
       <v-select
         v-for="(item,i) in dataActions" :key="i"
         :class="{active: item.active}"
@@ -54,6 +54,39 @@
         </div>
       </template>
     </v-data-table>
+
+    <section id="dataTableMobile" class="font2">
+      <v-card v-for="(item,i) in dataTable" :key="i" color="transparent" class="space wrap gap1">
+        <aside class="acenter gap1" @click="$router.push('/artist-details')">
+          <img src="@/assets/miscellaneous/track.jpg" alt="track image" class="aspect" style="--h:100%">
+          <div class="divcol gap1">
+            <div class="divcol tstart">
+              <h6 class="font1 p">{{item.name}}</h6>
+              <span>{{item.track}}</span>
+            </div>
+            <span>
+              <b>GENRE: </b>{{item.genre}}
+            </span>
+            <span>
+              <b>OWNER: </b>{{item.owner}}
+            </span>
+          </div>
+        </aside>
+
+        <aside class="space gap2 marginaleft">
+          <div class="divcol center">
+            <img class="play" :src="require(`@/assets/icons/${item.play?'pause':'play'}.svg`)" alt="play/pause button" style="--w:1.9em"
+              @click="item.play?item.play=!item.play:dataTable.forEach(e=>{e.play=false;item.play=true})">
+            <span>{{item.plays}}</span>
+          </div>
+
+          <div class="divcol center">
+            <h6 class="p">FLOOR PRICE</h6>
+            <span>{{item.price}}</span>
+          </div>
+        </aside>
+      </v-card>
+    </section>
   </section>
 </template>
 

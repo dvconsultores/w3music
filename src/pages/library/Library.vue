@@ -1,10 +1,10 @@
 <template>
-  <section id="library" class="divcol margin_global gap2 isolate">
+  <section id="library" class="divcol margin_global gap2 overflow isolate">
     <section class="container-header divcol" style="gap:2em">
       <img class="pointer back" src="@/assets/icons/back.svg" alt="back" style="--w:100px" @click="$router.push('/home')">
       
       <div class="divcol">
-        <span class="font2">LIBRARY</span>
+        <span class="font2" style="font-size:16px">LIBRARY</span>
         <h1 class="p">YOUR COLLECTION</h1>
       </div>
     </section>

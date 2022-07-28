@@ -1,5 +1,5 @@
 <template>
-  <section id="checkout" class="divcol gap2">
+  <section id="checkout" class="divcol">
     <v-card class="card divcol" style="--bg:hsl(0, 0%, 96%, .47);--p:1em 2em;--max-w:23.75em;--br:0">
       <h3 class="p" style="font-size:3em">NICOLEBROWN.NEAR</h3>
       <span class="font2" style="font-size:1.5em">Balance: 100</span>
@@ -8,12 +8,12 @@
     <section class="divcol" style="gap:3em">
       <v-card v-for="(item,i) in dataCart" :key="i" color="transparent" class="space wrap acenter gap2">
         <div class="isolate acenter">
-          <v-card class="card aspect center" style="--br:0">
-            <v-avatar size="7em">
-              <img :src="item.img" :alt="`${item.name} image`" style="--W:4.8125em">
+          <v-card class="card center" style="--br:0">
+            <v-avatar size="clamp(calc(7em - 3em), 7vw, 7em)">
+              <img :src="item.img" :alt="`${item.name} image`" style="--w:100%">
             </v-avatar>
 
-            <img id="decoration" src="@/assets/miscellaneous/track.png" alt="track image" style="--w:13.625em">
+            <img id="decoration" src="@/assets/miscellaneous/track.png" alt="track image" style="--w:clamp(calc(13.625em - 4em), 13vw, 13.625em)">
           </v-card>
 
           <v-sheet class="divcol" color="var(--primary)">
@@ -47,12 +47,12 @@
         </div>
 
         <div class="acenter not_fwrap" style="gap:.1em">
-          <span style="font-size:3em">{{item.price}}</span>
-          <img src="@/assets/icons/near.svg" alt="near" style="--w:2.5em">
+          <span style="font-size:clamp(2.5em,3vw,3em)">{{item.price}}</span>
+          <img src="@/assets/icons/near.svg" alt="near" style="--w:clamp(2em,2.5vw,2.5em)">
         </div>
 
-        <v-btn icon style="--bg:#000000;--bs:0px 4px 4px rgba(0, 0, 0, 0.25)" class="not_fwrap">
-          <img src="@/assets/icons/x-yellow.svg" alt="delete button">
+        <v-btn id="close" icon style="--bg:#000000;--bs:0px 4px 4px rgba(0, 0, 0, 0.25)" class="not_fwrap">
+          <img src="@/assets/icons/x-yellow.svg" alt="delete button" style="--w:clamp(1em, 1.25vw, 1.25em)">
         </v-btn>
       </v-card>
     </section>

@@ -6,9 +6,9 @@
       <aside class="divcol">
         <h1>GOOD MORNING!</h1>
 
-        <div class="aend">
-          <div class="divcol">
-            <img src="@/assets/miscellaneous/track.svg" alt="track" style="--w:clamp(17em, 24vw, 24.375em)">
+        <div id="container-new-tracks" class="aend">
+          <div class="divcol" style="width:100%">
+            <img id="track" src="@/assets/miscellaneous/track.svg" alt="track" style="--w:clamp(17em, 24vw, 24.375em)">
             <div class="center align gap1" style="transform:translateY(-15px)">
               <img class="play" src="@/assets/icons/next-music.svg" alt="previous">
               <img class="play" :src="require(`@/assets/icons/${playMusic?'pause':'play'}-white.svg`)" alt="play/pause icon"
@@ -19,7 +19,7 @@
 
           <div class="divcol jspace" style="max-width:42.5em;margin-bottom:6em;gap:clamp(2em, 3vw, 3em)">
             <div class="divcol">
-              <h3 style="font-size:2.63125em;line-height:.7" class="p">NEW TRACKS</h3>
+              <h3 style="font-size:2.63125em;line-height:.8" class="p">NEW TRACKS</h3>
               <span style="font-size:2.63125em">release</span>
             </div>
 
@@ -47,7 +47,7 @@
             <v-card :style="`--bg-img:${item.img}`">
               <img class="play" :src="require(`@/assets/icons/${item.play?'pause':'play'}.svg`)" alt="play/pause icon"
                 @click="item.play?item.play=!item.play:dataRecentRelease.forEach(e=>{e.play=false;item.play=true})">
-              <img id="decoration" src="@/assets/miscellaneous/track.png" alt="decoration track">
+              <img id="decoration" src="@/assets/miscellaneous/track.png" alt="decoration track" style="--w:10.4375em">
             </v-card>
             <h6 class="p">{{item.name}}</h6>
           </blockquote>
@@ -55,7 +55,7 @@
       </aside>
     </section>
 
-    <section class="fwrap gap2">
+    <section class="fwrap gap2 divcolmobile">
       <aside class="divcol">
         <h2>TRENDING NOW</h2>
 
@@ -64,6 +64,7 @@
           :headers="headersTable"
           :items="dataTable"
           hide-default-footer
+          :mobile-breakpoint="525"
         >
           <template v-slot:[`item.name`]="{ item }">
             <div class="center gap2" @click="$router.push('/artist-details')" style="cursor:pointer;-border-radius:4vmax">

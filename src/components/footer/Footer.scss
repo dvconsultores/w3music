@@ -5,10 +5,15 @@
 // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // /
 .v-footer {
   transition: 0.5s $ease-return;
-  @include media(max, small) {font-size: 18px !important}
-  @include media(max, x-small) {font-size: 14px !important}
+  @include media(max, 530px) {font-size: 14px; .gap1 {gap: 0 !important}}
+  @include media(max, 475px) {font-size: 12px}
+  @include media(max, 340px) {
+    img:not(#track, #social) {
+      --w: clamp(1.46em - .7em, 1.4vw, 1.46em) !important;
+    }
+  }
   .row {
-    max-width: 80%;
+    max-width: calc(100% - (var(--margin-global)));
     .v-input {
       .v-slider__track {
         &-container {border-radius: 10vmax;height: 5px; overflow: hidden}

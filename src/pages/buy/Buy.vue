@@ -1,6 +1,6 @@
 <template>
   <section id="buy" class="grid gap2">
-    <aside class="divcol">
+    <aside class="divcol eliminarmobile">
       <div class="section-header">
         <h2>CATEGORIES</h2>
 
@@ -30,12 +30,21 @@
       </div>
     </aside>
 
-    <aside class="divcol gap2" style="transform:translateY(64px)">
+    <aside id="container-right" class="divcol gap2">
       <div class="section-header">
         <h3>AFOFUSION</h3>
 
         <aside class="space wrap gap1">
           <div class="fwrap gap1" style="--fb: 1 1">
+            <v-select
+              v-model="all"
+              :items="dataAll"
+              item-text="all"
+              placeholder="ALL"
+              hide-details
+              solo
+              class="vermobile"
+            ></v-select>
             <v-select
               v-model="recent"
               :items="dataRecent"
@@ -54,14 +63,15 @@
             ></v-select>
           </div>
 
-          <v-btn class="btn font2" style="--max-w:13.9375em;--h:2.75em;--bg:hsl(0, 0%, 96%, .75);--b:2.5px solid var(--primary)" @click="$router.push('/buy/checkout')">
-            <span class="acenter" style="gap:.5em">
+          <v-btn class="btn font2 eliminarmobile" style="--max-w:13.9375em;--h:2.75em;--bg:hsl(0, 0%, 96%, .75);--b:2.5px solid var(--primary)" @click="$router.push('/buy/checkout')">
+            <span class="acenter" style="gap:.5em;font-size: 20px">
               <img src="@/assets/icons/market-active.svg" alt="market icon" style="--w:25px">
-              <span>CART:</span>
-              <span>1</span>
+              <span>CART: 1</span>
             </span>
 
-            <span class="acenter" style="gap:.2em">20 <img src="@/assets/logos/near.svg" alt="near" style="--w:13px;--t:translateY(-2px)"></span>
+            <span class="acenter margin2left" style="gap:.2em;font-size:17px">
+              20 <img src="@/assets/logos/near.svg" alt="near" style="--w:13px;--t:translateY(-2px)">
+            </span>
           </v-btn>
         </aside>
       </div>
@@ -79,7 +89,7 @@
           <v-sheet color="var(--primary)" class="fill_w divcol center gap1 padd2">
             <div class="divcol marginaright">
               <h6 class="p">{{item.name}}</h6>
-              <span class="font2" style="font-size:0.875em">by {{item.by}}</span>
+              <span class="font2" style="font-size:0.875em">by <a class="not_typography" href="#">{{item.by}}</a></span>
             </div>
 
             <span class="font2 bold acenter" style="gap:.2em">
@@ -195,6 +205,8 @@ export default {
       dataRecent: [],
       atribute: "ATRIBUTE",
       dataAtribute: [],
+      all: "ALL",
+      dataAll: [],
       dataAfrofusion: [
         { img: require("@/assets/avatars/a2.jpg") ,name: "LOVE ARROW", by: "Travis Poll", price: "20", play: false, like: false },
         { img: require("@/assets/avatars/a2.jpg"), name: "LOVE ARROW", by: "Travis Poll", price: "20", play: false, like: false },

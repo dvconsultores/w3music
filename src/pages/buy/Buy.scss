@@ -5,17 +5,35 @@
 // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // /
 #marketplaceBuy {
   font-size: 16px;
-  h1 {max-width: 20ch}
+  h1 {max-width: 14ch}
   .container-header {
-    span {font-size: 1.25em}
+    span {font-size: clamp(1em, 1.2vw, 1.25em)}
+    #container-title {
+      span {font-size: 1.25em}
+      &.checkoutClass {
+        h1 {max-width: max-content}
+        @include media(max,480px) {font-size: 14px}
+        @include media(max,410px) {font-size: 12px}
+        @include media(max,330px) {font-size: 10px}
+      }
+    }
   }
   // buy //
   #buy {
     @include media(min,small) {grid-template-columns: 14.25em 1fr}
+    #container-right {
+      @include media(min,small) {transform:translateY(64px)}
+    }
     .section-header {
       h2 {font-size: 4em}
       h3 {font-size: 3em}
-      .v-input {--b:1.5px solid #000000;--c-place:#000000}
+      .v-input {
+        --b:1.5px solid #000000;--c-place:#000000;
+        @include media(max,small) {font-size: 14px}
+        @include media(max,600px) {font-size: 12px}
+        @include media(max,500px) {font-size: 10px}
+        @include media(max,400px) {font-size: 8px}
+      }
       .v-btn {
         span.acenter {font-size: 1.25em;& + span.acenter {transform:translateY(2px)}; span {transform:translateY(2px)}}
       }
@@ -81,13 +99,26 @@
       }
     }
   }
+  
   // checkout //
   #checkout {
+    gap: 3em;
     padding-bottom: 2em;
+    @include media(max, 700px) {font-size: 14px}
+    @include media(max, 500px) {font-size: 12px}
+    @include media(max, 350px) {font-size: 10px}
+    #close {
+      @include media(max,small) {
+        position: absolute;
+        top: 0;
+        right: 0;
+      }
+    }
     div.isolate {
       width: min(100%,calc(362px + 235px));
       .v-card {
-        --min-w :14.74em;
+        --min-w: clamp(calc(14.74em - 4em), 14vw, 14.74em);
+        --h: clamp(calc(14.74em - 4em), 14vw, 14.74em);
         --bs:5px 4px 11px rgba(0, 0, 0, 0.25);
         .v-avatar {
           box-shadow:4px 6px 6px rgba(0, 0, 0, 0.25);
@@ -106,6 +137,9 @@
         #decoration {
           @include absolute(auto,50%,-5.625em,50%);
           z-index: -1;
+          @include media(max, 450px) {
+            @include absolute(auto,50%,-3.8em,50%);
+          }
         }
       }
       //
@@ -115,12 +149,15 @@
         padding-left: 6.25em;
         z-index: -2;
         width: min(100%,22.625em);
-        h6 {font-size: 1.5em}
-        span {font-size: 0.875em}
+        h6 {font-size: 24px}
+        span {font-size: 14px}
+        @include media(max, 450px) {
+          padding-left: 4em;
+        }
       }
     }
     //
-    label {font-size: 1.5em; font-family: var(--font2);
+    label {font-size: clamp(1em, 1.5vw, 1.5em); font-family: var(--font2);
       &.v-label--active {position: relative;top:-1px}
     }
     .v-input {

@@ -5,7 +5,9 @@
 // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // /
 #home {
   font-size: 16px;
-  h1 {max-width: 20ch}
+  @include media(max, 600px) {font-size: 14px}
+  @include media(max, 500px) {font-size: 12px}
+  h1 {max-width: 20ch;font-size: clamp(2.5em, 4vw, 4em) !important}
   .contup {
     display: flex;
     gap: .2em;
@@ -19,11 +21,31 @@
       letter-spacing: 0.385em;
       color: rgba(245, 245, 245, 0.44);
       z-index: -1;
+      @include media(max,small) {
+        font-size: 100px;
+        height: max-content;
+        transform: rotate(-90deg);
+        @include absolute(auto,-400px,-210px);
+      }
+      @include media(max,x-small) {
+        @include absolute(auto,-400px,-180px);
+      }
+    }
+  }
+  #container-new-tracks {
+    @include media(max, 400px) {
+      flex-wrap: wrap !important;
+      #track {
+        --w: 100% !important;
+      }
     }
   }
   .container-slide {
     gap: 70px;
     width: 31.25em;
+    @include media(max,small) {width: clamp(10em, 90vw - 2em, 45em)}
+    @include media(max,x-small) {width: clamp(10em, 100vw - 2em, 45em)}
+    padding-right: 70px;
     &::-webkit-scrollbar {display: none}
     .v-card {
       width: 11em;
@@ -45,6 +67,7 @@
   #dataTable {
     background-color: transparent;
     font-family: var(--font2);
+    // @include media(max, 530px) {font-size: 8px}
     table {border-spacing: 0 1em}
     thead {
       tr {
@@ -61,6 +84,12 @@
         }
         &:hover {background-color: transparent}
       }
+    }
+    .v-data-table__mobile-row {padding-top: 14px}
+  }
+  blockquote {
+    h6 {
+      font-size: 20px !important;
     }
   }
 }

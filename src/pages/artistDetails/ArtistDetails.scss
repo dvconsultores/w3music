@@ -5,6 +5,7 @@
 // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // /
 #artistDetails {
   font-size: 16px;
+  padding-bottom: 2em;
   .v-avatar {
     box-shadow:4px 6px 6px rgba(0, 0, 0, 0.25);
     position: relative;
@@ -21,9 +22,14 @@
   }
   //
   .container-header {
-    & > div > div {
-      transform: translateX(18px);
+    @include media(max,560px) {font-size: 14px}
+    @include media(max,500px) {font-size: 12px}
+    & > div.acenter:first-of-type {
+      @include media(max,445px) {font-size: 10px}
+      @include media(max,350px) {font-size: 8px}
+      @include media(max,300px) {font-size: 6px}
     }
+    & > div > div {transform: translateX(18px)}
     section {
       aside + aside {
         span {
@@ -45,7 +51,7 @@
   }
   //
   .container-content {
-    &.activity {
+    &.tracks {
       --gtc: repeat(auto-fit,minmax(min(100%,16.25em),1fr));
       .v-card {
         display: flex !important;
@@ -85,6 +91,7 @@
     #dataTable {
       background-color: transparent;
       font-family: var(--font2);
+      @include media(max, 700px) {display: none !important}
       table {border-spacing: 0 1em}
       thead {
         tr {
@@ -100,6 +107,26 @@
             border-bottom: 2px solid #000000;
           }
           &:hover {background-color: transparent}
+        }
+      }
+      .v-data-table__mobile-row {padding-top: 14px}
+    }
+    #dataTableMobile {
+      font-size: 16px;
+      @include media(min, 701px) {display: none !important}
+      span {font-size: 1em}
+      .v-card {
+        --margin: 1em;
+        position: relative;
+        margin-bottom: var(--margin);
+        padding-bottom: var(--margin);
+        // lines
+        &::after {
+          content: "";
+          @include absolute(0,auto,0,0);
+          width: 100%;
+          height: 1px;
+          background-color: #000000;
         }
       }
     }

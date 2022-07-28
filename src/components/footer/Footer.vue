@@ -4,28 +4,29 @@ _<template>
       <!-- content -->
       <div v-if="!footerStyle" class="marginaleft center">
         <v-btn v-for="(item,i) in dataSocial" :key="i" icon :href="item.url" target="_blank">
-          <img :src="require(`@/assets/icons/${item.icon}.svg`)" :alt="`${item.icon} icons`" style="--w:1.5625em">
+          <img id="social" :src="require(`@/assets/icons/${item.icon}.svg`)" :alt="`${item.icon} icons`" style="--w:1.5625em">
         </v-btn>
       </div>
 
       <section v-else class="fill_w space gap2">
         <blockquote class="center gap1">
-          <img src="@/assets/miscellaneous/track-white.png" alt="track image" style="--w:3.06625em">
+          <img id="track" src="@/assets/miscellaneous/track-white.png" alt="track image" style="--w:3.06625em">
           <div class="divcol">
-            <h6 class="p" style="font-size:1.4em">TRAVIS POLL</h6>
-            <span class="font2" style="font-size:1.2em">Sunset dream</span>
+            <h6 class="p" style="font-size:clamp(1em, 1.4vw, 1.4em)">TRAVIS POLL</h6>
+            <span class="font2" style="font-size:clamp(1em, 1.2vw, 1.2em)">Sunset dream</span>
           </div>
         </blockquote>
 
         <aside class="acenter gap1">
-          <v-btn v-for="(item,i) in dataActions" :key="i" icon style="--p:1.5em" @click="item.key=='play'?item.play=!item.play:null">
+          <v-btn v-for="(item,i) in dataActions" :key="i" icon style="--p:clamp(1.2em ,1.5vw, 1.5em)" @click="item.key=='play'?item.play=!item.play:null" :class="{eliminarmobile: item.deleteMobile}">
             <img :src="require(`@/assets/icons/${item.key=='play'?item.play?'pause-simple':'play-simple':item.icon}.svg`)" :alt="`${item.key} icon`"
               :style="`transform: ${item.key=='next'?'rotate(180deg)':null}
-              ${item.key=='play'?item.icon=='play-simple'?'translateX(2px)':'translateX(0)':null}`">
+              ${item.key=='play'?item.icon=='play-simple'?'translateX(2px)':'translateX(0)':null};
+              --w: clamp(1.46em - .4em, 1.4vw, 1.46em)`">
           </v-btn>
         </aside>
 
-        <aside class="center gap1 font2" style="width:min(100%,18.6875em)">
+        <aside class="center gap1 font2 eliminarmobile" style="width:min(100%,18.6875em)">
           <span>{{sliderValue}}</span>
           <v-slider
             v-model="sliderValue"
@@ -39,7 +40,7 @@ _<template>
         </aside>
 
         <aside class="center gap1" style="width:min(100%,6.875em)">
-          <img src="@/assets/icons/sound.svg" alt="sound" style="--w:1.6875em">
+          <img src="@/assets/icons/sound.svg" alt="sound" style="--w:clamp(1.6875em - .4em, 1.6vw, 1.6875em)">
           <v-slider
             v-model="soundValue"
             color="#000000"
@@ -69,11 +70,11 @@ export default {
         { icon:"twitch", url:"#" },
       ],
       dataActions: [
-        { keY:"shuffle", icon:"shuffle" },
+        { keY:"shuffle", icon:"shuffle", deleteMobile:true },
         { key:"previous", icon:"next-music" },
         { key:"play", icon:"play-simple", play: false },
         { key:"next", icon:"next-music" },
-        { key:"repeat", icon:"repeat" },
+        { key:"repeat", icon:"repeat", deleteMobile:true },
       ],
       sliderValue: 0,
       sliderMax: 20,

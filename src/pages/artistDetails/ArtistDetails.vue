@@ -1,9 +1,9 @@
 <template>
-  <section id="artistDetails" class="divcol margin_global gap2 isolate">
+  <section id="artistDetails" class="divcol margin_global overflow gap2 isolate">
     <section class="container-header divcol" style="gap:2em">
       <img class="pointer back" src="@/assets/icons/back.svg" alt="back" style="--w:100px" @click="$router.push('/home')">
 
-      <div class="acenter" style="gap:3em">
+      <div class="acenter" style="gap:48px">
         <v-avatar size="7.3125em">
           <img :src="avatar" alt="profile image" style="--w:100%">
         </v-avatar>
@@ -39,9 +39,9 @@
       </section>
     </section>
 
-    <section class="container-content grid gap2" :class="{activity: dataActions[dataActions.findIndex(e=>e.key=='activity')].active}">
+    <section class="container-content grid gap2" :class="{tracks: dataActions[dataActions.findIndex(e=>e.key=='tracks')].active}">
       <v-data-table
-        v-show="dataActions[dataActions.findIndex(e=>e.key=='tracks')].active"
+        v-show="dataActions[dataActions.findIndex(e=>e.key=='activity')].active"
         id="dataTable"
         :headers="headersTable"
         :items="dataTable"
@@ -61,11 +61,44 @@
             <span>{{item.plays}}</span>
           </div>
         </template>
+        
+        <template v-slot:[`item.time`]="{ item }">
+          {{item.time}} ago
+        </template>
       </v-data-table>
 
-      <v-card v-show="dataActions[dataActions.findIndex(e=>e.key=='activity')].active" class="isolate"
-          v-for="(item,i) in dataActivity" :key="i">
-        <v-btn id="play" class="play" icon @click="item.play?item.play=!item.play:dataActivity.forEach(e=>{e.play=false;item.play=true})">
+      <section id="dataTableMobile" class="font2" v-show="dataActions[dataActions.findIndex(e=>e.key=='activity')].active">
+        <v-card v-for="(item,i) in dataTable" :key="i" color="transparent" class="space wrap gap1">
+          <aside class="acenter gap1">
+            <img src="@/assets/miscellaneous/track.jpg" alt="track image" class="aspect" style="--h:100%">
+            <div class="divcol gap1">
+              <span>
+                <b>PRICE: </b>{{item.price}}
+              </span>
+              <span>
+                <b>GENRE: </b>{{item.genre}}
+              </span>
+              <span>
+                <b>TO: </b>{{item.to}}
+              </span>
+            </div>
+          </aside>
+
+          <aside class="space gap2 marginaleft">
+            <div class="divcol center">
+              <img class="play" :src="require(`@/assets/icons/${item.play?'pause':'play'}.svg`)" alt="play/pause button" style="--w:1.9em"
+                @click="item.play?item.play=!item.play:dataTable.forEach(e=>{e.play=false;item.play=true})">
+              <span>{{item.plays}}</span>
+            </div>
+
+            <span>{{item.time}} ago</span>
+          </aside>
+        </v-card>
+      </section>
+
+      <v-card v-show="dataActions[dataActions.findIndex(e=>e.key=='tracks')].active" class="isolate"
+          v-for="(item,i) in dataTracks" :key="i">
+        <v-btn id="play" class="play" icon @click="item.play?item.play=!item.play:dataTracks.forEach(e=>{e.play=false;item.play=true})">
           <img :src="require(`@/assets/icons/${item.play?'pause':'play'}-simple.svg`)" alt="play button" :style="`transform:${item.play?'translatex(0)':'translateX(3px)'}`">
         </v-btn>
 
@@ -116,7 +149,7 @@ export default {
           plays: 4.679,
           play: false,
           to: "patysb.near",
-          time: "3 days ago",
+          time: "3 days",
         },
         {
           img: require("@/assets/miscellaneous/track.jpg"),
@@ -125,7 +158,7 @@ export default {
           plays: 4.679,
           play: false,
           to: "patysb.near",
-          time: "3 days ago",
+          time: "3 days",
         },
         {
           img: require("@/assets/miscellaneous/track.jpg"),
@@ -134,7 +167,7 @@ export default {
           plays: 4.679,
           play: false,
           to: "patysb.near",
-          time: "3 days ago",
+          time: "3 days",
         },
         {
           img: require("@/assets/miscellaneous/track.jpg"),
@@ -143,7 +176,7 @@ export default {
           plays: 4.679,
           play: false,
           to: "patysb.near",
-          time: "3 days ago",
+          time: "3 days",
         },
         {
           img: require("@/assets/miscellaneous/track.jpg"),
@@ -152,10 +185,10 @@ export default {
           plays: 4.679,
           play: false,
           to: "patysb.near",
-          time: "3 days ago",
+          time: "3 days",
         },
       ],
-      dataActivity: [
+      dataTracks: [
         { img: require("@/assets/avatars/a2.jpg") ,name: "LOVE ARROW", price: "20", play: false },
         { img: require("@/assets/avatars/a2.jpg"), name: "LOVE ARROW", price: "20", play: false },
         { img: require("@/assets/avatars/a2.jpg"), name: "LOVE ARROW", price: "20", play: false },

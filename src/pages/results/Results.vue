@@ -25,7 +25,7 @@ export default {
   name: "results",
   data() {
     return {
-      results: false,
+      results: true,
     }
   },
   mounted() {

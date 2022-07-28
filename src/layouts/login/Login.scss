@@ -4,19 +4,42 @@
 // // // login // // // 
 // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // /
 #login {
+  font-size: 16px;
   background: center no-repeat fixed;
   background-image: url(../../assets/images/bg.jpg);
   @include media(max, small) {background-image: url(../../assets/images/bg-mobile.jpg)};
   background-size: cover;
   overflow: hidden;
+  @include media(max, 354px) {font-size: 14px};
+  @include media(max, 300px) {font-size: 12px};
   .v-main__wrap {
     padding-block: 120px 0px !important;
+    @include media(max,small) {padding-inline: var(--margin-global)}
+  }
+  .container {
+    @include media(min,small) {height: calc(100vh - 120px) !important}
+    @include media(max,small) {gap: 4em;margin-bottom: 220px}
+    &-card {
+      width: 100%;
+      @include media(min,small) {margin-right:6em;width:min(100%,28.6875em);}
+    }
   }
 
   #audio {
     // @include absolute(auto,-135px,-140px);
     @include absolute(auto,-200px,-140px);
     z-index: 2;
+    @include media(max,small) {
+      --w: 96px !important;
+      @include absolute(auto,-300px,-40px);
+    }
+  }
+  #audio2 {
+    @include media(max,small) {
+      --w:13.9375em !important;
+      @include absolute(var(--margin-global),auto,auto,0px);
+      z-index: 2;
+    }
   }
   #back {
     cursor: pointer;

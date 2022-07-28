@@ -1,26 +1,30 @@
 <template>
-  <section id="profile" class="divcol margin_global gap2 isolate">
+  <section id="profile" class="divcol margin_global overflow gap2 isolate">
     <section class="container-header divcol" style="gap:3em">
       <img class="pointer back" src="@/assets/icons/back.svg" alt="back" style="--w:100px" @click="$router.push('/home')">
 
       <div class="space gap2 wrap">
-        <div class="acenter" style="gap:80px">
-          <v-avatar size="7.3125em">
-            <img :src="$store.state.user.login?$store.state.user.img:require(`@/assets/icons/account.svg`)" alt="profile image">
+        <div class="acenter wrap" style="gap: 50px 80px">
+          <aside class="container-mobile align">
+            <v-avatar size="clamp(5em, 7vw, 7.3125em)">
+              <img :src="$store.state.user.login?$store.state.user.img:require(`@/assets/icons/account.svg`)" alt="profile image" style="--w:100%">
 
-            <v-btn icon>
-              <img src="@/assets/icons/camera-circle.svg" alt="camera icon">
-            </v-btn>
-          </v-avatar>
+              <v-btn icon style="--b:1px solid #000000;">
+                <img src="@/assets/icons/camera.svg" alt="camera icon" style="--w:clamp(1.8em,2vw,2em);--p:2px">
+              </v-btn>
+            </v-avatar>
+            
+            <v-btn v-show="profileType=='artist'" id="sellBtn" class="btn font2 mobile">SELL</v-btn>
+          </aside>
 
-          <div class="divcol">
+          <div class="divcol alignmobile">
             <span class="font2 Title">PROFILE</span>
             <h1 class="p">WELCOME</h1>
             <h2 class="p">TRAVIS POLL</h2>
           </div>
         </div>
 
-        <v-btn v-show="profileType=='artist'" id="sellBtn" class="btn font2">SELL</v-btn>
+        <v-btn v-show="profileType=='artist'" id="sellBtn" class="btn font2 desktop">SELL</v-btn>
       </div>
     </section>
 

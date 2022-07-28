@@ -23,9 +23,9 @@
           <template v-if="dataDrawer.expansion">
             <v-expansion-panel v-for="(item, index) in dataDrawer.expansion" :key="index">
               <!-- title -->
-              <v-expansion-panel-header hide-actions @click="item.active?item.active=!item.active:dataDrawer.expansion.forEach(e=>{e.active=false;item.active=true})">
+              <v-expansion-panel-header hide-actions @click="ActiveClass('expansion', item);">
                 <v-col class="conttitle acenter gap1 h10_em">
-                  <img :src="require(`@/assets/icons/${item.icon}.svg`)" :alt="item.alt" class="icon">
+                  <img :src="require(`@/assets/icons/${item.icon}${item.active?'-active':''}.svg`)" :alt="item.alt" class="icon" :class="{active: item.active}">
                   <span class="normal" style="max-width: max-content">{{ item.name }}</span>
                   <v-icon small color="#ffffff" :class="{active_rotate: item.active}">mdi-menu-down</v-icon>
                 </v-col>
@@ -34,11 +34,13 @@
               <v-expansion-panel-content>
                 <v-list>
                   <!-- ciclo for items -->
-                  <v-list-item v-for="(item2,i) in item.selection" :key="i" @click="CambiarLanguage(item2.key)">
-                    <v-list-item-title class="center h10_em">
-                      <span class="normal">{{ item2.name}}</span>
-                    </v-list-item-title>
-                  </v-list-item>
+                  <v-list-item-group active-class="activeText">
+                    <v-list-item v-for="(item2,i) in item.selection" :key="i" :ripple="false" :to="item2.to">
+                      <v-list-item-title class="center h10_em">
+                        <span class="normal">{{ item2.name}}</span>
+                      </v-list-item-title>
+                    </v-list-item>
+                  </v-list-item-group>
                 </v-list>
               </v-expansion-panel-content>
             </v-expansion-panel>
@@ -48,10 +50,10 @@
           <template v-if="dataDrawer.list">
             <v-list class="fill_w">
               <!-- ciclo for items -->
-              <v-list-item v-for="(item,i) in dataDrawer.list" :key="i" link :to="(item.to)">
-                <v-list-item-content>
+              <v-list-item v-for="(item,i) in dataDrawer.list" :key="i" link :to="(item.to)" :ripple="false">
+                <v-list-item-content @click="ActiveClass('list', item)">
                   <v-col class="conttitle acenter gap1 h10_em">
-                    <img :src="require(`@/assets/icons/${item.icon}.svg`)" :alt="item.alt">
+                    <img :src="require(`@/assets/icons/${item.icon}${item.active?'-active':''}.svg`)" class="icon" :alt="item.alt" :class="{active: item.active}">
                     <span style="max-width: max-content">
                       {{ item.name }}
                     </span>
@@ -90,7 +92,7 @@
     </v-menu>
 
     <!-- menu login -->
-    <v-menu activator=".openMenuLogin" right offset-x :offset-y="responsive">
+    <v-menu activator=".openMenuLogin" right offset-x>
       <v-list id="menuLogin" class="font2">
         <v-list-item-group active-class="activeClass">
           <v-list-item v-for="(item,i) in dataMenuLogin" :key="i" :to="item.to" @click="Logout(item.key)">
@@ -113,7 +115,7 @@ export default {
   // },
   data() {
     return {
-      responsive: false,
+      // responsive: false,
       messages: 1,
       drawer: false,
       dataDrawer: {
@@ -122,33 +124,37 @@ export default {
             key: "stats",
             icon: "stats",
             name: "STATS",
-            to: "",
+            to: "/stats",
+            active: false,
           },
           {
             key: "chats",
             icon: "chats",
             name: "CHATS",
-            to: "",
+            to: "/chats",
+            active: false,
           },
           {
             key: "settings",
             icon: "settings",
             name: "SETTINGS",
+            active: false,
           },
           {
             key: "faq",
             icon: "faq",
             name: "FAQ",
+            active: false,
           },
         ],
         expansion: [
           {
-            icon: "market-active",
+            icon: "market",
             name: "MARKETPLACE",
             active: false,
             selection: [
-              {name: "Buy", key: "buy"},
-              {name: "Sell", key: "sell"},
+              {name: "Buy", key: "buy", to: "/buy"},
+              {name: "Sell", key: "sell", to: "/sell"},
             ],
           },
         ],
@@ -167,20 +173,36 @@ export default {
   },
   mounted() {
     // responsive
-    this.Responsive()
-    document.addEventListener('resize', this.Responsive());
+    // this.Responsive()
+    // document.addEventListener('resize', this.Responsive());
   },
   methods: {
+    ActiveClass(key, item) {
+      // mejorar hace falta
+      if (key=='expansion') {
+        if (item.active) {
+          item.active=!item.active
+        } else {
+          this.dataDrawer.list.forEach(e=>{e.active=false})
+          this.dataDrawer.expansion.forEach(e=>{e.active=false})
+          item.active=true
+        }
+      } else if (key=='list') {
+        this.dataDrawer.expansion.forEach(e=>{e.active=false})
+        this.dataDrawer.list.forEach(e=>{e.active=false})
+        item.active=true
+      }
+    },
     Logout(key) {
       if (key=='logout') {localStorage.setItem('logKey', 'out');this.$router.push('/');this.$router.go()}
     },
-    Responsive() {
-      if (window.innerWidth <= 880) {
-        this.responsive = true
-      } else {
-        this.responsive = false
-      }
-    },
+    // Responsive() {
+    //   if (window.innerWidth <= 880) {
+    //     this.responsive = true
+    //   } else {
+    //     this.responsive = false
+    //   }
+    // },
     CambiarLanguage(lang) {
       if (lang === "ES") {
         localStorage.language = lang;

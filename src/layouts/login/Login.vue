@@ -5,18 +5,18 @@
     </v-btn>
 
     <v-main>
-      <v-container class="spacea">
+      <v-container class="spacea divcolmobile container">
         <aside class="divcol">
           <img id="back" src="@/assets/icons/back.svg" alt="back" style="--w:100px" @click="$router.push('/')">
-          <h1>HELLO</h1>
-          <img src="@/assets/images/audio2-login.png" alt="audio image 2" style="--max-w:464px">
+          <h1 class="p">HELLO</h1>
+          <img id="audio2" src="@/assets/images/audio2-login.png" alt="audio image 2" style="--w:clamp(25em,29vw,29em)">
         </aside>
 
-        <aside class="relative" style="width:min(100%,28.6875em)">
-          <img id="audio" src="@/assets/images/audio-login.png" alt="audio image">
+        <aside class="container-card relative">
+          <img id="audio" src="@/assets/images/audio-login.png" alt="audio image" style="--w:12em">
 
-          <v-card class="card divcol gap2" style="--w:100%;--bs:7px 8px 24px rgba(0, 0, 0, 0.25);--bg:rgba(245, 245, 245, 0.47);--br:0;--p:3em">
-            <h3 style="max-width: 20ch">SIGN UP AND START LISTENING</h3>
+          <v-card class="card divcol jcenter" style="--w:100%;--h:29em;gap:4em;--bs:7px 8px 24px rgba(0, 0, 0, 0.25);--bg:rgba(245, 245, 245, 0.47);--br:0;--p:3em">
+            <h3 class="p" style="max-width: 16ch">SIGN UP AND START LISTENING</h3>
             <div class="divcol gap1 font2">
               <v-btn class="btn" style="--mr:.5em" @click="prueba()">
                 <img src="@/assets/logos/near.svg" alt="near">

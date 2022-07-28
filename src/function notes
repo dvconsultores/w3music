@@ -93,5 +93,9 @@ export default {
         // do some thing
       }
     });
+
+    /* 6- responsive js */
+    this.responsive()
+    window.onresize = () => {this.responsive()}
   },
 };

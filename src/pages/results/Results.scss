@@ -27,6 +27,10 @@
       z-index: -1;
       @include absoluteCenter;
       transform: translateX(40%);
+      @include media(max,small) {
+        @include absolute(var(--margin-global),0,auto,auto);
+        transform: translateX(0%);
+      }
     }
   }
   .container-content.errorClass {
