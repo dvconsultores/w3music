@@ -5,9 +5,18 @@
 // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // /
 #results {
   font-size: 16px;
+  justify-content: space-between;
+  @include media(max,small) {height: calc(100vh - 120px)}
   h1 {max-width: 20ch}
   .container-header {
+    @include media(max, 580px) {font-size: 14px}
+    @include media(max, 530px) {font-size: 12px}
+    @include media(max, 460px) {font-size: 10px}
+    @include media(max, 360px) {font-size: 8px}
     span {font-size: 1.25em}
+    &.errorClass {
+      @include media(max, 580px) {font-size: 16px !important}
+    }
   }
   //
   .container-content {
@@ -20,6 +29,18 @@
       font-size: 2.5em;
       letter-spacing: 0.03em;
     }
+    #bg-image {
+      @include media(max, small) {
+        --w:24.25em;
+        transform: translateX(25%);
+      }
+      @include media(max, x-small) {transform: translateX(10%)}
+    }
+    .container-wrapper {
+      position: relative;
+      width: max-content;
+      @include media(max, x-small) {transform: translateX(20%)}
+    }
     .v-card {
       --w: min(100%, 34.08375em);
       --h: max-content;
@@ -30,23 +51,52 @@
       @include media(max,small) {
         @include absolute(var(--margin-global),0,auto,auto);
         transform: translateX(0%);
+        flex-direction: column;
+        align-items: flex-start;
+        justify-content: center;
+        --w: 9.6875em;
+        img {--w:3.320625em !important}
+        h3 {font-size: 1.5em}
       }
     }
   }
   .container-content.errorClass {
     margin-block: 200px;
     transform: translateX(0);
-    & > img {
+    @include media(max, small) {margin-block: 0}
+    #bg-image {
       @include absoluteCenter;
       transform: translateX(25%);
       @include media(min,1000px) {transform: translateX(35%)}
-      @include media(max, 900px,min,800px) {transform: translateX(30%)}
+      @include media(max, 900px,min,800px) {transform: translateX(25%)}
+      @include media(max, small) {
+        position: static;
+        transform: translateX(-5%);
+        --w: 47.9375em;
+      }
+      @include media(max, x-small) {--w: 40em}
+      @include media(max, 320px) {--w: 35em}
+    }
+    .container-wrapper {
+      display: contents;
+      @include media(max, small) {
+        position: relative;
+      }
+      // @include media(max, x-small) {transform: translateX(20%)}
     }
     .v-card {
       position: static;
       justify-content: flex-start;
       transform: translateX(0%);
       @include media(min,small) {transform: translateX(-20%)}
+      @include media(max,small) {
+        @include absolute(0,200px,0);
+        --w: 15.911875em;
+        flex-direction: row;
+        align-items: center;
+        justify-content: center;
+        transform: translateY(-150px)
+      }
     }
   }
 }
