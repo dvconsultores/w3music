@@ -90,7 +90,7 @@
 .margin2bottom {margin-bottom: 1em}
 .contents {display: contents}
 .grid {
-  --gtc: ;--gtr: ;--gc: ;--gr: ;--pc: ;--pi: ;--gaf: ;--gac: ;--gar: ;
+  --gtc: initial;--gtr: initial;--gc: initial;--gr: initial;--pc: initial;--pi: initial;--gaf: initial;--gac: initial;--gar: initial;
   display: grid;
   grid-template-columns: var(--gtc);
   grid-template-rows: var(--gtr);
@@ -389,7 +389,7 @@
   .margin2bottommobile {margin-bottom: 1em !important}
   .contentsmobile {display: contents !important}
   .gridmobile {
-    --gtc: ;--gtr: ;--gc: ;--gr: ;--pc: ;--pi: ;
+    --gtc: initial;--gtr: initial;--gc: initial;--gr: initial;--pc: initial;--pi: initial;
     display: grid !important;
     grid-template-columns: var(--gtc) !important;
     grid-template-rows: var(--gtr) !important;

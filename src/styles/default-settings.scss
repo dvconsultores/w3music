@@ -124,20 +124,20 @@ h6:not(.not_typography, .not) {
 /* // // html (tags) // // */ 
 // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // /
 img:not(.not_html, .not) {
-  --bg: ;
-  --w: auto;
+  --bg: none;
+  --w: initial;
   --max-w: none;
   --min-w: none;
-  --h: auto;
+  --h: initial;
   --max-h: none;
   --min-h: none;
-  --ar: ;
-  --p: ;
-  --b: ;
-  --br: ;
-  --bs: ;
-  --f: ;
-  --t: ;
+  --ar: none;
+  --p: none;
+  --b: none;
+  --br: none;
+  --bs: none;
+  --f: none;
+  --t: none;
   background-color: var(--bg) !important;
   width: var(--w);
   max-width: var(--max-w);
@@ -161,24 +161,24 @@ img:not(.not_html, .not) {
 //- defaut slider -//
 .v-input {
   --br: none;
-  --c-label: ;
+  --c-label: var(--clr-inv);
   --h: 2px;
   .v-slider__track {
     &-container {border-radius: var(--br);height: var(--h); overflow: hidden}
   }
   .v-slider__thumb-label-container {
-    * {color: var(--c-label)}
+    * {color: var(--c-label) !important}
   }
 }
 
 //- defaut v-btn -//
 // icon class
 .v-btn--icon:not(.not_vuetify, .not) {
-  --bg: ;
-  --p: ;
+  --bg: initial;
+  --p: initial;
   --br: 50%;
-  --b: ;
-  --bs: ;
+  --b: none;
+  --bs: none;
   background: var(--bg);
   padding: var(--p);
   border-radius: var(--br);
@@ -193,10 +193,10 @@ img:not(.not_html, .not) {
   --lh: 1;
   --ls: normal;
   --tt: none;
-  --t: ;
-  --f: ;
-  --ml: ;
-  --mr: ;
+  --t: none;
+  --f: none;
+  --ml: none;
+  --mr: none;
   color: var(--c);
   transform: var(--t);
   filter: var(--f);
@@ -218,10 +218,10 @@ img:not(.not_html, .not) {
   --c: #000000;
   --c-label: #FFFFFF;
   --c-place: #6e6e6e;
-  --b: ;
+  --b: none;
   --br: 3vmax;
   --p: 0 12px;
-  --w: ;
+  --w: initial;
   --max-w: none;
   --min-w: none;
   --h: 2.75em;
@@ -378,16 +378,16 @@ img:not(.not_html, .not) {
 @mixin btn() {
   --bg: var(--primary);
   --c: #000000;
-  --b: ;
+  --b: none;
   --p: 0 1em;
-  --w: auto;
+  --w: initial;
   --max-w: none;
   --min-w: none;
-  --h: auto;
+  --h: initial;
   --max-h: none;
   --min-h: 36px;
-  --ml: ;
-  --mr: ;
+  --ml: none;
+  --mr: none;
   --br: 3vmax;
   --bs: 0px 4px 4px rgba(0, 0, 0, 0.25);
   --fw: 300;
@@ -395,7 +395,7 @@ img:not(.not_html, .not) {
   --ls: -0.005em;
   --lh: 1;
   --f: none;
-  --t: ;
+  --t: none;
   background: var(--bg) !important;
   color: var(--c) !important;
   box-shadow: var(--bs) !important;
@@ -437,20 +437,20 @@ img:not(.not_html, .not) {
 
 //- cards -//
 @mixin card() {
-  --w: auto;
+  --w: initial;
   --max-w: none;
   --min-w: none;
-  --h: auto;
+  --h: initial;
   --max-h: none;
   --min-h: none;
   --bg: var(--clr-card);
   --c: var(--clr);
-  --b: ;
+  --b: none;
   --p: 1em;
   --br: 1.5vmax;
   --bs: 0px 4px 4px rgba(0, 0, 0, 0.25);
-  --f: ;
-  --t: ;
+  --f: none;
+  --t: none;
   width: var(--w) !important;
   max-width: var(--max-w) !important;
   min-width: var(--min-w) !important;
