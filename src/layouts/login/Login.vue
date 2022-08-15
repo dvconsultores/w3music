@@ -1,7 +1,7 @@
 <template>
   <v-app id="login" class="center">
     <v-btn id="records" icon style="--p:2.3em;">
-      <img src="@/assets/icons/records.svg" alt="records" style="--bs:drop-shadow(10px 5px 12px rgba(0, 0, 0, 0.25));--w:4.5em">
+      <!-- <img src="@/assets/icons/records.svg" alt="records" style="--bs:drop-shadow(10px 5px 12px rgba(0, 0, 0, 0.25));--w:4.5em"> -->
     </v-btn>
 
     <v-main>
