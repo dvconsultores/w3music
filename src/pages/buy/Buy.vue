@@ -6,8 +6,8 @@
 
         <v-expansion-panels accordion class="font2">
           <v-list class="fill_w" color="transparent">
-            <v-list-item :class="{activeClass2: !allFilter}" @click="allFilter=!allFilter;
-              dataCategories.forEach(e=>{e.selection.forEach(e2=>{allFilter?e2.active=false:e2.active=true})})">
+            <v-list-item :class="{activeClass2: dataCategories.every(e=>e.selection.every(e2=>e2.active==true))}" @click="allFilter=!allFilter;
+              dataCategories.forEach(e=>{e.selection.forEach(e2=>{allFilter?e2.active=true:e2.active=false})})">
               <v-list-item-title>ALL</v-list-item-title>
             </v-list-item>
           </v-list>
