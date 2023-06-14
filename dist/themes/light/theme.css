@@ -1,0 +1,41 @@
+/*-- global colors --*/
+:root {
+  /*--/ default color /--*/
+  --bg-ap: #4ddaeb;
+  --clr: #000000;
+  --clr-inv: #FFFFFF;
+  --clr-hover: hsl(288 90% 10%);
+  --clr-scroll: var(--primary);
+  --clr-bg-scroll: var(--secondary);
+  /*--/ cards /--*/
+  --clr-card: #FFFFFF;
+  --clr-card-inv: #191919;
+  /*--/ buttons /--*/
+  --clr-btn: var(--primary);
+  /*--clr-btn-pressed: #AD0FD5;
+  --clr-btn-inactive: #AD0FD5;*/
+  --clr-text-btn: #000000;
+  /*--/ badge /--*/
+  --clr-badge: var(--primary);
+  --clr-text-badge: #000000;
+  /*--/ line /--*/
+  --clr-line: hsl(59, 83%, 53%, .5);
+  /*--/ gradient /--*/
+  --clr-gradient: linear-gradient(to right top,#356D74,#2A505C,#21394A,#1A293D,#172035,#161D33,#161E34,#192539,#1E3143,#244251,#2D5862,#387378,#449492,#53B9B1,#63E2D2);
+}
+
+/*-- personal clases --*/
+.clr {color: var(--clr) !important}
+.clr_inv {color: var(--clr-inv) !important}
+.clr_btn {background-color: var(--clr-btn) !important}
+.clr_btn_pressed {background-color: var(--clr-btn-pressed) !important}
+.clr_btn_inactive {background-color: var(--clr-btn-inactive) !important}
+.clr_text_btn {color: var(--clr-text-btn) !important}
+.clr_card {background-color: var(--clr-card) !important}
+.clr_card_inv {background-color: var(--clr-card-inv) !important}
+.clr_svg {fill: var(--clr) !important}
+.clr_svg_inv {fill: var(--clr-inv) !important}
+.flr {filter: invert(0%) !important}
+.flr_inv {filter: invert(100%) !important}
+.clr-gradient {background: var(--clr-gradient) !important}
+.clr_card_2 {background-color: var(--clr-card-2) !important}
