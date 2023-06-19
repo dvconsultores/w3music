@@ -77,6 +77,7 @@ export default {
     }
   },
   mounted() {
+    if (!this.$ramper.getUser()) {this.$router.push("/")}
     this.$emit('RouteValidator')
   },
   methods: {

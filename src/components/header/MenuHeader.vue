@@ -95,7 +95,7 @@
     <v-menu activator=".openMenuLogin" right offset-x>
       <v-list id="menuLogin" class="font2">
         <v-list-item-group active-class="activeClass">
-          <v-list-item v-for="(item,i) in dataMenuLogin" :key="i" :to="item.to" @click="Logout(item.key)">
+          <v-list-item v-for="(item,i) in dataMenuLogin" :key="i" :to="item.to" @click="goTo(item.key)">
             <v-list-item-title>{{item.name}}</v-list-item-title>
           </v-list-item>
         </v-list-item-group>
@@ -193,8 +193,12 @@ export default {
         item.active=true
       }
     },
-    Logout(key) {
-      if (key=='logout') {localStorage.setItem('logKey', 'out');this.$router.push('/');this.$router.go()}
+    goTo(key) {
+      if (key=='logout') {
+        this.$ramper.signOut()
+        // setTimeout(() => this.$router.go(0), 100)
+        this.$router.go(0)
+      }
     },
     // Responsive() {
     //   if (window.innerWidth <= 880) {

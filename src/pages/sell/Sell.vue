@@ -13,14 +13,16 @@
       <h2 class="p">UPLOAD TRACKS</h2>
 
       <section class="divcol">
-        <label>UP TO 20 TRACKS</label>
+        
 
         <aside class="grid gap2" style="--gtc: repeat(auto-fit,minmax(min(100%,9.9375em),1fr));place-items:center">
-          <v-card v-for="(item,i) in dataTracks" :key="i" class="card center" :class="{active: item.active}" style="--bs:5px 4px 11px rgba(0, 0, 0, 0.25);--br:0" :ripple="true">
-            <img :src="require(`@/assets/${item.active?'miscellaneous/track.png':'icons/sonido.svg'}`)" alt="track image">
-          </v-card>
-
-          <img class="play" src="@/assets/icons/add.svg" alt="add button" style="--max-w:4.279375em">
+          <div v-for="(item,i) in dataTracks" :key="i">
+            <label>{{ item.title }}</label>
+            <v-card class="card center" :class="{active: item.active}" style="--bs:5px 4px 11px rgba(0, 0, 0, 0.25);--br:0" :ripple="true">
+              <img :src="require(`@/assets/${item.active?'miscellaneous/track.png':'icons/sonido.svg'}`)" alt="track image">
+            </v-card>
+          </div>
+          <!-- <img class="play" src="@/assets/icons/add.svg" alt="add button" style="--max-w:4.279375em"> -->
         </aside>
       </section>
 
@@ -82,21 +84,25 @@
       </section>
     </section>
 
-    <v-btn class="btn align font2" style="--w:min(100%,7.25em)">SAVE</v-btn>
+    <v-btn class="btn align font2" style="--w:min(100%,7.25em)" @click="nftSample()">SAVE</v-btn>
   </section>
 </template>
 
 <script>
+import * as nearAPI from 'near-api-js'
+const { Contract } = nearAPI
 export default {
   name: "sell",
   data() {
     return {
+      urlTx: null,
       dataTracks: [
-        { active: true },
-        { active: false },
-        { active: false },
-        { active: false },
-        { active: false },
+        { title: "UP TO TRACK", active: false },
+        { title: "PREVIEW TRACK", active: true },
+        // { active: false },
+        // { active: false },
+        // { active: false },
+        // { active: false },
       ],
       genre: "Dance Pop",
       dataGenre: [
@@ -109,6 +115,55 @@ export default {
     this.$emit('RouteValidator')
   },
   methods: {
+    async nftSample () {
+      if (this.$ramper.getUser()) {
+        const actions = [
+          this.$ramper.functionCall(
+            "nft_sample",
+            {
+              token_metadata: {
+                title: "",
+                description: "",
+                media: "",
+                reference: "",
+                extra: ""
+              }
+            },
+            "50000000000000"
+          ),
+        ]
+
+        console.log(process.env.VUE_APP_NETWORK)
+
+        const resTx = await this.$ramper.sendTransaction({
+          transactionActions: [{
+              receiverId: process.env.VUE_APP_CONTRACT_NFT,
+              actions: actions,
+            }],
+          network: process.env.VUE_APP_NETWORK,
+        });
+
+        if ((resTx &&
+          JSON.parse(localStorage.getItem('ramper_loggedInUser'))
+            .signupSource === 'near_wallet' &&
+            resTx.txHashes.length > 0) || (resTx.result || resTx.result[0]?.status?.SuccessValue || resTx.result[0]?.status?.SuccessValue === "")) {
+  
+          if (process.env.VUE_APP_NETWORK === "mainnet") {
+            this.urlTx = "https://explorer.near.org/accounts/" + this.$ramper.getAccountId();
+          } else {
+            this.urlTx = "https://explorer.testnet.near.org/accounts/" + this.$ramper.getAccountId();
+          }
+        }
+      } else {
+        const login = await this.$ramper.signIn()
+        if (login) {
+          if (login.user) {
+            localStorage.setItem('logKey', 'in')
+            location.reload()
+          }
+        }
+      }
+    },
   }
 };
 </script>

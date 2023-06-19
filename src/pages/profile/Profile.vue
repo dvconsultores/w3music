@@ -30,14 +30,14 @@
 
     <section class="container-content grid">
       <div class="divcol">
-        <label for="name">ARTISTC NAME</label>
-        <v-text-field id="name" solo placeholder="ALBERT EXAMPLE">
+        <label for="name">ARTIST NAME</label>
+        <v-text-field id="name" v-model="dataUser.artistName" solo>
         </v-text-field>
       </div>
       
       <div class="divcol">
         <label for="url">PUBLIC URL</label>
-        <v-text-field id="url" solo placeholder="http://albertexamplemusic.com">
+        <v-text-field id="url" v-model="dataUser.publicUrl" solo placeholder="http://examplew3music.com">
           <template v-slot:append>
             <img src="@/assets/icons/url.svg" alt="url icon">
           </template>
@@ -47,16 +47,16 @@
       <div class="fwrap gap2" style="--fb: 1 1 7.9375em">
         <div class="divcol" style="max-width:7.9375em">
           <label for="age">AGE</label>
-          <v-text-field id="age" solo type="number">
+          <v-text-field id="age" v-model="dataUser.age" solo type="number">
           </v-text-field>
         </div>
         
         <div class="divcol">
           <label for="location">LOCATION</label>
           <v-select
-            v-model="location"
+            v-model="dataUser.location"
             id="location"
-            :items="dataLocation"
+            :items="dataUser.dataLocation"
             solo
           ></v-select>
         </div>
@@ -65,16 +65,16 @@
       <div class="divcol">
         <label for="you-are">YOU ARE?</label>
         <v-select
-          v-model="youAre"
+          v-model="dataUser.youAre"
           id="you-are"
-          :items="dataYouAre"
+          :items="dataUser.dataYouAre"
           solo
         ></v-select>
       </div>
       
       <div class="divcol">
         <label for="email">Email</label>
-        <v-text-field id="email" solo placeholder="albertexamplemusic@domain.com">
+        <v-text-field id="email" v-model="dataUser.email" solo placeholder="examplew3music@domain.com">
         </v-text-field>
       </div>
       
@@ -82,18 +82,21 @@
         <label for="music-genre">MUSIC {{profileType=='fan'?'PREFERENCE':'GENRE'}}</label>
         <v-select
           v-if="profileType=='artist'"
-          v-model="musicGenre"
+          v-model="dataUser.musicGenre"
           id="music-genre"
-          :items="dataMusicGenre"
+          item-text="name"
+          item-value="id"
+          :items="dataUser.dataMusicGenre"
           solo
         ></v-select>
         <!-- mejorar funcion -->
         <v-select
           v-else
           id="music-genre"
-          v-model="name"
-          :items="dataMusicPreference"
+          v-model="dataUser.musicGenre"
+          :items="dataUser.dataMusicPreference"
           item-text="name"
+          item-value="id"
           placeholder="Select"
           solo
           @change="dataMusicPreferenceSelected.includes(dataMusicPreferenceSelected.indexOf(name))?null:dataMusicPreferenceSelected.push(name)"
@@ -101,8 +104,8 @@
         <!-- mejorar funcion -->
 
         <section class="fwrap gap1">
-          <v-chip v-for="(item,i) in dataMusicPreferenceSelected" :key="i" close close-icon="mdi-close" class="font2 maxsize_w"
-            @click:close="dataMusicPreferenceSelected.splice(dataMusicPreferenceSelected.indexOf(item),1)">
+          <v-chip v-for="(item,i) in dataUser.dataMusicPreferenceSelected" :key="i" close close-icon="mdi-close" class="font2 maxsize_w"
+            @click:close="dataUser.dataMusicPreferenceSelected.splice(dataUser.dataMusicPreferenceSelected.indexOf(item),1)">
             {{item}}
           </v-chip>
         </section>
@@ -112,7 +115,7 @@
         <label for="description">PROFILE DESCRIPTION</label>
         <v-textarea
           id="description"
-          placeholder="Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s"
+          v-model="dataUser.description"
           no-resize
           solo
           style="--br:1.5vmax;--p:.5em"
@@ -121,50 +124,203 @@
       
       <div v-if="profileType=='artist'" class="divcol">
         <label>NEAR WALLET</label>
-        <v-text-field solo disabled>
+        <v-text-field v-model="walletNear" solo disabled>
         </v-text-field>
       </div>
     </section>
 
-    <v-btn class="btn font2 align" style="--w:7.25em">SAVE</v-btn>
+    <v-btn class="btn font2 align" @click="saveProfile()" style="--w:7.25em">SAVE</v-btn>
   </section>
 </template>
 
 <script>
+import gql from "graphql-tag";
+
 export default {
   name: "profile",
   data() {
     return {
+      urlTx: null,
+      walletNear: null,
       // profile validation ("fan" or "artist")
       profileType: "artist",
       // data
-      youAre: "Producer",
-      dataYouAre: [
-        "Producer",
-        "Artist"
-      ],
-      location: "Madrid, Spain",
-      dataLocation: [
-        "Madrid, Spain",
-        "Carabobo, Venezuela"
-      ],
-      musicGenre: "Instrumental",
-      dataMusicGenre: [
-        "Instrumental",
-        "Pop"
-      ],
-      name: null,
-      dataMusicPreference: [
-        { name: "Instrumental" },
-        { name: "Pop" }
-      ],
-      dataMusicPreferenceSelected: [],
+      dataUser: {
+        youAre: null,
+        dataYouAre: [
+          "Producer",
+          "Artist"
+        ],
+        location: null,
+        dataLocation: [
+          "Madrid, Spain",
+          "Carabobo, Venezuela"
+        ],
+        musicGenre: "0",
+        dataMusicGenre: [],
+        age: null,
+        email: null,
+        artistName: null,
+        description: null,
+        publicUrl: null,
+        dataMusicPreference: [],
+        dataMusicPreferenceSelected: [],
+      }, 
     }
   },
-  mounted() {
+  async mounted() {
+    if (!this.$ramper.getUser()) {this.$router.push("/")}
     this.$emit('RouteValidator')
+
+    await this.getGenders()
+
+    this.walletNear = this.$ramper.getAccountId();
+
+    this.getData()
   },
   methods: {
+    async getGenders() {
+      
+      const getGendersUser = gql`
+        query MyQuery {
+          genders {
+            id
+            name
+          }
+        }
+      `;
+
+      console.log("ASD")
+
+      this.$apollo
+        .watchQuery({
+          query: getGendersUser,
+          pollInterval: 10000, // 10 seconds in milliseconds
+        })
+        .subscribe(({ data }) => {
+          console.log(data);
+          this.dataUser.dataMusicGenre = data.genders;
+          this.dataUser.dataMusicPreference = data.genders;
+
+        });
+    },
+    async getData() {
+      
+      const getDataUser = gql`
+        query MyQuery($wallet: String!) {
+          users(where: {wallet: ""}) {
+          artist_name
+          description
+          email
+          id
+          location
+          wallet
+          youare
+          public_url
+          music_genre
+          age
+        }
+        }
+      `;
+
+      const user = this.$ramper.getAccountId();
+
+      this.$apollo
+        .watchQuery({
+          query: getDataUser,
+          variables: {
+            wallet: user,
+          },
+          pollInterval: 10000, // 10 seconds in milliseconds
+        })
+        .subscribe(({ data }) => {
+          console.log(data);
+          let dataSeries = data.series;
+          this.dataTabs[0].data = [];
+          this.dataTabs[0].dataTableMobile = [];
+          var options = { year: "numeric", month: "short", day: "numeric" }; //Format data
+          
+
+          for (let i = 0; i < dataSeries.length; i++) {
+            const extra = JSON.parse(dataSeries[i].extra);
+            const startDate = extra.find((element) => element.trait_type === "Start Date");
+            const ticketType = extra.find((element) => element.trait_type === "ticket_type");
+            console.log(extra);
+            rows = {
+              id: dataSeries[i].id,
+              name: dataSeries[i].title,
+              date: this.convertDate(startDate.value * 1000), // new Date(value1.reference_blob.extra[6].value * 1000).toLocaleDateString("en-US", options),
+              location: dataSeries[i].title,
+              minted: dataSeries[i].supply,
+              sold: dataSeries[i].nftsold,
+              incomes: ((dataSeries[i].nft_amount_sold / Math.pow(10, 24)) * this.nearPrice) + " $",
+              incomesNear: dataSeries[i].nft_amount_sold / Math.pow(10, 24),
+              thingid: dataSeries[i].reference,
+              ticket_type: ticketType.value,
+              show: false,
+              key: i,
+              date1: dataSeries[i].title,
+              media: dataSeries[i].reference,
+            };
+            this.dataTabs[0].data.push(rows);
+            this.dataTabs[0].data.sort((a, b) => (a.date1 > b.date1 ? -1 : 1));
+            this.dataTabs[0].dataTableMobile.push(rows);
+          }
+        });
+    },
+    async saveProfile () {
+      if (this.$ramper.getUser()) {
+        console.log(this.dataUser.musicGenre)
+        const actions = [
+          this.$ramper.functionCall(
+            "set_user",
+            {
+              artist_name: this.dataUser.artistName || "",
+              public_url: this.dataUser.publicUrl || "",
+              age: this.dataUser.age || 0,
+              location: this.dataUser.location || "",
+              youare: this.dataUser.youAre || "",
+              email: this.dataUser.email || "",
+              music_genre: this.dataUser.musicGenre || 0,
+              description: this.dataUser.description || "",
+              wallet: this.$ramper.getAccountId()
+          },
+            "50000000000000"
+          ),
+        ]
+
+        const resTx = await this.$ramper.sendTransaction({
+          transactionActions: [{
+              receiverId: process.env.VUE_APP_CONTRACT_NFT,
+              actions: actions,
+            }],
+          network: process.env.VUE_APP_NETWORK,
+        });
+
+        console.log(resTx)
+
+        if ((resTx &&
+          JSON.parse(localStorage.getItem('ramper_loggedInUser'))
+            .signupSource === 'near_wallet' &&
+            resTx.txHashes.length > 0) || (resTx.result || resTx.result[0]?.status?.SuccessValue || resTx.result[0]?.status?.SuccessValue === "")) {
+  
+          if (process.env.VUE_APP_NETWORK === "mainnet") {
+            this.urlTx = "https://explorer.near.org/transactions/" + resTx.txHashes[0];
+          } else {
+            this.urlTx = "https://explorer.testnet.near.org/transactions/" + resTx.txHashes[0];
+          }
+          console.log(this.urlTx)
+        }
+      } else {
+        const login = await this.$ramper.signIn()
+        if (login) {
+          if (login.user) {
+            localStorage.setItem('logKey', 'in')
+            location.reload()
+          }
+        }
+      }
+    },
   }
 };
 </script>

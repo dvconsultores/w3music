@@ -2,7 +2,7 @@
   <section id="header">
     <MenuHeader ref="menu"></MenuHeader>
     <v-app-bar id="headerApp" color="transparent" height="100px" absolute class="font2 isolate">
-      <aside class="acenter gap2" style="padding-left:calc(48px + 2em">
+      <aside class="acenter gap2" style="padding-left:calc(48px + 2em)">
         <aside class="sidebar divcol acenter jspace isolate" :class="{active: sidebar}">
           <v-btn icon @click="toggleFunc()">
             <img :src="require(`@/assets/icons/menu${positionFocus==0||positionFocus==16?'':'-active-sidebar'}.svg`)" alt="toggle">
@@ -29,14 +29,14 @@
         </v-text-field>
       </aside>
 
-      <v-btn icon style="--p:2.3em;">
-        <!-- <img src="@/assets/icons/records.svg" alt="records" style="--bs:drop-shadow(10px 5px 12px rgba(0, 0, 0, 0.25));--w:4.5em"> -->
-      </v-btn>
+      <!-- <v-btn icon style="--p:2.3em;">
+        <img src="@/assets/icons/records.svg" alt="records" style="--bs:drop-shadow(10px 5px 12px rgba(0, 0, 0, 0.25));--w:4.5em">
+      </v-btn> -->
 
       <aside class="acenter gap2">
-        <v-btn v-show="!$store.state.user.login" class="btn eliminarmobile" @click="$router.push('/login')">LOG IN WITH NEAR</v-btn>
+        <v-btn v-show="!$store.state.user.login" class="btn eliminarmobile" @click="logIn()">LOG IN</v-btn>
 
-        <div :class="{acenter: $store.state.user.login, contents: !$store.state.user.login}" style="cursor:pointer;border-radius:4vmax" class="openMenuLogin">
+        <div v-show="$store.state.user.login" :class="{acenter: $store.state.user.login, contents: !$store.state.user.login}" style="cursor:pointer;border-radius:4vmax" class="openMenuLogin">
           <v-btn icon @click="$store.state.user.login?null:$router.push('/login')">
             <img :src="$store.state.user.login?$store.state.user.img:require(`@/assets/icons/account.svg`)" alt="account" class="eliminarmobile"
               :style="`--w:3em;${$store.state.user.login?'--br:50%;--b:2px solid #000000;--p:4px':null}`">
@@ -84,10 +84,14 @@ export default {
     };
   },
   mounted() {
+    console.log("HOLA"),
+    console.log(this.$ramper.getUser())
+
+    if (this.$ramper.getUser()) {this.$store.state.user.login = true}
     // responsive
     // this.responsive()
     // document.addEventListener('resize', this.responsive())
-    this.LogState();
+    // this.LogState();
 
     const el = document.querySelector(".sidebar");
     document.addEventListener("click", (e) => {
@@ -113,6 +117,15 @@ export default {
     })
   },
   methods: {
+    async logIn() {
+      const login = await this.$ramper.signIn()
+      if (login) {
+        if (login.user) {
+          localStorage.setItem('logKey', 'in')
+          location.reload()
+        }
+      }
+    },
     activeSidebarIcons(item) {
       this.dataSidebar.forEach(e=>{e.active=false});
       setTimeout(() => {
