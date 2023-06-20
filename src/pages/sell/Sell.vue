@@ -134,6 +134,7 @@ export default {
         .subscribe(({ data }) => {
           console.log(data);
           this.dataGenre = data.genders;
+
         });
     },
     back() {
