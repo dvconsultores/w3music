@@ -7,9 +7,9 @@
         <div class="acenter wrap" style="gap: 50px 80px">
           <aside class="container-mobile align">
             <v-avatar size="clamp(5em, 7vw, 7.3125em)">
-              <img :src="$store.state.user.login?$store.state.user.img:require(`@/assets/icons/account.svg`)" alt="profile image" style="--w:100%">
+              <img :src="nearSocialAvatar || require(`@/assets/icons/account.svg`)" alt="profile image" style="--w:100%">
 
-              <v-btn icon style="--b:1px solid #000000;">
+              <v-btn icon style="--b:1px solid #000000;" @click="goToSocial()">
                 <img src="@/assets/icons/camera.svg" alt="camera icon" style="--w:clamp(1.8em,2vw,2em);--p:2px">
               </v-btn>
             </v-avatar>
@@ -20,11 +20,11 @@
           <div class="divcol alignmobile">
             <span class="font2 Title">PROFILE</span>
             <h1 class="p">WELCOME</h1>
-            <h2 class="p">TRAVIS POLL</h2>
+            <h2 class="p">{{ dataUser.artistName }}</h2>
           </div>
         </div>
 
-        <v-btn v-show="profileType=='artist'" id="sellBtn" class="btn font2 desktop">SELL</v-btn>
+        <v-btn v-show="profileType=='artist'" @click="$router.push('/sell')" id="sellBtn" class="btn font2 desktop">SELL</v-btn>
       </div>
     </section>
 
@@ -140,6 +140,7 @@ export default {
   name: "profile",
   data() {
     return {
+      nearSocialAvatar: process.env.VUE_APP_API_BASE_URL_SOCIAL + localStorage.getItem("nearSocialAvatar"),
       urlTx: null,
       walletNear: null,
       // profile validation ("fan" or "artist")
@@ -179,6 +180,13 @@ export default {
     this.getData()
   },
   methods: {
+    goToSocial() {
+      if (process.env.VUE_APP_NETWORK === "mainnet") {
+        window.open("https://near.social/#/")
+      } else {
+        window.open("https://test.near.social/")
+      }
+    },
     async getGenders() {
       
       const getGendersUser = gql`
@@ -208,65 +216,63 @@ export default {
       
       const getDataUser = gql`
         query MyQuery($wallet: String!) {
-          users(where: {wallet: ""}) {
-          artist_name
-          description
-          email
-          id
-          location
-          wallet
-          youare
-          public_url
-          music_genre
-          age
-        }
+          users(where: {wallet: $wallet}) {
+            artist_name
+            description
+            email
+            id
+            location
+            wallet
+            youare
+            public_url
+            music_genre
+            age
+          }
         }
       `;
 
       const user = this.$ramper.getAccountId();
 
-      this.$apollo
-        .watchQuery({
-          query: getDataUser,
-          variables: {
-            wallet: user,
-          },
-          pollInterval: 10000, // 10 seconds in milliseconds
-        })
-        .subscribe(({ data }) => {
-          console.log(data);
-          let dataSeries = data.series;
-          this.dataTabs[0].data = [];
-          this.dataTabs[0].dataTableMobile = [];
-          var options = { year: "numeric", month: "short", day: "numeric" }; //Format data
-          
+      const res = await this.$apollo.query({
+        query: getDataUser,
+        variables: {wallet: user},
+      })
 
-          for (let i = 0; i < dataSeries.length; i++) {
-            const extra = JSON.parse(dataSeries[i].extra);
-            const startDate = extra.find((element) => element.trait_type === "Start Date");
-            const ticketType = extra.find((element) => element.trait_type === "ticket_type");
-            console.log(extra);
-            rows = {
-              id: dataSeries[i].id,
-              name: dataSeries[i].title,
-              date: this.convertDate(startDate.value * 1000), // new Date(value1.reference_blob.extra[6].value * 1000).toLocaleDateString("en-US", options),
-              location: dataSeries[i].title,
-              minted: dataSeries[i].supply,
-              sold: dataSeries[i].nftsold,
-              incomes: ((dataSeries[i].nft_amount_sold / Math.pow(10, 24)) * this.nearPrice) + " $",
-              incomesNear: dataSeries[i].nft_amount_sold / Math.pow(10, 24),
-              thingid: dataSeries[i].reference,
-              ticket_type: ticketType.value,
-              show: false,
-              key: i,
-              date1: dataSeries[i].title,
-              media: dataSeries[i].reference,
-            };
-            this.dataTabs[0].data.push(rows);
-            this.dataTabs[0].data.sort((a, b) => (a.date1 > b.date1 ? -1 : 1));
-            this.dataTabs[0].dataTableMobile.push(rows);
-          }
-        });
+      const data = res.data
+
+      console.log(data)
+      this.dataUser.youAre = data.users[0].youare || null,
+      this.dataUser.location= data.users[0].location || null,
+      this.dataUser.musicGenre= String(data.users[0].music_genre) || "0",
+      this.dataUser.age= Number(data.users[0].age) || null,
+      this.dataUser.email= data.users[0].email || null,
+      this.dataUser.artistName= data.users[0].artist_name || null,
+      this.dataUser.description= data.users[0].description || null,
+      this.dataUser.publicUrl= data.users[0].public_url || null,
+
+      console.log(this.dataUser)
+
+      // this.$apollo
+      //   .watchQuery({
+      //     query: getDataUser,
+      //     variables: {
+      //       wallet: user,
+      //     },
+      //     pollInterval: 10000, // 10 seconds in milliseconds
+      //   })
+      //   .subscribe(({ data }) => {
+      //     console.log(data);
+      //     this.dataUser = {
+      //       youAre: data.users[0].youare || null,
+      //       location: data.users[0].location || null,
+      //       musicGenre: data.users[0].music_genre || "0",
+      //       age: data.users[0].age || null,
+      //       email: data.users[0].email || null,
+      //       artistName: data.users[0].artist_name || null,
+      //       description: data.users[0].description || null,
+      //       publicUrl: data.users[0].public_url || null,
+      //     } 
+      //   });
     },
     async saveProfile () {
       if (this.$ramper.getUser()) {
@@ -275,15 +281,17 @@ export default {
           this.$ramper.functionCall(
             "set_user",
             {
-              artist_name: this.dataUser.artistName || "",
-              public_url: this.dataUser.publicUrl || "",
-              age: this.dataUser.age || 0,
-              location: this.dataUser.location || "",
-              youare: this.dataUser.youAre || "",
-              email: this.dataUser.email || "",
-              music_genre: this.dataUser.musicGenre || 0,
-              description: this.dataUser.description || "",
-              wallet: this.$ramper.getAccountId()
+              data_user: {
+                artist_name: this.dataUser.artistName || "",
+                public_url: this.dataUser.publicUrl || "",
+                age: this.dataUser.age || 0,
+                location: this.dataUser.location || "",
+                youare: this.dataUser.youAre || "",
+                email: this.dataUser.email || "",
+                music_genre: Number(this.dataUser.musicGenre) || 0,
+                description: this.dataUser.description || "",
+                wallet: this.$ramper.getAccountId()
+              }
           },
             "50000000000000"
           ),

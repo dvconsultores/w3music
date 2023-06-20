@@ -38,9 +38,9 @@
 
         <div v-show="$store.state.user.login" :class="{acenter: $store.state.user.login, contents: !$store.state.user.login}" style="cursor:pointer;border-radius:4vmax" class="openMenuLogin">
           <v-btn icon @click="$store.state.user.login?null:$router.push('/login')">
-            <img :src="$store.state.user.login?$store.state.user.img:require(`@/assets/icons/account.svg`)" alt="account" class="eliminarmobile"
+            <img :src="nearSocialAvatar || require(`@/assets/icons/account.svg`)" alt="account" class="eliminarmobile"
               :style="`--w:3em;${$store.state.user.login?'--br:50%;--b:2px solid #000000;--p:4px':null}`">
-            <img :src="$store.state.user.login?$store.state.user.img:require(`@/assets/icons/account-mobile.svg`)" alt="account" class="vermobile"
+            <img :src="nearSocialAvatar || require(`@/assets/icons/account-mobile.svg`)" alt="account" class="vermobile"
               :style="`--w:3em;${$store.state.user.login?'--br:50%;--b:2px solid #000000;--p:4px':null}`">
           </v-btn>
           <v-icon v-show="$store.state.user.login">mdi-menu-down</v-icon>
@@ -52,6 +52,9 @@
 
 <script>
 import MenuHeader from "./MenuHeader.vue"
+import * as nearAPI from "near-api-js";
+const { Contract } = nearAPI;
+
 const theme = localStorage.getItem("theme");
 
 export default {
@@ -69,6 +72,7 @@ export default {
   },
   data() {
     return {
+      nearSocialAvatar: null,
       accountId: null,
       messages: 1,
       sidebar: false,
@@ -83,11 +87,14 @@ export default {
       ]
     };
   },
-  mounted() {
+  async mounted() {
     console.log("HOLA"),
     console.log(this.$ramper.getUser())
 
-    if (this.$ramper.getUser()) {this.$store.state.user.login = true}
+    if (this.$ramper.getUser()) {
+      this.getNearSocial()
+      this.$store.state.user.login = true
+    }
     // responsive
     // this.responsive()
     // document.addEventListener('resize', this.responsive())
@@ -117,6 +124,28 @@ export default {
     })
   },
   methods: {
+    async getNearSocial() {
+      const account = await this.$near.account(this.$ramper.getAccountId());
+      const contract = new Contract(account, process.env.VUE_APP_CONTRACT_SOCIAL, {
+        viewMethods: ["get"],
+        sender: account,
+      });
+
+      const myArray = [account.accountId + "/profile/**"];
+      //console.log(myArray)
+      const social = await contract.get({
+          keys: myArray
+        });
+      
+      Object.entries(social).forEach(([key, value]) => {
+        localStorage.setItem("nearSocialAvatar", value.profile.image.ipfs_cid);
+        this.nearSocialAvatar = process.env.VUE_APP_API_BASE_URL_SOCIAL + localStorage.getItem("nearSocialAvatar")
+
+        if (value.profile.backgroundImage?.ipfs_cid) {
+          localStorage.setItem("nearSocialBanner", value.profile.backgroundImage.ipfs_cid);
+        }
+      });
+    },
     async logIn() {
       const login = await this.$ramper.signIn()
       if (login) {

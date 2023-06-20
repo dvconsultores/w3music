@@ -12,6 +12,7 @@ import router from './Routes'
 import store from './store/index'
 import VueAxios from "vue-axios";
 import ramper from "./services/ramper-api";
+import near from "./services/near-api";
 import Vue from 'vue'
 import App from './App.vue'
 import vuetify from './plugins/vuetify'
@@ -52,12 +53,15 @@ const apolloProvider = new VueApollo({
 
 Vue.use(VueAxios,axios);
 Vue.use(ramper);
+
+Vue.use(near);
 axios.defaults.baseURL='http://127.0.0.1:8000/'
 
 Vue.config.productionTip = false
 
 new Vue({
   ramper,
+  near,
   apolloProvider,
   vuetify,
   router,

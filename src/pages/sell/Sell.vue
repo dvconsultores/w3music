@@ -1,7 +1,7 @@
 <template>
   <section id="sell" class="divcol margin_global gap2 isolate">
     <section class="container-header divcol" style="gap:2em">
-      <img class="pointer back" src="@/assets/icons/back.svg" alt="back" style="--w:100px" @click="$router.push('/home')">
+      <img class="pointer back" src="@/assets/icons/back.svg" alt="back" style="--w:100px" @click="back()">
 
       <div class="divcol">
         <span class="font2">MARKETPLACE</span>
@@ -52,6 +52,7 @@
           <v-select
             id="genre"
             v-model="genre"
+            item-text="name"
             placeholder="Select"
             :items="dataGenre"
             solo
@@ -90,6 +91,7 @@
 
 <script>
 import * as nearAPI from 'near-api-js'
+import gql from "graphql-tag";
 const { Contract } = nearAPI
 export default {
   name: "sell",
@@ -104,17 +106,39 @@ export default {
         // { active: false },
         // { active: false },
       ],
-      genre: "Dance Pop",
-      dataGenre: [
-        "Dance Pop",
-        "Instrumental",
-      ],
+      genre: "0",
+      dataGenre: [],
     }
   },
-  mounted() {
+  async mounted() {
     this.$emit('RouteValidator')
+
+    await this.getGenders()
   },
   methods: {
+    async getGenders() {
+      const getGendersUser = gql`
+        query MyQuery {
+          genders {
+            id
+            name
+          }
+        }
+      `;
+
+      this.$apollo
+        .watchQuery({
+          query: getGendersUser,
+          pollInterval: 10000, // 10 seconds in milliseconds
+        })
+        .subscribe(({ data }) => {
+          console.log(data);
+          this.dataGenre = data.genders;
+        });
+    },
+    back() {
+      window.history.go(-1);
+    },
     async nftSample () {
       if (this.$ramper.getUser()) {
         const actions = [
@@ -149,10 +173,11 @@ export default {
             resTx.txHashes.length > 0) || (resTx.result || resTx.result[0]?.status?.SuccessValue || resTx.result[0]?.status?.SuccessValue === "")) {
   
           if (process.env.VUE_APP_NETWORK === "mainnet") {
-            this.urlTx = "https://explorer.near.org/accounts/" + this.$ramper.getAccountId();
+            this.urlTx = "https://explorer.near.org/transactions/" + resTx.txHashes[0];
           } else {
-            this.urlTx = "https://explorer.testnet.near.org/accounts/" + this.$ramper.getAccountId();
+            this.urlTx = "https://explorer.testnet.near.org/transactions/" + resTx.txHashes[0];
           }
+          console.log(this.urlTx)
         }
       } else {
         const login = await this.$ramper.signIn()

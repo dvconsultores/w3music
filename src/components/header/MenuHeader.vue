@@ -165,6 +165,7 @@ export default {
         { icon:"twitch", url:"#" }
       ],
       dataMenuLogin: [
+        { key:"wallet", name:"Open wallet" },
         { key:"profile", name:"Profile", to:"/profile" },
         { key:"library", name:"Library", to:"/library" },
         { key:"logout", name:"Log out" },
@@ -198,6 +199,8 @@ export default {
         this.$ramper.signOut()
         // setTimeout(() => this.$router.go(0), 100)
         this.$router.go(0)
+      } else if (key=='wallet') {
+        this.$ramper.openWallet()
       }
     },
     // Responsive() {
