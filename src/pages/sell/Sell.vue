@@ -13,24 +13,26 @@
       <h2 class="p">UPLOAD TRACKS</h2>
 
       <section class="divcol">
-        
-
         <aside class="grid gap2" style="--gtc: repeat(auto-fit,minmax(min(100%,9.9375em),1fr));place-items:center">
           <div v-for="(item,i) in dataTracks" :key="i">
             <label>{{ item.title }}</label>
-            <v-card class="card center" :class="{active: item.active}" style="--bs:5px 4px 11px rgba(0, 0, 0, 0.25);--br:0" :ripple="true">
-              <img :src="require(`@/assets/${item.active?'miscellaneous/track.png':'icons/sonido.svg'}`)" alt="track image">
+            <input v-show="false" v-on:change="handleFileSelection" type="file" :accept="item.type" :id="item.id">
+            <v-card class="card center" :disabled="disabledSave" @click="openPicker(item)" :class="{active: item.active}" style="--bs:5px 4px 11px rgba(0, 0, 0, 0.25);--br:0" :ripple="true">
+              <img :src="item.image" alt="track image">
             </v-card>
           </div>
           <!-- <img class="play" src="@/assets/icons/add.svg" alt="add button" style="--max-w:4.279375em"> -->
         </aside>
       </section>
-
+      <v-form ref="form" v-model="valid" class="divcol">
       <section class="grid" style="--gtc: repeat(auto-fit,minmax(min(100%,34.4375em),1fr));gap:0 2em">
         <div class="divcol">
           <label for="title">TITLE</label>
           <v-text-field
             id="title"
+            :disabled="disabledSave"
+            :rules="rules.required"
+            v-model="sample.title"
             placeholder="Summer Days"
             solo
           ></v-text-field>
@@ -40,6 +42,9 @@
           <label for="description">TRACK DESCRIPTION</label>
           <v-textarea
             id="description"
+            :disabled="disabledSave"
+            v-model="sample.description"
+            :rules="rules.required"
             placeholder="Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s,"
             style="--br:1.5vmax;--p:.5em"
             no-resize
@@ -51,7 +56,9 @@
           <label for="genre">TRACK GENRE</label>
           <v-select
             id="genre"
-            v-model="genre"
+            :disabled="disabledSave"
+            v-model="sample.genre"
+            :rules="rules.required"
             item-text="name"
             placeholder="Select"
             :items="dataGenre"
@@ -63,12 +70,18 @@
           <label for="price">FLOOR PRICE</label>
           <v-text-field
             id="price"
+            :disabled="disabledSave"
+            :rules="rules.required"
+            v-model="sample.price"
             placeholder="0.00"
             solo
+            @input="changePrice"
+            @change="changePrice"
             type="number"
           >
             <template v-slot:append>
-              <img src="@/assets/icons/near.svg" alt="near" style="--w:1.3125em">
+              <span class="font2">$</span>
+              <!-- <img src="@/assets/icons/near.svg" alt="near" style="--w:1.3125em"> -->
             </template>
           </v-text-field>
         </div>
@@ -77,30 +90,42 @@
           <label for="send">SEND INVITATION TO COLLABORATE</label>
           <v-text-field
             id="send"
+            :disabled="disabledSave"
+            v-model="sample.invitation"
             placeholder="chris.up@gmail.com"
             solo
             type="email"
           ></v-text-field>
         </div>
       </section>
+    </v-form>
     </section>
 
-    <v-btn class="btn align font2" style="--w:min(100%,7.25em)" @click="nftSample()">SAVE</v-btn>
+    <v-btn class="btn align font2" :disabled="disabledSave" style="--w:min(100%,7.25em)" @click="nftSample()">SAVE
+      <v-progress-circular
+        v-if="disabledSave"
+        :size="21"
+        indeterminate
+      ></v-progress-circular>
+    </v-btn>
   </section>
 </template>
 
 <script>
 import * as nearAPI from 'near-api-js'
 import gql from "graphql-tag";
+import axios from 'axios';
 const { Contract } = nearAPI
 export default {
   name: "sell",
   data() {
     return {
+      sample: {},
       urlTx: null,
       dataTracks: [
-        { title: "UP TO TRACK", active: false },
-        { title: "PREVIEW TRACK", active: true },
+        { id: "cover", title: "COVER", active: true, type: "image/*", image: require(`@/assets/miscellaneous/track.png`) },
+        { id: "preview", title: "PREVIEW TRACK", active: false, type: "audio/*", image: require(`@/assets/icons/sonido.svg`) },
+        { id: "full", title: "FULL TRACK", active: false, type: "audio/*", image: require(`@/assets/icons/sonido.svg`) },
         // { active: false },
         // { active: false },
         // { active: false },
@@ -108,6 +133,16 @@ export default {
       ],
       genre: "0",
       dataGenre: [],
+      imageCard: require(`@/assets/icons/sonido.svg`),
+      selectFile: null,
+      trackPreview: null,
+      disabledSave: false,
+      trackFull: null,
+      cover: null,
+      rules: {
+        required: [(v) => !!v || "Field required"],
+        percentage_split: [(v) => !!v || "Field required", () => (this.currentPercentage_split > 50 ? "must be 50% or less" : null)],
+      },
     }
   },
   async mounted() {
@@ -116,10 +151,55 @@ export default {
     await this.getGenders()
   },
   methods: {
+    changePrice() {
+      if (this.sample.price < 0) {
+        this.sample.price = 0
+      }
+    },
+    openPicker(item) {
+      var audioPicker = document.getElementById(item.id);
+      audioPicker.click();
+      this.selectFile = item.id
+    },
+    handleFileSelection(event) {
+      if (this.selectFile === "full") {
+        this.trackFull = event.target.files[0];
+      } else if (this.selectFile === "preview") { 
+        this.trackPreview = event.target.files[0];
+      } else if (this.selectFile === "cover") { 
+        this.cover = event.target.files[0];
+      }
+
+      this.dataTracks.find(element => {
+        if (element.id === this.selectFile) {
+          if (element.id === "cover") {
+            element.image = URL.createObjectURL(this.cover);
+          } else {
+            element.active = true
+            element.image = require(`@/assets/miscellaneous/track.png`)
+          }
+        }
+      })
+      
+    },
+    async uploadIpfs(file) {
+      const formData = new FormData();
+      formData.append("uploaded_file", file);
+      const resp = this.axios.post(process.env.VUE_APP_NODE_API + "/api/ipfs/", formData)
+        .then((res) => {
+          console.log(res.data)
+          return res.data
+        })
+        .catch((err) => {
+          console.log(err)
+          return false
+        })
+      return resp
+    },
     async getGenders() {
       const getGendersUser = gql`
         query MyQuery {
-          genders {
+          genders(where: {id_gt: "0"}) {
             id
             name
           }
@@ -141,44 +221,62 @@ export default {
       window.history.go(-1);
     },
     async nftSample () {
+      this.disabledSave = true
       if (this.$ramper.getUser()) {
-        const actions = [
-          this.$ramper.functionCall(
-            "nft_sample",
-            {
-              token_metadata: {
-                title: "",
-                description: "",
-                media: "",
-                reference: "",
-                extra: ""
+        if (this.$refs.form.validate()) {
+          const trackCover = await this.uploadIpfs(this.cover)
+          const trackPreview = await this.uploadIpfs(this.trackPreview)
+          console.log(trackPreview, trackCover)
+
+          if (trackCover && trackPreview) {
+            let extra = [
+              {
+                trait_type: "track_preview",
+                value: process.env.VUE_APP_IPFS + trackPreview.IpfsHash,
               }
-            },
-            "50000000000000"
-          ),
-        ]
+            ]
+            
+            const actions = [
+              this.$ramper.functionCall(
+                "nft_sample",
+                {
+                  token_metadata: {
+                    title: this.sample.title,
+                    description: this.sample.description,
+                    media: process.env.VUE_APP_IPFS + trackCover.IpfsHash,
+                    reference: this.sample.genre,
+                    extra: JSON.stringify(extra)
+                  },
+                  price: Number(this.sample.price)
+                },
+                "50000000000000",
+                "10000000000000000000000"
+              ),
+            ]
 
-        console.log(process.env.VUE_APP_NETWORK)
+            console.log(process.env.VUE_APP_NETWORK)
 
-        const resTx = await this.$ramper.sendTransaction({
-          transactionActions: [{
-              receiverId: process.env.VUE_APP_CONTRACT_NFT,
-              actions: actions,
-            }],
-          network: process.env.VUE_APP_NETWORK,
-        });
+            const resTx = await this.$ramper.sendTransaction({
+              transactionActions: [{
+                  receiverId: process.env.VUE_APP_CONTRACT_NFT,
+                  actions: actions,
+                }],
+              network: process.env.VUE_APP_NETWORK,
+            });
 
-        if ((resTx &&
-          JSON.parse(localStorage.getItem('ramper_loggedInUser'))
-            .signupSource === 'near_wallet' &&
-            resTx.txHashes.length > 0) || (resTx.result || resTx.result[0]?.status?.SuccessValue || resTx.result[0]?.status?.SuccessValue === "")) {
-  
-          if (process.env.VUE_APP_NETWORK === "mainnet") {
-            this.urlTx = "https://explorer.near.org/transactions/" + resTx.txHashes[0];
-          } else {
-            this.urlTx = "https://explorer.testnet.near.org/transactions/" + resTx.txHashes[0];
+            if ((resTx &&
+              JSON.parse(localStorage.getItem('ramper_loggedInUser'))
+                .signupSource === 'near_wallet' &&
+                resTx.txHashes.length > 0) || (resTx.result || resTx.result[0]?.status?.SuccessValue || resTx.result[0]?.status?.SuccessValue === "")) {
+      
+              if (process.env.VUE_APP_NETWORK === "mainnet") {
+                this.urlTx = "https://explorer.near.org/transactions/" + resTx.txHashes[0];
+              } else {
+                this.urlTx = "https://explorer.testnet.near.org/transactions/" + resTx.txHashes[0];
+              }
+              console.log(this.urlTx)
+            }
           }
-          console.log(this.urlTx)
         }
       } else {
         const login = await this.$ramper.signIn()
@@ -189,6 +287,7 @@ export default {
           }
         }
       }
+      this.disabledSave = false
     },
   }
 };

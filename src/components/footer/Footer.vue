@@ -12,8 +12,8 @@ _<template>
         <blockquote class="center gap1">
           <img id="track" src="@/assets/miscellaneous/track-white.png" alt="track image" style="--w:3.06625em">
           <div class="divcol">
-            <h6 class="p" style="font-size:clamp(1em, 1.4vw, 1.4em)">TRAVIS POLL</h6>
-            <span class="font2" style="font-size:clamp(1em, 1.2vw, 1.2em)">Sunset dream</span>
+            <h6 class="p" style="font-size:clamp(1em, 1.4vw, 1.4em)">{{ track.name || "-" }}</h6>
+            <span class="font2" style="font-size:clamp(1em, 1.2vw, 1.2em)">{{ track.by || "-" }}</span>
           </div>
         </blockquote>
 
@@ -59,6 +59,11 @@ _<template>
 
 <script>
 export default {
+  computed: {
+    track() {
+      return this.$store.getters.getTrack;
+    }
+  },
   props: {
     footerStyle: Boolean,
   },
@@ -80,6 +85,10 @@ export default {
       sliderMax: 20,
       soundValue: 50,
     }
+  },
+  mounted() {
+    console.log("HI JUAN")
+    console.log(this.track)
   },
   methods: {
   }

@@ -70,5 +70,6 @@ new Vue({
   axios,
   apexchart,
   Toast,
-  render: h => h(App), store
+  render: h => h(App), 
+  store
 }).$mount('#app')

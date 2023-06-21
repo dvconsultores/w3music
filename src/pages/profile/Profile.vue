@@ -31,13 +31,13 @@
     <section class="container-content grid">
       <div class="divcol">
         <label for="name">ARTIST NAME</label>
-        <v-text-field id="name" v-model="dataUser.artistName" solo>
+        <v-text-field id="name" :disabled="disabledSave" v-model="dataUser.artistName" solo>
         </v-text-field>
       </div>
       
       <div class="divcol">
         <label for="url">PUBLIC URL</label>
-        <v-text-field id="url" v-model="dataUser.publicUrl" solo placeholder="http://examplew3music.com">
+        <v-text-field id="url" :disabled="disabledSave" v-model="dataUser.publicUrl" solo placeholder="http://examplew3music.com">
           <template v-slot:append>
             <img src="@/assets/icons/url.svg" alt="url icon">
           </template>
@@ -47,7 +47,7 @@
       <div class="fwrap gap2" style="--fb: 1 1 7.9375em">
         <div class="divcol" style="max-width:7.9375em">
           <label for="age">AGE</label>
-          <v-text-field id="age" v-model="dataUser.age" solo type="number">
+          <v-text-field id="age" :disabled="disabledSave" v-model="dataUser.age" solo type="number">
           </v-text-field>
         </div>
         
@@ -55,6 +55,7 @@
           <label for="location">LOCATION</label>
           <v-select
             v-model="dataUser.location"
+            :disabled="disabledSave"
             id="location"
             :items="dataUser.dataLocation"
             solo
@@ -66,6 +67,7 @@
         <label for="you-are">YOU ARE?</label>
         <v-select
           v-model="dataUser.youAre"
+          :disabled="disabledSave"
           id="you-are"
           :items="dataUser.dataYouAre"
           solo
@@ -74,7 +76,7 @@
       
       <div class="divcol">
         <label for="email">Email</label>
-        <v-text-field id="email" v-model="dataUser.email" solo placeholder="examplew3music@domain.com">
+        <v-text-field id="email" :disabled="disabledSave" v-model="dataUser.email" solo placeholder="examplew3music@domain.com">
         </v-text-field>
       </div>
       
@@ -82,6 +84,7 @@
         <label for="music-genre">MUSIC {{profileType=='fan'?'PREFERENCE':'GENRE'}}</label>
         <v-select
           v-if="profileType=='artist'"
+          :disabled="disabledSave"
           v-model="dataUser.musicGenre"
           id="music-genre"
           item-text="name"
@@ -93,6 +96,7 @@
         <v-select
           v-else
           id="music-genre"
+          :disabled="disabledSave"
           v-model="dataUser.musicGenre"
           :items="dataUser.dataMusicPreference"
           item-text="name"
@@ -115,6 +119,7 @@
         <label for="description">PROFILE DESCRIPTION</label>
         <v-textarea
           id="description"
+          :disabled="disabledSave"
           v-model="dataUser.description"
           no-resize
           solo
@@ -129,7 +134,13 @@
       </div>
     </section>
 
-    <v-btn class="btn font2 align" @click="saveProfile()" style="--w:7.25em">SAVE</v-btn>
+    <v-btn class="btn font2 align" @click="saveProfile()" :disabled="disabledSave" style="--w:7.25em">SAVE
+      <v-progress-circular
+        v-if="disabledSave"
+        :size="21"
+        indeterminate
+      ></v-progress-circular>
+    </v-btn>
   </section>
 </template>
 
@@ -140,6 +151,7 @@ export default {
   name: "profile",
   data() {
     return {
+      disabledSave: false,
       nearSocialAvatar: process.env.VUE_APP_API_BASE_URL_SOCIAL + localStorage.getItem("nearSocialAvatar"),
       urlTx: null,
       walletNear: null,
@@ -275,6 +287,7 @@ export default {
       //   });
     },
     async saveProfile () {
+      this.disabledSave = true
       if (this.$ramper.getUser()) {
         console.log(this.dataUser.musicGenre)
         const actions = [
@@ -328,6 +341,7 @@ export default {
           }
         }
       }
+      this.disabledSave = false
     },
   }
 };
