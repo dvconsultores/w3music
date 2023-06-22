@@ -1,8 +1,8 @@
 <template>
   <section id="checkout" class="divcol">
-    <v-card class="card divcol" style="--bg:hsl(0, 0%, 96%, .47);--p:1em 2em;--max-w:23.75em;--br:0">
-      <h3 class="p" style="font-size:3em">NICOLEBROWN.NEAR</h3>
-      <span class="font2" style="font-size:1.5em">Balance: 100</span>
+    <v-card class="card divcol" style="--bg:hsl(0, 0%, 96%, .47);--p:1em 2em;--br:0">
+      <h3 class="p" style="font-size:3em">{{ userId }}</h3>
+      <span class="font2" style="font-size:1.5em">Balance: {{ convertNearToDollar(balanceNear) }}$ ≈ {{ balanceNear? balanceNear.toFixed(2) : "0" }} <img src="@/assets/icons/near.svg" alt="near" style="--w:clamp(0em,1.8vw,1.8em)"></span>
     </v-card>
 
     <section class="divcol" style="gap:3em">
@@ -47,11 +47,12 @@
         </div>
 
         <div class="acenter not_fwrap" style="gap:.1em">
-          <span style="font-size:clamp(2.5em,3vw,3em)">{{item.price}}</span>
+          <span style="font-size:clamp(2.5em,3vw,3em)">{{item.price}}$</span>
+          <span style="font-size:clamp(2.5em,3vw,3em)"> ≈ {{convertPrice(item.price)}}</span>
           <img src="@/assets/icons/near.svg" alt="near" style="--w:clamp(2em,2.5vw,2.5em)">
         </div>
 
-        <v-btn id="close" icon style="--bg:#000000;--bs:0px 4px 4px rgba(0, 0, 0, 0.25)" class="not_fwrap">
+        <v-btn id="close" :disabled="item.disabled" @click="deleteShoppingCart(item)" icon style="--bg:#000000;--bs:0px 4px 4px rgba(0, 0, 0, 0.25)" class="not_fwrap">
           <img src="@/assets/icons/x-yellow.svg" alt="delete button" style="--w:clamp(1em, 1.25vw, 1.25em)">
         </v-btn>
       </v-card>
@@ -59,22 +60,35 @@
 
     <div class="marginaleft divcol aend gap2">
       <v-card class="card divcol" style="--bg:hsl(0, 0%, 96%, .47);--p:1em 2em;--max-w:17.0625em;box-shadow: 7px 8px 24px rgba(0, 0, 0, 0.25) !important;--br:0">
-        <h3 class="p" style="font-size:3em">1 IN CART</h3>
+        <h3 class="p" style="font-size:3em">{{ checkout.quantity }} IN CART</h3>
         <span class="font2 acenter" style="font-size:1.5em;gap:.1em">
-          Total: 20 <img src="@/assets/logos/near.svg" alt="near">
+          Total: {{ checkout.totalPrice }}$
         </span>
-      </v-card>
+        <span class="font2 acenter" style="font-size:1.5em;gap:.1em"> ≈ {{convertPrice(checkout.totalPrice)}}</span>
+          <img src="@/assets/icons/near.svg" alt="near" style="--w:clamp(2em,2.5vw,2.5em)">
+        </v-card>
 
-      <v-btn class="btn center font2" style="--w:max-content" @click="$router.push('/results')">PROCEED</v-btn>
+      <!-- <v-btn class="btn center font2" style="--w:max-content" @click="$router.push('/results')">PROCEED</v-btn> -->
+      <v-btn class="btn center font2" style="--w:max-content" @click="buyWithRamper()">PROCEED</v-btn>
     </div>
   </section>
 </template>
 
 <script>
+import * as nearAPI from "near-api-js";
+const { Contract } = nearAPI;
 export default {
   name: "checkout",
   data() {
     return {
+      checkout: {
+        quantity: "0",
+        totalPrice: "0"
+      },
+      balanceNear: 0,
+      userId: null,
+      nearPrice: 0,
+      amountDeposit: 0.01,
       dataMarketplace: [
         {marketplace: require("@/assets/icons/auto.svg")},
         {marketplace: require("@/assets/icons/doge.svg")},
@@ -82,26 +96,192 @@ export default {
         {marketplace: require("@/assets/icons/xdn.svg")}
       ],
       dataCart: [
-        {
-          img: require("@/assets/avatars/a2.jpg"),
-          name: "SUMMER DAYS",
-          by: "Travis Poll",
-          marketplace: null,
-          price: 20,
-        },
-        {
-          img: require("@/assets/avatars/a2.jpg"),
-          name: "SUMMER DAYS",
-          by: "Travis Poll",
-          marketplace: null,
-          price: 20,
-        },
+        // {
+        //   img: require("@/assets/avatars/a2.jpg"),
+        //   name: "SUMMER DAYS",
+        //   by: "Travis Poll",
+        //   marketplace: null,
+        //   price: 20,
+        // }
       ],
     }
   },
-  mounted() {
+  async mounted() {
+    if (!this.$ramper.getUser()) {this.$router.push("/")}
+
+    this.userId = this.$ramper.getAccountId()
+
+    await this.getNearPrice()
+    this.getBalance()
+    this.getShoppingCart()
   },
   methods: {
+    async buyWithRamper () {
+      // this.disabledSave = true
+      if (this.$ramper.getUser()) {
+        const balance = await this.getBalance()
+        let totalPriceNear = 0
+        const actions = []
+        const tokenIds = []
+        for (let i = 0; i < this.dataCart.length; i++) {
+          const element = this.dataCart[i]
+          tokenIds.push(element.tokenId)
+          let priceSeries = await this.getSeriesPrice(element.tokenId);
+      
+          let price = parseFloat(priceSeries) + this.amountDeposit;
+
+          totalPriceNear += price
+
+          actions.push(
+            this.$ramper.functionCall(
+              "nft_buy",
+              {
+                token_series_id: element.tokenId,
+                receiver_id: this.$ramper.getAccountId(),
+              },
+              "50000000000000",
+              this.$utils.format.parseNearAmount(String(price))
+            ),
+          )
+        }
+
+        console.log(totalPriceNear)
+
+        if (balance < totalPriceNear) {
+          console.log("FALTA DE PLATA BB")
+          return;
+        }
+
+        const resTx = await this.$ramper.sendTransaction({
+          transactionActions: [{
+              receiverId: process.env.VUE_APP_CONTRACT_NFT,
+              actions: actions,
+            }],
+          network: process.env.VUE_APP_NETWORK,
+        });
+
+        if ((resTx &&
+          JSON.parse(localStorage.getItem('ramper_loggedInUser'))
+            .signupSource === 'near_wallet' &&
+            resTx.txHashes.length > 0) || (resTx.result || resTx.result[0]?.status?.SuccessValue || resTx.result[0]?.status?.SuccessValue === "")) {
+
+          this.axios.post(process.env.VUE_APP_NODE_API + "/api/delete-array-shopping-cart/", {wallet: this.$ramper.getAccountId(), tokenIds: tokenIds})
+  
+          if (process.env.VUE_APP_NETWORK === "mainnet") {
+            this.urlTx = "https://explorer.near.org/transactions/" + resTx.txHashes[0];
+          } else {
+            this.urlTx = "https://explorer.testnet.near.org/transactions/" + resTx.txHashes[0];
+          }
+          console.log(this.urlTx)
+        }
+        
+      } else {
+        const login = await this.$ramper.signIn()
+        if (login) {
+          if (login.user) {
+            localStorage.setItem('logKey', 'in')
+            location.reload()
+          }
+        }
+      }
+    },
+    async getSeriesPrice(seriesId) {
+      try {
+        const account = await this.$near.account(this.$ramper.getAccountId());
+        const contract = new Contract(account, process.env.VUE_APP_CONTRACT_NFT, {
+          viewMethods: ["nft_get_series_price"],
+          sender: account,
+        });
+
+        const price = await contract.nft_get_series_price({ token_series_id: seriesId });
+
+        if (price) {
+          return this.$utils.format.formatNearAmount(price);
+        } else {
+          return
+        }
+      } catch (error) {
+        console.log(error)
+      }
+      
+    },
+    deleteShoppingCart(item) {
+      item.disabled = true
+      this.axios.post(process.env.VUE_APP_NODE_API + "/api/delete-shopping-cart/", {wallet: this.$ramper.getAccountId(), id: item.id})
+        .then((res) => {
+          this.dataCart = this.dataCart.filter((obj) => obj.index !== item.index);
+
+          let totalPrice = 0
+          for (let i = 0; i < this.dataCart.length; i++) {
+            totalPrice += Number(this.dataCart[i].price)
+          }
+          this.checkout.totalPrice = totalPrice
+          this.checkout.quantity = this.dataCart.length
+        })
+        .catch((err) => {
+          console.log(err)
+        })
+    },
+    async getBalance () {
+      try {
+        if (this.$ramper.getUser()) {
+          const account = await this.$near.account(this.$ramper.getAccountId());
+          const response = await account.state();
+          const valueStorage = Math.pow(10, 19)
+          const valueYocto = Math.pow(10, 24)
+
+          const storage = (response.storage_usage * valueStorage) / valueYocto 
+          this.balanceNear = ((response.amount / valueYocto) - storage)
+          return this.balanceNear
+        }
+      } catch (error) {
+        return "0"
+      }
+    },
+    convertPrice(price) {
+      return (price / this.nearPrice).toFixed(3) || 0
+    },
+    convertNearToDollar(price) {
+      return (price * this.nearPrice).toFixed(3) || 0
+    },
+    async getNearPrice() {
+      const account = await this.$near.account(this.$ramper.getAccountId());
+      const contract = new Contract(account, process.env.VUE_APP_CONTRACT_NFT, {
+        viewMethods: ["get_tasa"],
+        sender: account,
+      });
+
+      const price = await contract.get_tasa();
+      this.nearPrice = price
+    },
+    getShoppingCart() {
+      this.axios.post(process.env.VUE_APP_NODE_API + "/api/get-all-shopping-cart/", {wallet: this.$ramper.getAccountId()})
+        .then((res) => {
+          this.dataCart = []
+          let totalPrice = 0
+          for (let i = 0; i < res.data.length; i++) {
+            const element = res.data[i];
+            const item = {
+              index: i,
+              id: element.id,
+              tokenId: element.tokenId,
+              img: element.media,
+              name: element.title,
+              by: element.creator_id,
+              marketplace: null,
+              price: element.price,
+              disabled: false
+            }
+            totalPrice += Number(element.price)
+            this.dataCart.push(item)
+          }
+          this.checkout.totalPrice = totalPrice
+          this.checkout.quantity = res.data.length
+        })
+        .catch((err) => {
+          console.log(err)
+        })
+    },
   }
 };
 </script>

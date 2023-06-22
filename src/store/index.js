@@ -6,7 +6,10 @@ Vue.use(Vuex);
 export default new Vuex.Store({
   namespace: true,
   state: {
-    player: {},
+    player: {
+      volume: 0.50,
+      play: false,
+    },
     track: {},
     baseURL: process.env.BASE_URL,
     theme: "light",
@@ -24,7 +27,10 @@ export default new Vuex.Store({
   getters: {
     getTrack(state) {
       return state.track;
-    }
+    },
+    getPlayer(state) {
+      return state.player;
+    },
   },
   mutations: {
     Avatar (state, avatar) {state.user.perfil = avatar},
@@ -34,9 +40,12 @@ export default new Vuex.Store({
         if (value.play && (state.track.token_id !== value.token_id)) {
           state.track.track.pause()
           state.track.track.currentTime = 0;
+        } else if (!value.play && (state.track.token_id === value.token_id)) {
+          state.track.track.pause()
         }
       }
       state.track = value;
+      state.track.track.volume = state.player.volume
 
       if (value.play) {
         state.track.track.play()
@@ -44,6 +53,28 @@ export default new Vuex.Store({
         state.track.track.pause()
         // state.track.track.currentTime = 0;
       }
+      state.player.play = value.play;
+    },
+    setVolume(state, value) {
+      state.player.volume = value;
+      if (state.track?.track) {
+        state.track.track.volume = value;
+      }
+    },
+    setPlayer(state, value) {
+      state.player = value;
+      if (state.player.play) {
+        state.track.track.play()
+        state.track.play = true
+      } else {
+        state.track.track.pause()
+        state.track.play = false;
+      } 
+
+      
+      // if (state.track?.track) {
+      //   state.track.track.volume = value;
+      // }
     },
     OverlayMethod(state, theme) {
       if (theme == "dark") {state.overlay.opacity = "0.5";state.overlay.color = "black"}
@@ -58,6 +89,12 @@ export default new Vuex.Store({
     },
     updateTrack({ commit }, value) {
       commit('setTrack', value);
+    },
+    updateVolume({ commit }, value) {
+      commit('setVolume', value);
+    },
+    updatePlayer({ commit }, value) {
+      commit('setPlayer', value);
     },
   },
 });

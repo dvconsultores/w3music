@@ -114,7 +114,6 @@
 <script>
 import * as nearAPI from 'near-api-js'
 import gql from "graphql-tag";
-import axios from 'axios';
 const { Contract } = nearAPI
 export default {
   name: "sell",

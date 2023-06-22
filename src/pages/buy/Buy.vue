@@ -41,7 +41,7 @@
 
     <aside id="container-right" class="divcol gap2">
       <div class="section-header">
-        <h3>AFOFUSION</h3>
+        <h3>FILTERS</h3>
 
         <aside class="space wrap gap1">
           <div class="fwrap gap1" style="--fb: 1 1">
@@ -72,14 +72,18 @@
             ></v-select>
           </div>
 
-          <v-btn class="btn font2 eliminarmobile" style="--max-w:13.9375em;--h:2.75em;--bg:hsl(0, 0%, 96%, .75);--b:2.5px solid var(--primary)" @click="$router.push('/buy/checkout')">
+          <v-btn class="btn font2 eliminarmobile" style="--h:2.75em;--bg:hsl(0, 0%, 96%, .75);--b:2.5px solid var(--primary)" @click="$router.push('/buy/checkout')">
             <span class="acenter" style="gap:.5em;font-size: 20px">
               <img src="@/assets/icons/market-active.svg" alt="market icon" style="--w:25px">
-              <span>CART: 1</span>
+              <span>CART: {{ cart.quantity }}</span>
             </span>
 
+            <!-- <span class="acenter margin2left" style="gap:.2em;font-size:17px">
+              {{ cart.totalPrice }} <img src="@/assets/logos/near.svg" alt="near" style="--w:13px;--t:translateY(-2px)">
+            </span> -->
+
             <span class="acenter margin2left" style="gap:.2em;font-size:17px">
-              20 <img src="@/assets/logos/near.svg" alt="near" style="--w:13px;--t:translateY(-2px)">
+              {{ cart.totalPrice }}$<span style="font-size:0.875em"> ≈ {{ convertPrice(cart.totalPrice) }}<img src="@/assets/logos/near.svg" alt="near" style="--w:0.75em"></span>
             </span>
           </v-btn>
         </aside>
@@ -106,11 +110,11 @@
             </span> -->
 
             <span class="font2 bold acenter" style="gap:.2em">
-              FLOOR PRICE {{item.price}}$
+              FLOOR PRICE {{item.price}}$<span style="font-size:0.875em"> ≈ {{ convertPrice(item.price) }}<img src="@/assets/logos/near.svg" alt="near" style="--w:0.75em"></span>
             </span>
 
             <div class="center gap1">
-              <v-btn class="btn align font2" style="--bg:#000000;--c:var(--primary);--fs:1.2em">ADD TO CART</v-btn>
+              <v-btn class="btn align font2" :disabled="item.disabled" style="--bg:#000000;--c:var(--primary);--fs:1.2em" @click="addToCart(item)">{{ item.status == "success" ? "SUCCESS " : item.status == "error" ? "FAILED " : "ADD TO CART"}} <v-icon>{{ item.status == "success" ? "mdi-check-circle" : item.status == "error" ? "mdi-close-circle" : null }}</v-icon></v-btn>
               <v-btn icon style="--b:1px solid #000000" @click="item.like=!item.like">
                 <img :src="require(`@/assets/icons/like${item.like?'-active':''}.svg`)" alt="like button">
               </v-btn>
@@ -124,6 +128,10 @@
 
 <script>
 import gql from "graphql-tag";
+import axios from 'axios';
+import * as nearAPI from "near-api-js";
+const { Contract } = nearAPI;
+
 export default {
   name: "buy",
   data() {
@@ -221,8 +229,13 @@ export default {
       atribute: "ATRIBUTE",
       dataAtribute: [],
       categoriesFilter: [],
+      cart: {
+        quantity: "0",
+        totalPrice: "0"
+      },
       all: "ALL",
       dataAll: [],
+      nearPrice: 0,
       dataAfrofusion: [
         // { img: require("@/assets/avatars/a2.jpg") ,name: "LOVE ARROW", by: "Travis Poll", price: "10", play: false, like: false },
         // { img: require("@/assets/avatars/a2.jpg"), name: "LOVE ARROW", by: "Travis Poll", price: "20", play: false, like: false },
@@ -241,20 +254,68 @@ export default {
   },
   async mounted() {
     this.$emit('RouteValidator')
+    this.getNearPrice()
+    this.getShoppingCart()
     this.getGenders()
     
   },
   methods: {
+    convertPrice(price) {
+      return (price / this.nearPrice).toFixed(3) || 0
+    },
+    async getNearPrice() {
+      const account = await this.$near.account(this.$ramper.getAccountId());
+      const contract = new Contract(account, process.env.VUE_APP_CONTRACT_NFT, {
+        viewMethods: ["get_tasa"],
+        sender: account,
+      });
+
+      const price = await contract.get_tasa();
+      this.nearPrice = price
+    },
+    getShoppingCart() {
+      this.axios.post(process.env.VUE_APP_NODE_API + "/api/get-all-shopping-cart/", {wallet: this.$ramper.getAccountId()})
+        .then((res) => {
+          let totalPrice = 0
+          for (let i = 0; i < res.data.length; i++) {
+            const element = res.data[i];
+            totalPrice += Number(element.price)
+          }
+          this.cart.totalPrice = String(totalPrice)
+          this.cart.quantity = String(res.data.length)
+        })
+        .catch((err) => {
+          console.log(err)
+        })
+    },
+    addToCart(item) {
+      item.disabled = true
+      this.axios.post(process.env.VUE_APP_NODE_API + "/api/add-shopping-cart/", {wallet: this.$ramper.getAccountId(), tokenId: item.token_id})
+        .then((res) => {
+          console.log(res.data)
+          item.status = "success"
+          this.getShoppingCart()
+          // setTimeout(item.status = null, 1500);
+          setTimeout(() => {
+            item.status = null
+            item.disabled = false
+          }, 3000);
+        })
+        .catch((err) => {
+          item.status = "error"
+          setTimeout(() => {
+            item.status = null
+            item.disabled = false
+          }, 2000);
+          // setTimeout(item.status = null, 1500);
+        })
+    },
     playPreview(item) {
-      this.track = item.track
+      this.track = item
       if (item.play) {
-        // this.track.play()
-        console.log(item)
         this.$store.dispatch('updateTrack', item);
       } else {
         this.$store.dispatch('updateTrack', item);
-        // this.track.pause()
-        // this.track.currentTime = 0;
       }
     },
     clickCategories(item) {
@@ -326,7 +387,7 @@ export default {
       console.log(this.categoriesFilter)
       const getSeries = gql`
         query MyQuery($categories: [String!]) {
-          series(where: {reference_in: $categories}) {
+          series(where: {reference_in: $categories, is_mintable: true}) {
             aproved_event
             aproved_objects
             copies
@@ -356,14 +417,14 @@ export default {
         }
       `;
 
+      console.log(this.categoriesFilter, true)
+
       const res = await this.$apollo.query({
         query: getSeries,
         variables: {categories: this.categoriesFilter}
       })
 
       const data = res.data.series
-
-      console.log("Brrr",data)
 
       this.dataAfrofusion = []
       
@@ -388,7 +449,14 @@ export default {
           price: element.price, 
           play: false, 
           like: false,
-          track: sonido
+          track: sonido,
+          type: "preview",
+          status: null,
+          disabled: false
+        }
+
+        if (this.track?.play && this.track?.token_id === item.token_id) {
+          item.play = true
         }
 
         this.dataAfrofusion.push(item)
