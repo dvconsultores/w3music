@@ -34,7 +34,7 @@
       </v-btn> -->
 
       <aside class="acenter gap2">
-        <v-btn v-show="!$store.state.user.login" class="btn eliminarmobile" @click="logIn()">LOG IN</v-btn>
+        <v-btn v-show="!$store.state.user.login" class="btn eliminarmobile" @click="modalConnect = true">LOG IN</v-btn>
 
         <div v-show="$store.state.user.login" :class="{acenter: $store.state.user.login, contents: !$store.state.user.login}" style="cursor:pointer;border-radius:4vmax" class="openMenuLogin">
           <v-btn icon @click="$store.state.user.login?null:$router.push('/login')">
@@ -47,10 +47,39 @@
         </div>
       </aside>
     </v-app-bar>
+    <v-dialog v-model="modalConnect" content-class="modal-connect divcol relative isolate">
+      <aside class="space">
+        <span class="h9_em" style="color:#fff !important">Connect Wallet</span>
+        
+        <v-btn icon @click="closeDialog()">
+          <v-icon size="1.5em">mdi-close</v-icon>
+        </v-btn>
+      </aside>
+
+      <v-sheet class="grid" color="transparent">
+        <v-btn plain color="hsl(0 0% 0% / .5)" @click="logIn()">
+          <img src="@/assets/sources/logos/ramper.svg" alt="near">
+          
+          <div class="divcol astart" style="gap: 5px">
+            <span class="h12_em bold" style="color:#fff !important">Email</span>
+            <span class="h13_em">ramper.xyz</span>
+          </div>
+        </v-btn>
+        <v-btn plain @click="walletSelector()">
+          <img src="@/assets/sources/logos/near-wallet-icon.svg" alt="near">
+          
+          <div class="divcol astart" style="gap: 5px">
+            <span class="h12_em bold" style="color:#fff !important">WALLET</span>
+            <span class="h13_em">near</span>
+          </div>
+        </v-btn>
+      </v-sheet>
+    </v-dialog>
   </section>
 </template>
 
 <script>
+import "@near-wallet-selector/modal-ui/styles.css"
 import MenuHeader from "./MenuHeader.vue"
 import * as nearAPI from "near-api-js";
 const { Contract } = nearAPI;
@@ -72,12 +101,14 @@ export default {
   },
   data() {
     return {
+      modalConnect: false,
       nearSocialAvatar: null,
       accountId: null,
       messages: 1,
       sidebar: false,
       initialFocus: 0,
       positionFocus: 0,
+      modeConnect: localStorage.getItem("modeConnect"),
       dataSidebar: [
         { key:"market", icon: "market", name:"Marketplace", position: 120, active: false },
         { key:"stats", icon: "stats", name:"stats", to:"/stats", position: 240, active: false },
@@ -88,13 +119,19 @@ export default {
     };
   },
   async mounted() {
-    console.log("HOLA"),
+    console.log(this.$selector.selector.isSignedIn())
     console.log(this.$ramper.getUser())
-
-    if (this.$ramper.getUser()) {
-      this.getNearSocial()
+    if (this.$selector.selector.isSignedIn()) {
+      this.getNearSocial(this.$selector.getAccountId())
+      localStorage.setItem('modeConnect', 'walletSelector')
+      this.$store.state.user.login = true
+    } else if (this.$ramper.getUser()) {
+      this.getNearSocial(this.$ramper.getAccountId())
+      localStorage.setItem('modeConnect', 'ramper')
       this.$store.state.user.login = true
     }
+    
+    
     // responsive
     // this.responsive()
     // document.addEventListener('resize', this.responsive())
@@ -124,8 +161,17 @@ export default {
     })
   },
   methods: {
-    async getNearSocial() {
-      const account = await this.$near.account(this.$ramper.getAccountId());
+    closeDialog(){
+      this.modalConnect = false
+    },
+    async walletSelector() {
+      this.modalConnect = false
+      localStorage.setItem('modeConnect', 'walletSelector')
+
+      this.$selector.modal.show();
+    },
+    async getNearSocial(accountId) {
+      const account = await this.$near.account(accountId);
       const contract = new Contract(account, process.env.VUE_APP_CONTRACT_SOCIAL, {
         viewMethods: ["get"],
         sender: account,
@@ -147,9 +193,11 @@ export default {
       });
     },
     async logIn() {
+      this.modalConnect = false
       const login = await this.$ramper.signIn()
       if (login) {
         if (login.user) {
+          localStorage.setItem('modeConnect', 'ramper')
           localStorage.setItem('logKey', 'in')
           location.reload()
         }
@@ -192,4 +240,4 @@ export default {
 };
 </script>
 
-<style src="./Header.scss" lang="scss" />
+<style src="./Header.scss" lang="scss">

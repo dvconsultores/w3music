@@ -147,6 +147,7 @@ export default {
             active: false,
           },
         ],
+        modeConnect: localStorage.getItem("modeConnect"),
         expansion: [
           {
             icon: "market",
@@ -194,9 +195,14 @@ export default {
         item.active=true
       }
     },
-    goTo(key) {
+    async goTo(key) {
       if (key=='logout') {
-        this.$ramper.signOut()
+        if (localStorage.getItem("modeConnect") === "walletSelector") {
+          await this.$selector.wallet.signOut();
+        } else if (localStorage.getItem("modeConnect") === "ramper")  {
+          this.$ramper.signOut()
+        }
+        // localStorage.removeItem('modeConnect')
         // setTimeout(() => this.$router.go(0), 100)
         this.$router.go(0)
       } else if (key=='wallet') {

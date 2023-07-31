@@ -75,7 +75,7 @@
       </div>
       
       <div class="divcol">
-        <label for="email">Email</label>
+        <label for="email">EMAIL</label>
         <v-text-field id="email" :disabled="disabledSave" v-model="dataUser.email" solo placeholder="examplew3music@domain.com">
         </v-text-field>
       </div>
@@ -151,6 +151,7 @@ export default {
   name: "profile",
   data() {
     return {
+      modeConnect: localStorage.getItem("modeConnect"),
       disabledSave: false,
       nearSocialAvatar: process.env.VUE_APP_API_BASE_URL_SOCIAL + localStorage.getItem("nearSocialAvatar"),
       urlTx: null,
@@ -182,12 +183,13 @@ export default {
     }
   },
   async mounted() {
-    if (!this.$ramper.getUser()) {this.$router.push("/")}
+    console.log(!this.$ramper.getUser(), !this.$selector.getAccountId() )
+    if (!this.$ramper.getUser() && !this.$selector?.getAccountId()) {this.$router.push("/")}
     this.$emit('RouteValidator')
 
     await this.getGenders()
 
-    this.walletNear = this.$ramper.getAccountId();
+    this.walletNear = this.$ramper.getAccountId() || this.$selector.getAccountId();
 
     this.getData()
   },
@@ -243,7 +245,7 @@ export default {
         }
       `;
 
-      const user = this.$ramper.getAccountId();
+      const user = this.$ramper.getAccountId() || this.$selector.getAccountId();
 
       const res = await this.$apollo.query({
         query: getDataUser,
@@ -286,7 +288,52 @@ export default {
       //     } 
       //   });
     },
-    async saveProfile () {
+    saveProfile() {
+      if (this.modeConnect === "walletSelector") {
+        this.saveProfileSelector()
+      } else if (this.modeConnect === "ramper")  {
+        this.saveProfileRamper()
+      }
+    },
+    async saveProfileSelector () {
+      this.disabledSave = true
+      console.log("AQUI VA")
+      if (this.$selector.getAccountId()) {
+        const resTx = await this.$selector.wallet.signAndSendTransactions({
+          transactions: [
+            {
+              receiverId: process.env.VUE_APP_CONTRACT_NFT,
+              actions: [
+                {
+                  type: "FunctionCall",
+                  params: {
+                    methodName: "set_user",
+                    args: {
+                      data_user: {
+                        artist_name: this.dataUser.artistName || "",
+                        public_url: this.dataUser.publicUrl || "",
+                        age: Number(this.dataUser.age) || 0,
+                        location: this.dataUser.location || "",
+                        youare: this.dataUser.youAre || "",
+                        email: this.dataUser.email || "",
+                        music_genre: Number(this.dataUser.musicGenre) || 0,
+                        description: this.dataUser.description || "",
+                        wallet: this.$selector.getAccountId()
+                      }
+                    },
+                    gas: "50000000000000"
+                  },
+                },
+              ],
+            },
+          ],
+        });
+
+        console.log(resTx)
+      }
+      this.disabledSave = false
+    },
+    async saveProfileRamper () {
       this.disabledSave = true
       if (this.$ramper.getUser()) {
         console.log(this.dataUser.musicGenre)
@@ -297,7 +344,7 @@ export default {
               data_user: {
                 artist_name: this.dataUser.artistName || "",
                 public_url: this.dataUser.publicUrl || "",
-                age: this.dataUser.age || 0,
+                age: Number(this.dataUser.age) || 0,
                 location: this.dataUser.location || "",
                 youare: this.dataUser.youAre || "",
                 email: this.dataUser.email || "",

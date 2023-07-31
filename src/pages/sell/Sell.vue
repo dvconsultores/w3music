@@ -119,6 +119,7 @@ export default {
   name: "sell",
   data() {
     return {
+      modeConnect: localStorage.getItem("modeConnect"),
       sample: {},
       urlTx: null,
       dataTracks: [
@@ -220,6 +221,70 @@ export default {
       window.history.go(-1);
     },
     async nftSample () {
+      if (this.modeConnect === "walletSelector") {
+        this.nftSampleSelector()
+      } else if (this.modeConnect === "ramper")  {
+        this.nftSampleRamper()
+      }
+    },
+    async nftSampleSelector () {
+      this.disabledSave = true
+      if (this.$selector.getAccountId()) {
+        if (this.$refs.form.validate()) {
+          const trackCover = await this.uploadIpfs(this.cover)
+          const trackPreview = await this.uploadIpfs(this.trackPreview)
+          console.log(trackPreview, trackCover)
+
+          if (trackCover && trackPreview) {
+            let extra = [
+              {
+                trait_type: "track_preview",
+                value: process.env.VUE_APP_IPFS + trackPreview.IpfsHash,
+              }
+            ]
+
+            const resTx = await this.$selector.wallet.signAndSendTransactions({
+              transactions: [
+                {
+                  receiverId: process.env.VUE_APP_CONTRACT_NFT,
+                  actions: [
+                    {
+                      type: "FunctionCall",
+                      params: {
+                        methodName: "nft_sample",
+                        args: {
+                          token_metadata: {
+                            title: this.sample.title,
+                            description: this.sample.description,
+                            media: process.env.VUE_APP_IPFS + trackCover.IpfsHash,
+                            reference: this.sample.genre,
+                            extra: JSON.stringify(extra)
+                          },
+                          price: Number(this.sample.price)
+                        },
+                        gas: "50000000000000",
+                        deposit: "10000000000000000000000"
+                      },
+                    },
+                  ],
+                },
+              ],
+            });
+            console.log(resTx)
+          }
+        }
+      } else {
+        const login = await this.$ramper.signIn()
+        if (login) {
+          if (login.user) {
+            localStorage.setItem('logKey', 'in')
+            location.reload()
+          }
+        }
+      }
+      this.disabledSave = false
+    },
+    async nftSampleRamper () {
       this.disabledSave = true
       if (this.$ramper.getUser()) {
         if (this.$refs.form.validate()) {

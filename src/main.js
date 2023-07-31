@@ -1,4 +1,5 @@
 import dotenv from 'dotenv'
+import "@near-wallet-selector/modal-ui/styles.css"
 const config = dotenv.config()
 if(config.error){
   console.log('Could not load env file', config.error)
@@ -12,6 +13,7 @@ import router from './Routes'
 import store from './store/index'
 import VueAxios from "vue-axios";
 import ramper from "./services/ramper-api";
+import selector from "./services/wallet-selector-api";
 import near from "./services/near-api";
 import Vue from 'vue'
 import App from './App.vue'
@@ -53,6 +55,7 @@ const apolloProvider = new VueApollo({
 
 Vue.use(VueAxios,axios);
 Vue.use(ramper);
+Vue.use(selector);
 
 Vue.use(near);
 axios.defaults.baseURL='http://127.0.0.1:8000/'
@@ -62,6 +65,7 @@ Vue.config.productionTip = false
 new Vue({
   ramper,
   near,
+  selector,
   apolloProvider,
   vuetify,
   router,
