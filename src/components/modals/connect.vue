@@ -10,7 +10,7 @@
 
     <v-sheet class="grid" color="transparent">
       <v-btn plain color="hsl(0 0% 0% / .5)" @click="$store.commit('signIn', 'ramper')">
-        <img src="~/assets/sources/logos/ramper.svg" alt="near">
+        <!-- <img src="~/assets/sources/logos/ramper.svg" alt="near"> -->
         
         <div class="divcol astart" style="gap: 5px">
           <span class="h12_em bold">Email</span>
@@ -18,7 +18,7 @@
         </div>
       </v-btn>
       <v-btn plain @click="$store.commit('signIn', 'near')">
-        <img src="~/assets/sources/logos/near-wallet-icon.svg" alt="near">
+        <!-- <img src="~/assets/sources/logos/near-wallet-icon.svg" alt="near"> -->
         
         <div class="divcol astart" style="gap: 5px">
           <span class="h12_em bold">NEAR</span>
@@ -27,7 +27,7 @@
       </v-btn>
       
       <v-btn plain color="hsl(0 0% 0% / .5)" @click="$store.commit('signIn', 'myNear')">
-        <img src="~/assets/sources/logos/my-near-wallet-icon.svg" alt="near">
+        <!-- <img src="~/assets/sources/logos/my-near-wallet-icon.svg" alt="near"> -->
         
         <div class="divcol astart" style="gap: 5px">
           <span class="h12_em bold">MyNearWallet</span>
@@ -135,6 +135,8 @@ export default {
 </script>
 
 <style lang="scss">
+@use "@/styles/app" as *;
+
 .modal-connect {
   @include card;
   --min-w: 330px;
@@ -153,7 +155,7 @@ export default {
     padding: 2px;
     background-clip: content-box, border-box;
     background-image: linear-gradient(var(--bg),var(--bg)),
-      linear-gradient(135deg, rgba($primary,.2), rgba($accent,.2));
+      linear-gradient(135deg, rgba($primary,.2), rgba($secondary,.2));
     z-index: -1;
   }
 
