@@ -42,6 +42,9 @@ export default new Vuex.Store({
           state.track.track.currentTime = 0;
         } else if (!value.play && (state.track.token_id === value.token_id)) {
           state.track.track.pause()
+        } else {
+          state.track.track.pause()
+          state.track.track.currentTime = 0;
         }
       }
       state.track = value;

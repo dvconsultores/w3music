@@ -1,5 +1,6 @@
 <template>
   <section id="buy" class="grid gap2">
+    <ModalConnect ref="ModalConnect"></ModalConnect>
     <aside class="divcol eliminarmobile">
       <div class="section-header">
         <h2>CATEGORIES</h2>
@@ -66,7 +67,8 @@
               v-model="atribute"
               :items="dataAtribute"
               item-text="atribute"
-              placeholder="ATRIBUTE"
+              placeholder="Sort by Price"
+              @change="getData()"
               hide-details
               solo
             ></v-select>
@@ -115,7 +117,7 @@
 
             <div class="center gap1">
               <v-btn class="btn align font2" :disabled="item.disabled" style="--bg:#000000;--c:var(--primary);--fs:1.2em" @click="addToCart(item)">{{ item.status == "success" ? "SUCCESS " : item.status == "error" ? "FAILED " : "ADD TO CART"}} <v-icon>{{ item.status == "success" ? "mdi-check-circle" : item.status == "error" ? "mdi-close-circle" : null }}</v-icon></v-btn>
-              <v-btn icon style="--b:1px solid #000000" @click="item.like=!item.like">
+              <v-btn icon style="--b:1px solid #000000" @click="createLikeTrack(item)">
                 <img :src="require(`@/assets/icons/like${item.like?'-active':''}.svg`)" alt="like button">
               </v-btn>
             </div>
@@ -129,11 +131,13 @@
 <script>
 import gql from "graphql-tag";
 import axios from 'axios';
+import ModalConnect from "../../components/modals/connect.vue"
 import * as nearAPI from "near-api-js";
 const { Contract } = nearAPI;
 
 export default {
   name: "buy",
+  components: { ModalConnect },
   data() {
     return {
       track: null,
@@ -226,8 +230,8 @@ export default {
       ],
       recent: "RECENT",
       dataRecent: [],
-      atribute: "ATRIBUTE",
-      dataAtribute: [],
+      atribute: null,
+      dataAtribute: ["any","asc", "desc"],
       categoriesFilter: [],
       cart: {
         quantity: "0",
@@ -236,6 +240,7 @@ export default {
       all: "ALL",
       dataAll: [],
       nearPrice: 0,
+      likesTrack: [],
       dataAfrofusion: [
         // { img: require("@/assets/avatars/a2.jpg") ,name: "LOVE ARROW", by: "Travis Poll", price: "10", play: false, like: false },
         // { img: require("@/assets/avatars/a2.jpg"), name: "LOVE ARROW", by: "Travis Poll", price: "20", play: false, like: false },
@@ -255,16 +260,65 @@ export default {
   async mounted() {
     this.$emit('RouteValidator')
     this.getNearPrice()
+    this.likesTrack = await this.getAllLikeTrack()
     this.getShoppingCart()
     this.getGenders()
     
   },
   methods: {
+    getAllLikeTrack() {
+      if (this.$ramper.getAccountId() || this.$selector.getAccountId()) {
+        let wallet = this.$ramper.getAccountId() || this.$selector.getAccountId()
+        const resp = this.axios.post(process.env.VUE_APP_NODE_API + "/api/get-all-like-track/", {wallet})
+          .then((res) => {
+            return res.data
+          })
+          .catch((err) => {
+            return []
+          })
+        return resp
+      }
+    },
+    getLikeTrack(tokenId) {
+      const like = this.likesTrack.find((element) => element.tokenId === tokenId)
+      if (like) {
+        return true
+      } else {
+        return false
+      }
+    },
+    createLikeTrack(item) {
+      console.log(item)
+      if (this.$ramper.getAccountId() || this.$selector.getAccountId()) {
+        let wallet = this.$ramper.getAccountId() || this.$selector.getAccountId()
+        if (!item.like) {
+          this.axios.post(process.env.VUE_APP_NODE_API + "/api/create-like-track/", {wallet, tokenId: item.token_id})
+            .then((res) => {
+              console.log(res)
+              item.like=!item.like
+            })
+            .catch((err) => {
+              console.log(err)
+            })
+        } else {
+          this.axios.post(process.env.VUE_APP_NODE_API + "/api/delete-like-track/", {wallet, tokenId: item.token_id})
+            .then((res) => {
+              console.log(res)
+              item.like=!item.like
+            })
+            .catch((err) => {
+              console.log(err)
+            })
+        }     
+      } else {
+        this.$refs.ModalConnect.modalConnect = true
+      }   
+    },
     convertPrice(price) {
       return (price / this.nearPrice).toFixed(3) || 0
     },
     async getNearPrice() {
-      const account = await this.$near.account(this.$ramper.getAccountId());
+      const account = await this.$near.account(this.$ramper.getAccountId() || this.$selector.getAccountId());
       const contract = new Contract(account, process.env.VUE_APP_CONTRACT_NFT, {
         viewMethods: ["get_tasa"],
         sender: account,
@@ -274,7 +328,7 @@ export default {
       this.nearPrice = price
     },
     getShoppingCart() {
-      this.axios.post(process.env.VUE_APP_NODE_API + "/api/get-all-shopping-cart/", {wallet: this.$ramper.getAccountId()})
+      this.axios.post(process.env.VUE_APP_NODE_API + "/api/get-all-shopping-cart/", {wallet: this.$ramper.getAccountId() || this.$selector.getAccountId()})
         .then((res) => {
           let totalPrice = 0
           for (let i = 0; i < res.data.length; i++) {
@@ -290,7 +344,7 @@ export default {
     },
     addToCart(item) {
       item.disabled = true
-      this.axios.post(process.env.VUE_APP_NODE_API + "/api/add-shopping-cart/", {wallet: this.$ramper.getAccountId(), tokenId: item.token_id})
+      this.axios.post(process.env.VUE_APP_NODE_API + "/api/add-shopping-cart/", {wallet: this.$ramper.getAccountId() || this.$selector.getAccountId(), tokenId: item.token_id})
         .then((res) => {
           console.log(res.data)
           item.status = "success"
@@ -383,42 +437,75 @@ export default {
       }
       this.getData()
     },
-    async getData() {
-      console.log(this.categoriesFilter)
-      const getSeries = gql`
-        query MyQuery($categories: [String!]) {
-          series(where: {reference_in: $categories, is_mintable: true}) {
-            aproved_event
-            aproved_objects
-            copies
-            creator_id
-            description
-            expires_at
-            extra
-            fecha
-            id
-            is_mintable
-            issued_at
-            media
-            nft_amount_sold
-            nftsold
-            object_event
-            price
-            price_near
-            redeemerevents
-            redeemerobjects
-            reference
-            starts_at
-            supply
-            title
-            typetoken_id
-            updated_at
+    getSeriesGQL() {
+      if (this.atribute === "asc" || this.atribute === "desc") {
+        return gql`
+          query MyQuery($categories: [String!]) {
+            series(orderBy: price, orderDirection: ${this.atribute}, where: {reference_in: $categories, is_mintable: true}) {
+              aproved_event
+              aproved_objects
+              copies
+              creator_id
+              description
+              expires_at
+              extra
+              fecha
+              id
+              is_mintable
+              issued_at
+              media
+              nft_amount_sold
+              nftsold
+              object_event
+              price
+              price_near
+              redeemerevents
+              redeemerobjects
+              reference
+              starts_at
+              supply
+              title
+              typetoken_id
+              updated_at
+            }
           }
-        }
-      `;
-
-      console.log(this.categoriesFilter, true)
-
+        `;
+      } else {
+        return gql`
+          query MyQuery($categories: [String!]) {
+            series(where: {reference_in: $categories, is_mintable: true}) {
+              aproved_event
+              aproved_objects
+              copies
+              creator_id
+              description
+              expires_at
+              extra
+              fecha
+              id
+              is_mintable
+              issued_at
+              media
+              nft_amount_sold
+              nftsold
+              object_event
+              price
+              price_near
+              redeemerevents
+              redeemerobjects
+              reference
+              starts_at
+              supply
+              title
+              typetoken_id
+              updated_at
+            }
+          }
+        `;
+      }
+    },
+    async getData() {
+      const getSeries = this.getSeriesGQL()
       const res = await this.$apollo.query({
         query: getSeries,
         variables: {categories: this.categoriesFilter}
@@ -427,6 +514,7 @@ export default {
       const data = res.data.series
 
       this.dataAfrofusion = []
+      const dataAfrofusionAux = []
       
       for (let i = 0; i < data.length; i++) {
         const element = data[i];
@@ -445,10 +533,11 @@ export default {
           img: element.media,
           name: element.title, 
           preview: trackPreview.value,
-          by: element.creator_id, 
+          by: await this.getArtistName(element.creator_id), 
+          creator: element.creator_id, 
           price: element.price, 
           play: false, 
-          like: false,
+          like: this.getLikeTrack(element.id),
           track: sonido,
           type: "preview",
           status: null,
@@ -459,9 +548,39 @@ export default {
           item.play = true
         }
 
-        this.dataAfrofusion.push(item)
+        dataAfrofusionAux.push(item)
       }
+      this.dataAfrofusion = dataAfrofusionAux.sort(this.compararPorLike)
     },
+    async getArtistName(wallet) {
+      
+      const getDataUser = gql`
+        query MyQuery($wallet: String!) {
+          users(where: {wallet: $wallet}) {
+            artist_name
+            wallet
+          }
+        }
+      `;
+
+      const res = await this.$apollo.query({
+        query: getDataUser,
+        variables: {wallet: wallet},
+      })
+
+      const data = res.data
+
+      return data.users[0].artist_name || null
+    },
+    compararPorLike(a, b) {
+      if (a.like && !b.like) {
+        return -1; // a viene antes que b en el orden de clasificación
+      } else if (!a.like && b.like) {
+        return 1; // a viene después que b en el orden de clasificación
+      } else {
+        return 0; // mantener el orden actual si ambos tienen el mismo valor 'like'
+      }
+    }
   }
 };
 </script>

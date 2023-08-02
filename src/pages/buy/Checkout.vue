@@ -1,5 +1,6 @@
 <template>
   <section id="checkout" class="divcol">
+    <ModalConnect ref="ModalConnect"></ModalConnect>
     <v-card class="card divcol" style="--bg:hsl(0, 0%, 96%, .47);--p:1em 2em;--br:0">
       <h3 class="p" style="font-size:3em">{{ userId }}</h3>
       <span class="font2" style="font-size:1.5em">Balance: {{ convertNearToDollar(balanceNear) }}$ ≈ {{ balanceNear? balanceNear.toFixed(2) : "0" }} <img src="@/assets/icons/near.svg" alt="near" style="--w:clamp(0em,1.8vw,1.8em)"></span>
@@ -22,7 +23,7 @@
           </v-sheet>
         </div>
 
-        <div class="divcol">
+        <!-- <div class="divcol">
           <v-select
             label="CHOOSE MARKETPLACE"
             v-model="item.marketplace"
@@ -44,7 +45,7 @@
               </v-btn>
             </template>
           </v-select>
-        </div>
+        </div> -->
 
         <div class="acenter not_fwrap" style="gap:.1em">
           <span style="font-size:clamp(2.5em,3vw,3em)">{{item.price}}$</span>
@@ -69,18 +70,22 @@
         </v-card>
 
       <!-- <v-btn class="btn center font2" style="--w:max-content" @click="$router.push('/results')">PROCEED</v-btn> -->
-      <v-btn class="btn center font2" style="--w:max-content" @click="buyWithRamper()">PROCEED</v-btn>
+      <v-btn class="btn center font2" style="--w:max-content" @click="buy()">PROCEED</v-btn>
     </div>
   </section>
 </template>
 
 <script>
+import gql from "graphql-tag";
+import ModalConnect from "../../components/modals/connect.vue"
 import * as nearAPI from "near-api-js";
 const { Contract } = nearAPI;
 export default {
   name: "checkout",
+  components: { ModalConnect },
   data() {
     return {
+      modeConnect: localStorage.getItem("modeConnect"),
       checkout: {
         quantity: "0",
         totalPrice: "0"
@@ -107,16 +112,90 @@ export default {
     }
   },
   async mounted() {
-    if (!this.$ramper.getUser()) {this.$router.push("/")}
+    if (!this.$ramper.getUser() && !this.$selector.getAccountId()) {this.$router.push("/")}
 
-    this.userId = this.$ramper.getAccountId()
+    this.userId = this.$ramper.getAccountId() || this.$selector.getAccountId()
 
     await this.getNearPrice()
     this.getBalance()
     this.getShoppingCart()
   },
   methods: {
-    async buyWithRamper () {
+    async buy () {
+      if (this.$ramper.getUser() || this.$selector?.getAccountId()) {
+        if (this.modeConnect === "walletSelector") {
+          this.buySelector()
+        } else if (this.modeConnect === "ramper")  {
+          this.buyRamper()
+        }
+      } else {
+        this.$refs.ModalConnect.modalConnect = true
+      }
+    },
+    async buySelector () {
+      // this.disabledSave = true
+      if (this.$selector.getAccountId()) {
+        const balance = await this.getBalance()
+        let totalPriceNear = 0
+        const actions = []
+        const tokenIds = []
+        for (let i = 0; i < this.dataCart.length; i++) {
+          const element = this.dataCart[i]
+          tokenIds.push(element.tokenId)
+          let priceSeries = await this.getSeriesPrice(element.tokenId);
+      
+          let price = parseFloat(priceSeries) + this.amountDeposit;
+
+          totalPriceNear += price
+
+          actions.push(
+            this.$ramper.functionCall(
+              "nft_buy",
+              {
+                token_series_id: element.tokenId,
+                receiver_id: this.$ramper.getAccountId(),
+              },
+              "50000000000000",
+              this.$utils.format.parseNearAmount(String(price))
+            ),
+          )
+        }
+
+        console.log(totalPriceNear)
+
+        if (balance < totalPriceNear) {
+          console.log("FALTA DE PLATA BB")
+          return;
+        }
+
+        const resTx = await this.$ramper.sendTransaction({
+          transactionActions: [{
+              receiverId: process.env.VUE_APP_CONTRACT_NFT,
+              actions: actions,
+            }],
+          network: process.env.VUE_APP_NETWORK,
+        });
+
+        if ((resTx &&
+          JSON.parse(localStorage.getItem('ramper_loggedInUser'))
+            .signupSource === 'near_wallet' &&
+            resTx.txHashes.length > 0) || (resTx.result || resTx.result[0]?.status?.SuccessValue || resTx.result[0]?.status?.SuccessValue === "")) {
+
+          this.axios.post(process.env.VUE_APP_NODE_API + "/api/delete-array-shopping-cart/", {wallet: this.$ramper.getAccountId(), tokenIds: tokenIds})
+  
+          if (process.env.VUE_APP_NETWORK === "mainnet") {
+            this.urlTx = "https://explorer.near.org/transactions/" + resTx.txHashes[0];
+          } else {
+            this.urlTx = "https://explorer.testnet.near.org/transactions/" + resTx.txHashes[0];
+          }
+          console.log(this.urlTx)
+        }
+        
+      } else {
+        this.$refs.ModalConnect.modalConnect = true
+      }
+    },
+    async buyRamper () {
       // this.disabledSave = true
       if (this.$ramper.getUser()) {
         const balance = await this.getBalance()
@@ -176,18 +255,12 @@ export default {
         }
         
       } else {
-        const login = await this.$ramper.signIn()
-        if (login) {
-          if (login.user) {
-            localStorage.setItem('logKey', 'in')
-            location.reload()
-          }
-        }
+        this.$refs.ModalConnect.modalConnect = true
       }
     },
     async getSeriesPrice(seriesId) {
       try {
-        const account = await this.$near.account(this.$ramper.getAccountId());
+        const account = await this.$near.account(this.$ramper.getAccountId() || this.$selector.getAccountId());
         const contract = new Contract(account, process.env.VUE_APP_CONTRACT_NFT, {
           viewMethods: ["nft_get_series_price"],
           sender: account,
@@ -207,7 +280,7 @@ export default {
     },
     deleteShoppingCart(item) {
       item.disabled = true
-      this.axios.post(process.env.VUE_APP_NODE_API + "/api/delete-shopping-cart/", {wallet: this.$ramper.getAccountId(), id: item.id})
+      this.axios.post(process.env.VUE_APP_NODE_API + "/api/delete-shopping-cart/", {wallet: this.$ramper.getAccountId() || this.$selector.getAccountId(), id: item.id})
         .then((res) => {
           this.dataCart = this.dataCart.filter((obj) => obj.index !== item.index);
 
@@ -224,8 +297,8 @@ export default {
     },
     async getBalance () {
       try {
-        if (this.$ramper.getUser()) {
-          const account = await this.$near.account(this.$ramper.getAccountId());
+        if (this.$ramper.getUser() || this.$selector.getAccountId()) {
+          const account = await this.$near.account(this.$ramper.getAccountId() || this.$selector.getAccountId());
           const response = await account.state();
           const valueStorage = Math.pow(10, 19)
           const valueYocto = Math.pow(10, 24)
@@ -245,7 +318,7 @@ export default {
       return (price * this.nearPrice).toFixed(3) || 0
     },
     async getNearPrice() {
-      const account = await this.$near.account(this.$ramper.getAccountId());
+      const account = await this.$near.account(this.$ramper.getAccountId() || this.$selector.getAccountId());
       const contract = new Contract(account, process.env.VUE_APP_CONTRACT_NFT, {
         viewMethods: ["get_tasa"],
         sender: account,
@@ -254,9 +327,9 @@ export default {
       const price = await contract.get_tasa();
       this.nearPrice = price
     },
-    getShoppingCart() {
-      this.axios.post(process.env.VUE_APP_NODE_API + "/api/get-all-shopping-cart/", {wallet: this.$ramper.getAccountId()})
-        .then((res) => {
+    async getShoppingCart() {
+      this.axios.post(process.env.VUE_APP_NODE_API + "/api/get-all-shopping-cart/", {wallet: this.$ramper.getAccountId() || this.$selector.getAccountId()})
+        .then(async (res) => {
           this.dataCart = []
           let totalPrice = 0
           for (let i = 0; i < res.data.length; i++) {
@@ -267,7 +340,8 @@ export default {
               tokenId: element.tokenId,
               img: element.media,
               name: element.title,
-              by: element.creator_id,
+              by: await this.getArtistName(element.creator_id), 
+              creator: element.creator_id, 
               marketplace: null,
               price: element.price,
               disabled: false
@@ -281,6 +355,26 @@ export default {
         .catch((err) => {
           console.log(err)
         })
+    },
+    async getArtistName(wallet) {
+      
+      const getDataUser = gql`
+        query MyQuery($wallet: String!) {
+          users(where: {wallet: $wallet}) {
+            artist_name
+            wallet
+          }
+        }
+      `;
+
+      const res = await this.$apollo.query({
+        query: getDataUser,
+        variables: {wallet: wallet},
+      })
+
+      const data = res.data
+
+      return data.users[0].artist_name || null
     },
   }
 };

@@ -1,5 +1,6 @@
 <template>
   <section id="header">
+    <ModalConnect ref="ModalConnect"></ModalConnect>
     <MenuHeader ref="menu"></MenuHeader>
     <v-app-bar id="headerApp" color="transparent" height="100px" absolute class="font2 isolate">
       <aside class="acenter gap2" style="padding-left:calc(48px + 2em)">
@@ -34,7 +35,7 @@
       </v-btn> -->
 
       <aside class="acenter gap2">
-        <v-btn v-show="!$store.state.user.login" class="btn eliminarmobile" @click="modalConnect = true">LOG IN</v-btn>
+        <v-btn v-show="!$store.state.user.login" class="btn eliminarmobile" @click="$refs.ModalConnect.modalConnect = true">LOG IN</v-btn>
 
         <div v-show="$store.state.user.login" :class="{acenter: $store.state.user.login, contents: !$store.state.user.login}" style="cursor:pointer;border-radius:4vmax" class="openMenuLogin">
           <v-btn icon @click="$store.state.user.login?null:$router.push('/login')">
@@ -47,38 +48,11 @@
         </div>
       </aside>
     </v-app-bar>
-    <v-dialog v-model="modalConnect" content-class="modal-connect divcol relative isolate">
-      <aside class="space">
-        <span class="h9_em" style="color:#fff !important">Connect Wallet</span>
-        
-        <v-btn icon @click="closeDialog()">
-          <v-icon size="1.5em">mdi-close</v-icon>
-        </v-btn>
-      </aside>
-
-      <v-sheet class="grid" color="transparent">
-        <v-btn plain color="hsl(0 0% 0% / .5)" @click="logIn()">
-          <img src="@/assets/sources/logos/ramper.svg" alt="near">
-          
-          <div class="divcol astart" style="gap: 5px">
-            <span class="h12_em bold" style="color:#fff !important">Email</span>
-            <span class="h13_em">ramper.xyz</span>
-          </div>
-        </v-btn>
-        <v-btn plain @click="walletSelector()">
-          <img src="@/assets/sources/logos/near-wallet-icon.svg" alt="near">
-          
-          <div class="divcol astart" style="gap: 5px">
-            <span class="h12_em bold" style="color:#fff !important">WALLET</span>
-            <span class="h13_em">near</span>
-          </div>
-        </v-btn>
-      </v-sheet>
-    </v-dialog>
   </section>
 </template>
 
 <script>
+import ModalConnect from "../modals/connect.vue"
 import "@near-wallet-selector/modal-ui/styles.css"
 import MenuHeader from "./MenuHeader.vue"
 import * as nearAPI from "near-api-js";
@@ -88,7 +62,7 @@ const theme = localStorage.getItem("theme");
 
 export default {
   name: "header",
-  components: { MenuHeader },
+  components: { MenuHeader, ModalConnect },
   i18n: require("./i18n"),
   created() {
     this.element = document.getElementById("theme");
@@ -101,7 +75,6 @@ export default {
   },
   data() {
     return {
-      modalConnect: false,
       nearSocialAvatar: null,
       accountId: null,
       messages: 1,
@@ -119,18 +92,17 @@ export default {
     };
   },
   async mounted() {
-    console.log(this.$selector.selector.isSignedIn())
-    console.log(this.$ramper.getUser())
     if (this.$selector.selector.isSignedIn()) {
       this.getNearSocial(this.$selector.getAccountId())
+      this.initUser(this.$selector.getAccountId())
       localStorage.setItem('modeConnect', 'walletSelector')
       this.$store.state.user.login = true
     } else if (this.$ramper.getUser()) {
       this.getNearSocial(this.$ramper.getAccountId())
+      this.initUser(this.$ramper.getAccountId())
       localStorage.setItem('modeConnect', 'ramper')
       this.$store.state.user.login = true
     }
-    
     
     // responsive
     // this.responsive()
@@ -161,14 +133,16 @@ export default {
     })
   },
   methods: {
-    closeDialog(){
-      this.modalConnect = false
-    },
-    async walletSelector() {
-      this.modalConnect = false
-      localStorage.setItem('modeConnect', 'walletSelector')
-
-      this.$selector.modal.show();
+    initUser(wallet) {
+      this.axios.post(process.env.VUE_APP_NODE_API + "/api/get-user-by-wallet/", {wallet})
+        .then((res) => {
+          if (!res.data) {
+            this.axios.post(process.env.VUE_APP_NODE_API + "/api/create-user/", {wallet})
+          }
+        })
+        .catch((err) => {
+          console.log(err)
+        })
     },
     async getNearSocial(accountId) {
       const account = await this.$near.account(accountId);
@@ -191,17 +165,6 @@ export default {
           localStorage.setItem("nearSocialBanner", value.profile.backgroundImage.ipfs_cid);
         }
       });
-    },
-    async logIn() {
-      this.modalConnect = false
-      const login = await this.$ramper.signIn()
-      if (login) {
-        if (login.user) {
-          localStorage.setItem('modeConnect', 'ramper')
-          localStorage.setItem('logKey', 'in')
-          location.reload()
-        }
-      }
     },
     activeSidebarIcons(item) {
       this.dataSidebar.forEach(e=>{e.active=false});

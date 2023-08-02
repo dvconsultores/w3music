@@ -1,5 +1,6 @@
 <template>
   <section id="sell" class="divcol margin_global gap2 isolate">
+    <ModalConnect ref="ModalConnect"></ModalConnect>
     <section class="container-header divcol" style="gap:2em">
       <img class="pointer back" src="@/assets/icons/back.svg" alt="back" style="--w:100px" @click="back()">
 
@@ -112,11 +113,14 @@
 </template>
 
 <script>
+import ModalConnect from "../../components/modals/connect.vue"
+import crypto from "crypto";
 import * as nearAPI from 'near-api-js'
 import gql from "graphql-tag";
 const { Contract } = nearAPI
 export default {
   name: "sell",
+  components: { ModalConnect },
   data() {
     return {
       modeConnect: localStorage.getItem("modeConnect"),
@@ -183,6 +187,25 @@ export default {
       
     },
     async uploadIpfs(file) {
+      const resp = this.axios.post('https://api.nft.storage/upload', file, {
+        headers: {
+          'Content-Type': file.type,
+          Authorization: 'Bearer ' + process.env.VUE_APP_IPFS_KEY, 
+        },
+        maxContentLength: 100 * 1024 * 1024, // Tamaño máximo de la respuesta en bytes (100MB)
+        maxBodyLength: 100 * 1024 * 1024, // Tamaño máximo del cuerpo de la solicitud en bytes (100MB)
+      })
+        .then((res) => {
+          console.log(res.data)
+          return res.data
+        })
+        .catch((err) => {
+          console.log(err)
+          return false
+        })
+      return resp
+    },
+    async uploadIpfsNode(file) {
       const formData = new FormData();
       formData.append("uploaded_file", file);
       const resp = this.axios.post(process.env.VUE_APP_NODE_API + "/api/ipfs/", formData)
@@ -220,11 +243,30 @@ export default {
     back() {
       window.history.go(-1);
     },
+    encryptRSA(text) {
+      try {
+        const encrypted = crypto.publicEncrypt(
+          {
+            key: process.env.VUE_APP_PUBLIC_KEY,
+            padding: crypto.constants.RSA_PKCS1_OAEP_PADDING,
+          },
+          Buffer.from(text)
+        );
+        return encrypted.toString("base64");
+      } catch (error) {
+        console.log(error);
+        return false;
+      }
+    },
     async nftSample () {
-      if (this.modeConnect === "walletSelector") {
-        this.nftSampleSelector()
-      } else if (this.modeConnect === "ramper")  {
-        this.nftSampleRamper()
+      if (this.$ramper.getUser() || this.$selector?.getAccountId()) {
+        if (this.modeConnect === "walletSelector") {
+          this.nftSampleSelector()
+        } else if (this.modeConnect === "ramper")  {
+          this.nftSampleRamper()
+        }
+      } else {
+        this.$refs.ModalConnect.modalConnect = true
       }
     },
     async nftSampleSelector () {
@@ -233,13 +275,19 @@ export default {
         if (this.$refs.form.validate()) {
           const trackCover = await this.uploadIpfs(this.cover)
           const trackPreview = await this.uploadIpfs(this.trackPreview)
-          console.log(trackPreview, trackCover)
+          const trackFull = await this.uploadIpfs(this.trackFull)
 
-          if (trackCover && trackPreview) {
+          const trackFullCrypto = await this.encryptRSA("https://" + trackFull.value.cid + process.env.VUE_APP_IPFS)
+
+          if (trackCover && trackPreview && trackFullCrypto) {
             let extra = [
               {
                 trait_type: "track_preview",
-                value: process.env.VUE_APP_IPFS + trackPreview.IpfsHash,
+                value: "https://" + trackPreview.value.cid + process.env.VUE_APP_IPFS,
+              },
+              {
+                trait_type: "track_full",
+                value: trackFullCrypto,
               }
             ]
 
@@ -256,7 +304,7 @@ export default {
                           token_metadata: {
                             title: this.sample.title,
                             description: this.sample.description,
-                            media: process.env.VUE_APP_IPFS + trackCover.IpfsHash,
+                            media: "https://" + trackCover.value.cid + process.env.VUE_APP_IPFS,
                             reference: this.sample.genre,
                             extra: JSON.stringify(extra)
                           },
@@ -274,13 +322,7 @@ export default {
           }
         }
       } else {
-        const login = await this.$ramper.signIn()
-        if (login) {
-          if (login.user) {
-            localStorage.setItem('logKey', 'in')
-            location.reload()
-          }
-        }
+        this.$refs.ModalConnect.modalConnect = true
       }
       this.disabledSave = false
     },
@@ -290,13 +332,19 @@ export default {
         if (this.$refs.form.validate()) {
           const trackCover = await this.uploadIpfs(this.cover)
           const trackPreview = await this.uploadIpfs(this.trackPreview)
-          console.log(trackPreview, trackCover)
+          const trackFull = await this.uploadIpfs(this.trackFull)
 
-          if (trackCover && trackPreview) {
+          const trackFullCrypto = await this.encryptRSA("https://" + trackFull.value.cid + process.env.VUE_APP_IPFS)
+
+          if (trackCover && trackPreview && trackFullCrypto) {
             let extra = [
               {
                 trait_type: "track_preview",
-                value: process.env.VUE_APP_IPFS + trackPreview.IpfsHash,
+                value: "https://" + trackPreview.value.cid + process.env.VUE_APP_IPFS,
+              },
+              {
+                trait_type: "track_full",
+                value: trackFullCrypto,
               }
             ]
             
@@ -307,7 +355,7 @@ export default {
                   token_metadata: {
                     title: this.sample.title,
                     description: this.sample.description,
-                    media: process.env.VUE_APP_IPFS + trackCover.IpfsHash,
+                    media: "https://" + trackCover.value.cid + process.env.VUE_APP_IPFS,
                     reference: this.sample.genre,
                     extra: JSON.stringify(extra)
                   },
@@ -343,13 +391,7 @@ export default {
           }
         }
       } else {
-        const login = await this.$ramper.signIn()
-        if (login) {
-          if (login.user) {
-            localStorage.setItem('logKey', 'in')
-            location.reload()
-          }
-        }
+        this.$refs.ModalConnect.modalConnect = true
       }
       this.disabledSave = false
     },

@@ -1,7 +1,7 @@
 <template>
   <v-dialog v-model="modalConnect" content-class="modal-connect divcol relative isolate">
     <aside class="space">
-      <span class="h9_em">Connect Wallet</span>
+      <span class="h9_em" style="color:#fff !important">Connect Wallet</span>
       
       <v-btn icon @click="closeDialog()">
         <v-icon size="1.5em">mdi-close</v-icon>
@@ -9,57 +9,23 @@
     </aside>
 
     <v-sheet class="grid" color="transparent">
-      <v-btn plain color="hsl(0 0% 0% / .5)" @click="$store.commit('signIn', 'ramper')">
-        <!-- <img src="~/assets/sources/logos/ramper.svg" alt="near"> -->
+      <v-btn plain color="hsl(0 0% 0% / .5)" @click="logIn()">
+        <img src="@/assets/sources/logos/ramper.svg" alt="near">
         
         <div class="divcol astart" style="gap: 5px">
-          <span class="h12_em bold">Email</span>
+          <span class="h12_em bold" style="color:#fff !important">Email</span>
           <span class="h13_em">ramper.xyz</span>
         </div>
       </v-btn>
-      <v-btn plain @click="$store.commit('signIn', 'near')">
-        <!-- <img src="~/assets/sources/logos/near-wallet-icon.svg" alt="near"> -->
+      <v-btn plain @click="walletSelector()">
+        <img src="@/assets/sources/logos/near-wallet-icon.svg" alt="near">
         
         <div class="divcol astart" style="gap: 5px">
-          <span class="h12_em bold">NEAR</span>
-          <span class="h13_em">wallet.near.org</span>
-        </div>
-      </v-btn>
-      
-      <v-btn plain color="hsl(0 0% 0% / .5)" @click="$store.commit('signIn', 'myNear')">
-        <!-- <img src="~/assets/sources/logos/my-near-wallet-icon.svg" alt="near"> -->
-        
-        <div class="divcol astart" style="gap: 5px">
-          <span class="h12_em bold">MyNearWallet</span>
-          <span class="h13_em">mynearwallet.com</span>
+          <span class="h12_em bold" style="color:#fff !important">WALLET</span>
+          <span class="h13_em">near</span>
         </div>
       </v-btn>
     </v-sheet>
-    <!-- <v-sheet class="grid" color="transparent">
-      {{user}}
-
-      <v-btn plain color="hsl(0 0% 0% / .5)" @click="loginRamper()">
-        <div class="divcol astart" style="gap: 5px">
-          <span class="h12_em bold">Login Ramper</span>
-        </div>
-      </v-btn>
-      <v-btn plain color="hsl(0 0% 0% / .5)" @click="handleSignOut()">
-        <div class="divcol astart" style="gap: 5px">
-          <span class="h12_em bold">Logout Ramper</span>
-        </div>
-      </v-btn>
-      <v-btn plain color="hsl(0 0% 0% / .5)" @click="openWalletView()">
-        <div class="divcol astart" style="gap: 5px">
-          <span class="h12_em bold">Open Wallet</span>
-        </div>
-      </v-btn>
-
-      <v-btn plain color="hsl(0 0% 0% / .5)" @click="sendSampleTransaction()">
-        <div class="divcol astart" style="gap: 5px">
-          <span class="h12_em bold">Call</span>
-        </div>
-      </v-btn>
-    </v-sheet> -->
   </v-dialog>
 </template>
 
@@ -92,6 +58,26 @@ export default {
   mounted() {
   },
   methods: {
+    closeDialog(){
+      this.modalConnect = false
+    },
+    async walletSelector() {
+      this.modalConnect = false
+      localStorage.setItem('modeConnect', 'walletSelector')
+
+      this.$selector.modal.show();
+    },
+    async logIn() {
+      this.modalConnect = false
+      const login = await this.$ramper.signIn()
+      if (login) {
+        if (login.user) {
+          localStorage.setItem('modeConnect', 'ramper')
+          localStorage.setItem('logKey', 'in')
+          location.reload()
+        }
+      }
+    },
     closeDialog() {
       this.modalConnect = false
       if (JSON.parse(localStorage.getItem('discord_sinc'))) {

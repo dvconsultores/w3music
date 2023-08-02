@@ -165,8 +165,12 @@ export default {
         { icon:"instagram", url:"#" },
         { icon:"twitch", url:"#" }
       ],
-      dataMenuLogin: [
+      dataMenuLogin: localStorage.getItem("modeConnect") === "ramper"? [
         { key:"wallet", name:"Open wallet" },
+        { key:"profile", name:"Profile", to:"/profile" },
+        { key:"library", name:"Library", to:"/library" },
+        { key:"logout", name:"Log out" },
+      ] : [
         { key:"profile", name:"Profile", to:"/profile" },
         { key:"library", name:"Library", to:"/library" },
         { key:"logout", name:"Log out" },
