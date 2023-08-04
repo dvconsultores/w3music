@@ -290,7 +290,7 @@ export default {
                 value: trackFullCrypto,
               }
             ]
-
+            localStorage.setItem("typeResult", "sell")
             const resTx = await this.$selector.wallet.signAndSendTransactions({
               transactions: [
                 {
@@ -318,7 +318,6 @@ export default {
                 },
               ],
             });
-            console.log(resTx)
           }
         }
       } else {
@@ -386,7 +385,13 @@ export default {
               } else {
                 this.urlTx = "https://explorer.testnet.near.org/transactions/" + resTx.txHashes[0];
               }
-              console.log(this.urlTx)
+              localStorage.setItem("results", true)
+              localStorage.setItem("typeResult", "sell")
+              localStorage.setItem("linkHash", this.urlTx)
+              this.$router.push('/results')
+            } else {
+              localStorage.setItem("results", false)
+              this.$router.push('/results')
             }
           }
         }

@@ -297,8 +297,8 @@ export default {
     },
     async saveProfileSelector () {
       this.disabledSave = true
-      console.log("AQUI VA")
       if (this.$selector.getAccountId()) {
+        localStorage.setItem("typeResult", "profile")
         const resTx = await this.$selector.wallet.signAndSendTransactions({
           transactions: [
             {
@@ -365,8 +365,6 @@ export default {
           network: process.env.VUE_APP_NETWORK,
         });
 
-        console.log(resTx)
-
         if ((resTx &&
           JSON.parse(localStorage.getItem('ramper_loggedInUser'))
             .signupSource === 'near_wallet' &&
@@ -377,7 +375,13 @@ export default {
           } else {
             this.urlTx = "https://explorer.testnet.near.org/transactions/" + resTx.txHashes[0];
           }
-          console.log(this.urlTx)
+          localStorage.setItem("results", true)
+          localStorage.setItem("typeResult", "profile")
+          localStorage.setItem("linkHash", this.urlTx)
+          this.$router.push('/results')
+        } else {
+          localStorage.setItem("results", false)
+          this.$router.push('/results')
         }
       } else {
         const login = await this.$ramper.signIn()

@@ -19,7 +19,7 @@
 
           <v-sheet class="divcol" color="var(--primary)">
             <h6 class="p">{{item.name}}</h6>
-            <span class="font2">by <a class="not_typography" href="#">{{item.by}}</a></span>
+            <span class="font2">by <a class="not_typography" href="#" @click="goArtistDetails(item)">{{item.by}}</a></span>
           </v-sheet>
         </div>
 
@@ -121,6 +121,10 @@ export default {
     this.getShoppingCart()
   },
   methods: {
+    goArtistDetails(item) {
+      localStorage.setItem("artist", item.creator)
+      this.$router.push('/artist-details')
+    },
     async buy () {
       if (this.$ramper.getUser() || this.$selector?.getAccountId()) {
         if (this.modeConnect === "walletSelector") {
@@ -149,47 +153,34 @@ export default {
           totalPriceNear += price
 
           actions.push(
-            this.$ramper.functionCall(
-              "nft_buy",
-              {
-                token_series_id: element.tokenId,
-                receiver_id: this.$ramper.getAccountId(),
+            {
+              type: "FunctionCall",
+              params: {
+                methodName: "nft_buy",
+                args: {
+                  token_series_id: element.tokenId,
+                  receiver_id: this.$selector.getAccountId(),
+                },
+                gas: "50000000000000",
+                deposit: this.$utils.format.parseNearAmount(String(price))
               },
-              "50000000000000",
-              this.$utils.format.parseNearAmount(String(price))
-            ),
+            },
           )
         }
 
-        console.log(totalPriceNear)
-
         if (balance < totalPriceNear) {
-          console.log("FALTA DE PLATA BB")
-          return;
+          localStorage.setItem("results", false)
+          this.$router.push('/results')
         }
 
-        const resTx = await this.$ramper.sendTransaction({
-          transactionActions: [{
+        await this.$selector.wallet.signAndSendTransactions({
+          transactions: [
+            {
               receiverId: process.env.VUE_APP_CONTRACT_NFT,
               actions: actions,
-            }],
-          network: process.env.VUE_APP_NETWORK,
+            },
+          ],
         });
-
-        if ((resTx &&
-          JSON.parse(localStorage.getItem('ramper_loggedInUser'))
-            .signupSource === 'near_wallet' &&
-            resTx.txHashes.length > 0) || (resTx.result || resTx.result[0]?.status?.SuccessValue || resTx.result[0]?.status?.SuccessValue === "")) {
-
-          this.axios.post(process.env.VUE_APP_NODE_API + "/api/delete-array-shopping-cart/", {wallet: this.$ramper.getAccountId(), tokenIds: tokenIds})
-  
-          if (process.env.VUE_APP_NETWORK === "mainnet") {
-            this.urlTx = "https://explorer.near.org/transactions/" + resTx.txHashes[0];
-          } else {
-            this.urlTx = "https://explorer.testnet.near.org/transactions/" + resTx.txHashes[0];
-          }
-          console.log(this.urlTx)
-        }
         
       } else {
         this.$refs.ModalConnect.modalConnect = true
@@ -224,11 +215,9 @@ export default {
           )
         }
 
-        console.log(totalPriceNear)
-
         if (balance < totalPriceNear) {
-          console.log("FALTA DE PLATA BB")
-          return;
+          localStorage.setItem("results", false)
+          this.$router.push('/results')
         }
 
         const resTx = await this.$ramper.sendTransaction({
@@ -242,7 +231,7 @@ export default {
         if ((resTx &&
           JSON.parse(localStorage.getItem('ramper_loggedInUser'))
             .signupSource === 'near_wallet' &&
-            resTx.txHashes.length > 0) || (resTx.result || resTx.result[0]?.status?.SuccessValue || resTx.result[0]?.status?.SuccessValue === "")) {
+            resTx.txHashes.length > 0) || (resTx.result && (resTx.result[0]?.status?.SuccessValue || resTx.result[0]?.status?.SuccessValue === ""))) {
 
           this.axios.post(process.env.VUE_APP_NODE_API + "/api/delete-array-shopping-cart/", {wallet: this.$ramper.getAccountId(), tokenIds: tokenIds})
   
@@ -251,7 +240,13 @@ export default {
           } else {
             this.urlTx = "https://explorer.testnet.near.org/transactions/" + resTx.txHashes[0];
           }
-          console.log(this.urlTx)
+          localStorage.setItem("results", true)
+          localStorage.setItem("typeResult", "buy")
+          localStorage.setItem("linkHash", this.urlTx)
+          this.$router.push('/results')
+        } else {
+          localStorage.setItem("results", false)
+          this.$router.push('/results')
         }
         
       } else {

@@ -91,6 +91,29 @@ export default {
       ]
     };
   },
+  created() {
+    const queryString = window.location.search; // tomo mi url
+    const urlParams = new URLSearchParams(queryString)
+    if (urlParams.get("transactionHashes") !== null) {
+      let urlTx
+      if (process.env.VUE_APP_NETWORK === "mainnet") {
+        urlTx = "https://explorer.near.org/transactions/" + urlParams.get("transactionHashes")
+      } else {
+        urlTx = "https://explorer.testnet.near.org/transactions/" + urlParams.get("transactionHashes")
+      }
+
+      this.transactionHashes = urlParams.get("transactionHashes")
+      history.replaceState(null, location.href.split("?")[0], '/#/');
+      localStorage.setItem("results", true)
+      localStorage.setItem("linkHash", urlTx)
+      this.$router.push('/results')
+    }
+    if (urlParams.get("errorCode") !== null) {
+      // error de transaccion
+      history.replaceState(null, location.href.split("?")[0], '/#/');
+      this.$router.push('/results')
+    }
+  },
   async mounted() {
     if (this.$selector.selector.isSignedIn()) {
       this.getNearSocial(this.$selector.getAccountId())

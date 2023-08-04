@@ -8,12 +8,12 @@
           <img :src="avatar" alt="profile image" style="--w:100%">
         </v-avatar>
 
-        <h1 class="p" style="max-width:14ch">MANDY BAXTER</h1>
+        <h1 class="p" style="max-width:14ch">{{ dataArtist.artistName || dataArtist.wallet  }}</h1>
       </div>
 
       <section class="space gap1 wrap">
         <aside class="wrap gap1 font2">
-          <v-chip v-for="(item,i) in dataActions" :key="i" :class="{active: item.active}"
+          <v-chip v-for="(item,i) in dataActions" :key="i" :class="{active: item.active}" :disabled="item.disabled"
             @click="dataActions.forEach(e=>{e.active=false});item.active=true">
             {{item.name}} {{item.amount}}
           </v-chip>
@@ -126,13 +126,15 @@ export default {
   name: "artistDetails",
   data() {
     return {
+      dataArtist: {},
+      artistId: localStorage.getItem("artist"),
       like: false,
       avatar: require("@/assets/avatars/a2.jpg"),
       dataActions: [
-        { key:"tracks", name:"TRACKS", active: true },
-        { key:"activity", name:"ACTIVITY", active: false },
-        { key:"followers", name:"FOLLOWERS", amount:"5.0k", active: false },
-        { key:"following", name:"FOLLOWING", amount: "20", active: false },
+        { key:"tracks", name:"GRID", active: true, disabled: false },
+        { key:"activity", name:"LIST", active: false, disabled: false },
+        { key:"followers", name:"FOLLOWERS", amount:"", active: false, disabled: true },
+        { key:"following", name:"FOLLOWING", amount: "", active: false, disabled: true },
       ],
       headersTable: [
         { value:"price", text:"PRICE", align:"center" },
@@ -200,9 +202,68 @@ export default {
     }
   },
   mounted() {
+    this.getArtist()
     this.$emit('RouteValidator')
   },
   methods: {
+    async getArtist() {
+      
+      const getDataUser = gql`
+        query MyQuery($wallet: String!) {
+          users(where: {wallet: $wallet}) {
+            artist_name
+            description
+            id
+            location
+            wallet
+            youare
+            public_url
+            music_genre
+            age
+          }
+        }
+      `;;
+
+      const res = await this.$apollo.query({
+        query: getDataUser,
+        variables: {wallet: this.artistId},
+      })
+
+      const data = res.data
+
+      console.log(data)
+      this.dataArtist.youAre = data.users[0].youare || null,
+      this.dataArtist.location= data.users[0].location || null,
+      this.dataArtist.musicGenre= String(data.users[0].music_genre) || "0",
+      this.dataArtist.age= Number(data.users[0].age) || null,
+      this.dataArtist.artistName= data.users[0].artist_name || null,
+      this.dataArtist.description= data.users[0].description || null,
+      this.dataArtist.publicUrl= data.users[0].public_url || null,
+
+      console.log(this.dataArtist)
+
+      // this.$apollo
+      //   .watchQuery({
+      //     query: getDataUser,
+      //     variables: {
+      //       wallet: user,
+      //     },
+      //     pollInterval: 10000, // 10 seconds in milliseconds
+      //   })
+      //   .subscribe(({ data }) => {
+      //     console.log(data);
+      //     this.dataUser = {
+      //       youAre: data.users[0].youare || null,
+      //       location: data.users[0].location || null,
+      //       musicGenre: data.users[0].music_genre || "0",
+      //       age: data.users[0].age || null,
+      //       email: data.users[0].email || null,
+      //       artistName: data.users[0].artist_name || null,
+      //       description: data.users[0].description || null,
+      //       publicUrl: data.users[0].public_url || null,
+      //     } 
+      //   });
+    },
   }
 };
 </script>

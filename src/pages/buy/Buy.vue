@@ -104,7 +104,7 @@
           <v-sheet color="var(--primary)" class="fill_w divcol center gap1 padd2">
             <div class="divcol marginaright">
               <h6 class="p">{{item.name}}</h6>
-              <span class="font2" style="font-size:0.875em">by <a :title="item.by" class="not_typography" href="#">{{limitStr(item.by, 25)}}</a></span>
+              <span class="font2" style="font-size:0.875em">by <a :title="item.by" class="not_typography" href="#" @click="goArtistDetails(item)">{{limitStr(item.by, 25)}}</a></span>
             </div>
 
             <!-- <span class="font2 bold acenter" style="gap:.2em">
@@ -112,7 +112,7 @@
             </span> -->
 
             <span class="font2 bold acenter" style="gap:.2em">
-              FLOOR PRICE {{item.price}}$<span style="font-size:0.875em"> ≈ {{ convertPrice(item.price) }}<img src="@/assets/logos/near.svg" alt="near" style="--w:0.75em"></span>
+              PRICE {{item.price}}$<span style="font-size:0.875em"> ≈ {{ convertPrice(item.price) }}<img src="@/assets/logos/near.svg" alt="near" style="--w:0.75em"></span>
             </span>
 
             <div class="center gap1">
@@ -266,33 +266,48 @@ export default {
     
   },
   methods: {
+    goArtistDetails(item) {
+      localStorage.setItem("artist", item.creator)
+      this.$router.push('/artist-details')
+    },
     getAllLikeTrack() {
       if (this.$ramper.getAccountId() || this.$selector.getAccountId()) {
         let wallet = this.$ramper.getAccountId() || this.$selector.getAccountId()
         const resp = this.axios.post(process.env.VUE_APP_NODE_API + "/api/get-all-like-track/", {wallet})
           .then((res) => {
-            return res.data
+            if (res.data) {
+              return res.data
+            } else {
+              return []
+            }
           })
           .catch((err) => {
+            console.log(err)
             return []
           })
         return resp
+      } else {
+        return []
       }
     },
     getLikeTrack(tokenId) {
-      const like = this.likesTrack.find((element) => element.tokenId === tokenId)
-      if (like) {
-        return true
+      if (this.likesTrack.length > 0) {
+        const like = this.likesTrack.find((element) => element.tokenId === tokenId)
+        if (like) {
+          return true
+        } else {
+          return false
+        }
       } else {
         return false
-      }
+      }   
     },
     createLikeTrack(item) {
       console.log(item)
       if (this.$ramper.getAccountId() || this.$selector.getAccountId()) {
         let wallet = this.$ramper.getAccountId() || this.$selector.getAccountId()
         if (!item.like) {
-          this.axios.post(process.env.VUE_APP_NODE_API + "/api/create-like-track/", {wallet, tokenId: item.token_id})
+          this.axios.post(process.env.VUE_APP_NODE_API + "/api/create-like-track/", {wallet, tokenId: item.token_id, creatorId: item.creator})
             .then((res) => {
               console.log(res)
               item.like=!item.like
@@ -301,7 +316,7 @@ export default {
               console.log(err)
             })
         } else {
-          this.axios.post(process.env.VUE_APP_NODE_API + "/api/delete-like-track/", {wallet, tokenId: item.token_id})
+          this.axios.post(process.env.VUE_APP_NODE_API + "/api/delete-like-track/", {wallet, tokenId: item.token_id, creatorId: item.creator})
             .then((res) => {
               console.log(res)
               item.like=!item.like
@@ -368,6 +383,8 @@ export default {
       this.track = item
       if (item.play) {
         this.$store.dispatch('updateTrack', item);
+        let wallet = this.$ramper.getAccountId() || this.$selector.getAccountId()
+        this.axios.post(process.env.VUE_APP_NODE_API + "/api/play-track/", {wallet, tokenId: item.token_id, creatorId: item.creator})
       } else {
         this.$store.dispatch('updateTrack', item);
       }
