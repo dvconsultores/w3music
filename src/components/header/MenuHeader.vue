@@ -150,7 +150,6 @@ export default {
             active: false,
           },
         ],
-        modeConnect: localStorage.getItem("modeConnect"),
         expansion: [
           {
             icon: "market",
@@ -163,6 +162,7 @@ export default {
           },
         ],
       },
+      modeConnect: localStorage.getItem("modeConnect"),
       dataSocial: [
         { icon:"twitter", url:"#" },
         { icon:"instagram", url:"#" },

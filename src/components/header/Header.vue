@@ -52,6 +52,7 @@
 </template>
 
 <script>
+import gql from "graphql-tag";
 import ModalConnect from "../modals/connect.vue"
 import "@near-wallet-selector/modal-ui/styles.css"
 import MenuHeader from "./MenuHeader.vue"
@@ -120,11 +121,13 @@ export default {
       this.initUser(this.$selector.getAccountId())
       localStorage.setItem('modeConnect', 'walletSelector')
       this.$store.state.user.login = true
+      this.getCollection()
     } else if (this.$ramper.getUser()) {
       this.getNearSocial(this.$ramper.getAccountId())
       this.initUser(this.$ramper.getAccountId())
       localStorage.setItem('modeConnect', 'ramper')
       this.$store.state.user.login = true
+      this.getCollection()
     }
     
     // responsive
@@ -156,6 +159,60 @@ export default {
     })
   },
   methods: {
+    async getCollection() {
+      this.axios.post(process.env.VUE_APP_NODE_API + "/api/get-collection/", {wallet: this.$ramper.getAccountId() || this.$selector.getAccountId()})
+        .then(async (res) => {
+          const dataCollection = []
+          const nfts = res.data
+          for (let i = 0; i < nfts.length; i++) {
+            const nft = nfts[i];
+            const sonido = document.createElement("audio");
+            sonido.src = nft.trackFull;
+            sonido.setAttribute("preload", "auto");
+            sonido.setAttribute("controls", "none");
+            sonido.style.display = "none"; // <-- oculto
+            document.body.appendChild(sonido);
+            const item = { 
+              index: i,
+              tokenId: nft.id,
+              img: nft.metadata.media, 
+              name: nft.metadata.title, 
+              nameNft: nft.title, 
+              by: await this.getArtistName(nft.metadata.creator_id), 
+              creator: nft.metadata.creator_id, 
+              track: sonido,
+              play: false,
+              type: "full",
+            }
+            dataCollection.push(item)
+          }      
+          this.$store.dispatch('updateLibrary', dataCollection); 
+        })
+        .catch((err) => {
+          console.log(err)
+       
+        })
+    },
+    async getArtistName(wallet) {
+      
+      const getDataUser = gql`
+        query MyQuery($wallet: String!) {
+          users(where: {wallet: $wallet}) {
+            artist_name
+            wallet
+          }
+        }
+      `;
+
+      const res = await this.$apollo.query({
+        query: getDataUser,
+        variables: {wallet: wallet},
+      })
+
+      const data = res.data
+
+      return data.users[0].artist_name || null
+    },
     initUser(wallet) {
       this.axios.post(process.env.VUE_APP_NODE_API + "/api/get-user-by-wallet/", {wallet})
         .then((res) => {

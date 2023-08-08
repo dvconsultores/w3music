@@ -96,6 +96,7 @@ export default {
             sonido.style.display = "none"; // <-- oculto
             document.body.appendChild(sonido);
             const item = { 
+              index: i,
               tokenId: nft.id,
               img: nft.metadata.media, 
               name: nft.metadata.title, 
@@ -104,7 +105,7 @@ export default {
               creator: nft.metadata.creator_id, 
               track: sonido,
               play: false,
-              type: "preview",
+              type: "full",
             }
             this.dataCollection.push(item)
           }       

@@ -8,9 +8,10 @@ export default new Vuex.Store({
   state: {
     player: {
       volume: 0.50,
-      play: false,
+      play: false
     },
     track: {},
+    library: [],
     baseURL: process.env.BASE_URL,
     theme: "light",
     overlay: { opacity: 0.2, color: "black" },
@@ -66,18 +67,66 @@ export default new Vuex.Store({
     },
     setPlayer(state, value) {
       state.player = value;
-      if (state.player.play) {
+
+      if (state.player.play && state.track.track) {
         state.track.track.play()
         state.track.play = true
-      } else {
+      } else if (!state.player.play && state.track.track) {
         state.track.track.pause()
         state.track.play = false;
-      } 
+      } else {
+        console.log(state.library)
+        if (state.library.length > 0) {
+          state.track = state.library[0]
+          state.track.track.play()
+          state.track.play = true
+        }
+      }
 
       
       // if (state.track?.track) {
       //   state.track.track.volume = value;
       // }
+    },
+    setLibrary(state, value) {
+      state.library = value;
+    },
+    updateArrow(state, value) {
+      console.log(value)
+      console.log(state.track)
+      if (value === "next") {
+        if (typeof state.track.index === "number") {
+          let index = state.track.index + 1
+          if ((index+1) > state.library.length) {
+            index = 0
+          }
+          if (state.track.track.play) {
+            state.track.track.pause()
+            state.track.track.currentTime = 0;
+            state.track.play = false
+          }
+          state.track = state.library[index]
+          state.track.track.play()
+          state.track.play = true
+          state.player.play = true
+        }
+      } else if (value === "previous") {
+        if (typeof state.track.index === "number") {
+          let index = state.track.index - 1
+          if (index < 0) {
+            index = 0
+          }
+          if (state.track.track.play) {
+            state.track.track.pause()
+            state.track.track.currentTime = 0;
+            state.track.play = false
+          }
+          state.track = state.library[index]
+          state.track.track.play()
+          state.track.play = true
+          state.player.play = true
+        }
+      }
     },
     OverlayMethod(state, theme) {
       if (theme == "dark") {state.overlay.opacity = "0.5";state.overlay.color = "black"}
@@ -93,11 +142,17 @@ export default new Vuex.Store({
     updateTrack({ commit }, value) {
       commit('setTrack', value);
     },
+    updateLibrary({ commit }, value) {
+      commit('setLibrary', value);
+    },
     updateVolume({ commit }, value) {
       commit('setVolume', value);
     },
     updatePlayer({ commit }, value) {
       commit('setPlayer', value);
+    },
+    arrowPlayer({ commit }, value) {
+      commit('updateArrow', value);
     },
   },
 });
