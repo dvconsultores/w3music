@@ -4,12 +4,12 @@ import Vue from 'vue'
 
 export default function RamperApi() {
   init({
-    appName: 'Music Feast',
+    appName: 'W3 Music',
     chainName: CHAIN.NEAR,
     walletProviders: [],
     theme: THEME.DARK,
     network: process.env.NETWORK,
-    logoURI: "https://testnet.musicfeast.io/img/logo.fb7d246.svg",
+    logoURI: "https://bafkreihdn254nyl5cnj7unjul4mjnp6lqrrme5a4gd6zm5ppnw7iyhxh3y.ipfs.nftstorage.link/",
     authProviders: [
       AUTH_PROVIDER.GOOGLE,
       AUTH_PROVIDER.FACEBOOK,

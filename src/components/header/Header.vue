@@ -168,6 +168,7 @@ export default {
         })
     },
     async getNearSocial(accountId) {
+      localStorage.removeItem("nearSocialAvatar");
       const account = await this.$near.account(accountId);
       const contract = new Contract(account, process.env.VUE_APP_CONTRACT_SOCIAL, {
         viewMethods: ["get"],

@@ -1,5 +1,6 @@
 <template>
   <section id="menuHeader">
+    <ModalConnect ref="ModalConnect"></ModalConnect>
     <!-- drawer -->
     <v-navigation-drawer
       id="toggleBar"
@@ -65,7 +66,7 @@
         </v-expansion-panels>
 
         <section class="container-footer divcol center gap2">
-          <v-btn class="btn" style="--max-w:9.1875em;--p:0 1.2em">LOG IN WITH NEAR</v-btn>
+          <v-btn v-show="!$store.state.user.login" @click="$refs.ModalConnect.modalConnect = true" class="btn" style="--max-w:9.1875em;--p:0 1.2em">LOG IN</v-btn>
 
           <div class="center">
             <v-btn v-for="(item,i) in dataSocial" :key="i" icon :href="item.url" target="_blank">
@@ -105,10 +106,12 @@
 </template>
 
 <script>
+import ModalConnect from "../modals/connect.vue"
 import { i18n } from "@/plugins/i18n";
 export default {
   name: "headerMenu",
   i18n: require("./i18n"),
+  components: { ModalConnect },
   // created() {
   //   const theme = localStorage.getItem("theme");
   //   this.OverlayMethod(theme);
@@ -178,6 +181,17 @@ export default {
     };
   },
   mounted() {
+    // if (this.$selector.selector.isSignedIn()) {
+    //   // this.getNearSocial(this.$selector.getAccountId())
+    //   // this.initUser(this.$selector.getAccountId())
+    //   localStorage.setItem('modeConnect', 'walletSelector')
+    //   this.$store.state.user.login = true
+    // } else if (this.$ramper.getUser()) {
+    //   // this.getNearSocial(this.$ramper.getAccountId())
+    //   // this.initUser(this.$ramper.getAccountId())
+    //   localStorage.setItem('modeConnect', 'ramper')
+    //   this.$store.state.user.login = true
+    // }
     // responsive
     // this.Responsive()
     // document.addEventListener('resize', this.Responsive());

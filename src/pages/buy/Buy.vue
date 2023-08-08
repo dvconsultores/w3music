@@ -59,6 +59,7 @@
               v-model="recent"
               :items="dataRecent"
               item-text="recent"
+              @change="selectRecent()"
               placeholder="RECENT"
               hide-details
               solo
@@ -228,8 +229,8 @@ export default {
         //   ],
         // },
       ],
-      recent: "RECENT",
-      dataRecent: [],
+      recent: "Recent",
+      dataRecent: ["any","recent", "ancient"],
       atribute: null,
       dataAtribute: ["any","asc", "desc"],
       categoriesFilter: [],
@@ -266,6 +267,22 @@ export default {
     
   },
   methods: {
+    selectRecent() {
+      if (this.recent === "recent") {
+        if (this.atribute) {
+          this.atribute = "any"
+        }
+        this.getData()
+        
+      } else if (this.recent === "ancient") {
+        this.dataAfrofusion = this.dataAfrofusion.reverse()
+        if (this.atribute) {
+          this.atribute = "any"
+        }
+      } else {
+        this.getData()
+      }
+    },
     goArtistDetails(item) {
       localStorage.setItem("artist", item.creator)
       this.$router.push('/artist-details')
@@ -456,6 +473,9 @@ export default {
     },
     getSeriesGQL() {
       if (this.atribute === "asc" || this.atribute === "desc") {
+        if (this.recent) {
+          this.recent = "any"
+        }
         return gql`
           query MyQuery($categories: [String!]) {
             series(orderBy: price, orderDirection: ${this.atribute}, where: {reference_in: $categories, is_mintable: true}) {

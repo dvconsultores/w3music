@@ -72,8 +72,8 @@ export default {
         ]
       },
       dataCollection: [
-        { img: require("@/assets/tracks/track2.jpg"), name: "Tracks & Beats you like", track: "List- 459", like: false },
-        { img: require("@/assets/tracks/track1.jpg"), name: "Travis Poll", track: "Sunset dream", like: false }
+        // { img: require("@/assets/tracks/track2.jpg"), name: "Tracks & Beats you like", track: "List- 459", like: false },
+        // { img: require("@/assets/tracks/track1.jpg"), name: "Travis Poll", track: "Sunset dream", like: false }
       ],
     }
   },

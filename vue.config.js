@@ -13,5 +13,5 @@ module.exports = {
       }
     }
 },
-  publicPath: '/'
+  publicPath: '/w3music/'
 }
