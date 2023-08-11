@@ -6,6 +6,7 @@ Vue.use(Vuex);
 export default new Vuex.Store({
   namespace: true,
   state: {
+    artist: null,
     player: {
       volume: 0.50,
       play: false
@@ -29,11 +30,15 @@ export default new Vuex.Store({
     getTrack(state) {
       return state.track;
     },
+    getArtist(state) {
+      return state.artist;
+    },
     getPlayer(state) {
       return state.player;
     },
   },
   mutations: {
+    setArtist(state, value) {state.artist = value},
     Avatar (state, avatar) {state.user.perfil = avatar},
     CambiarTheme(state, theme) {state.theme = theme},
     setTrack(state, value) {
@@ -110,6 +115,19 @@ export default new Vuex.Store({
           state.track.play = true
           state.player.play = true
         }
+      } else if (value === "nextRandom") {
+        if (typeof state.track.index === "number") {
+          let index = Math.floor(Math.random() * state.library.length);
+          if (state.track.track.play) {
+            state.track.track.pause()
+            state.track.track.currentTime = 0;
+            state.track.play = false
+          }
+          state.track = state.library[index]
+          state.track.track.play()
+          state.track.play = true
+          state.player.play = true
+        }
       } else if (value === "previous") {
         if (typeof state.track.index === "number") {
           let index = state.track.index - 1
@@ -144,6 +162,9 @@ export default new Vuex.Store({
     },
     updateLibrary({ commit }, value) {
       commit('setLibrary', value);
+    },
+    updateArtist({ commit }, value) {
+      commit('setArtist', value);
     },
     updateVolume({ commit }, value) {
       commit('setVolume', value);

@@ -19,7 +19,21 @@ _<template>
         </blockquote>
 
         <aside class="acenter gap1">
+          <v-btn v-for="(item,i) in dataActionsLeft" :key="i" icon :disabled="disabledTrack && ((item.key === 'previous' || item.key === 'next') || (item.key === 'shuffle' || item.key === 'repeat'))" style="--p:clamp(1.2em ,1.5vw, 1.5em)" @click="btnLeft"
+          :class="{ 'activeBtn': isPressedLeft }">
+            <img :src="require(`@/assets/icons/${item.key=='play'?player.play?'pause-simple':'play-simple':item.icon}.svg`)" :alt="`${item.key} icon`"
+              :style="`transform: ${item.key=='next'?'rotate(180deg)':null}
+              ${item.key=='play'?item.icon=='play-simple'?'translateX(2px)':'translateX(0)':null};
+              --w: clamp(1.46em - .4em, 1.4vw, 1.46em)`">
+          </v-btn>
           <v-btn v-for="(item,i) in dataActions" :key="i" icon :disabled="disabledTrack && ((item.key === 'previous' || item.key === 'next') || (item.key === 'shuffle' || item.key === 'repeat'))" style="--p:clamp(1.2em ,1.5vw, 1.5em)" @click="clickPlayer(item)" :class="{eliminarmobile: item.deleteMobile}">
+            <img :src="require(`@/assets/icons/${item.key=='play'?player.play?'pause-simple':'play-simple':item.icon}.svg`)" :alt="`${item.key} icon`"
+              :style="`transform: ${item.key=='next'?'rotate(180deg)':null}
+              ${item.key=='play'?item.icon=='play-simple'?'translateX(2px)':'translateX(0)':null};
+              --w: clamp(1.46em - .4em, 1.4vw, 1.46em)`">
+          </v-btn>
+          <v-btn v-for="(item,i) in dataActionsRight" :key="i" icon :disabled="disabledTrack && ((item.key === 'previous' || item.key === 'next') || (item.key === 'shuffle' || item.key === 'repeat'))" style="--p:clamp(1.2em ,1.5vw, 1.5em)" @click="btnRight"
+          :class="{ 'activeBtn': isPressedRight }">
             <img :src="require(`@/assets/icons/${item.key=='play'?player.play?'pause-simple':'play-simple':item.icon}.svg`)" :alt="`${item.key} icon`"
               :style="`transform: ${item.key=='next'?'rotate(180deg)':null}
               ${item.key=='play'?item.icon=='play-simple'?'translateX(2px)':'translateX(0)':null};
@@ -81,6 +95,15 @@ export default {
           clearInterval(this.interval)
           this.interval = setInterval(() => {
             this.sliderValue = track.currentTime
+            if (track.currentTime >= track.duration) {
+              if (this.isPressedRight) {
+                track.play()
+              } else if (this.isPressedLeft) {
+                this.$store.dispatch('arrowPlayer', "nextRandom");
+              } else {
+                this.$store.dispatch('arrowPlayer', "next");
+              }
+            }
           }, 500);
         }
       }      
@@ -98,17 +121,23 @@ export default {
   },
   data() {
     return {
+      isPressedRight: false,
+      isPressedLeft: false,
       dataSocial: [
         { icon:"twitter", url:"#" },
         { icon:"instagram", url:"#" },
         { icon:"twitch", url:"#" },
       ],
       dataActions: [
-        { key:"shuffle", icon:"shuffle", deleteMobile:true },
         { key:"previous", icon:"next-music" },
         { key:"play", icon:"play-simple"},
         { key:"next", icon:"next-music" },
+      ],
+      dataActionsRight: [
         { key:"repeat", icon:"repeat", deleteMobile:true },
+      ],
+      dataActionsLeft: [
+        { key:"shuffle", icon:"shuffle", deleteMobile:true },
       ],
       disabledTrack: true,
       playTrack: 0,
@@ -128,6 +157,22 @@ export default {
     this.soundValue = this.player.volume * 100 || 50
   },
   methods: {
+    btnRight() {
+      this.isPressedRight = !this.isPressedRight;
+
+      console.log(this.isPressedRight)
+
+      if (this.isPressedRight) {
+        this.isPressedLeft = false
+      }
+    },
+    btnLeft() {
+      this.isPressedLeft = !this.isPressedLeft;
+
+      if (this.isPressedLeft) {
+        this.isPressedRight = false
+      }
+    },
     inputTimeSlider() {
       // clearInterval(this.interval)
     },
@@ -137,6 +182,15 @@ export default {
 
       this.interval = setInterval(() => {
         this.sliderValue = this.track.track.currentTime
+        if (this.track.track.currentTime >= this.track.track.duration) {
+          if (this.isPressedRight) {
+            this.track.track.play()
+          } else if (this.isPressedLeft) {
+            this.$store.dispatch('arrowPlayer', "nextRandom");
+          } else {
+            this.$store.dispatch('arrowPlayer', "next");
+          }
+        }
       }, 500);
     },
     getConvertTime(seconds) {
@@ -153,8 +207,14 @@ export default {
       if (item.key === "play") {
         player.play = !player.play
         this.$store.dispatch('updatePlayer', player);
-      } else if (item.key === "next" || item.key === "previous") {
+      } else if (item.key === "previous") {
         this.$store.dispatch('arrowPlayer', item.key);
+      } else if (item.key === "next") {
+        if (this.isPressedLeft) {
+          this.$store.dispatch('arrowPlayer', "nextRandom");
+        } else {
+          this.$store.dispatch('arrowPlayer', "next");
+        }
       }
     },
     changeSound() {

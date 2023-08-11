@@ -23,11 +23,31 @@
           </v-tooltip>
         </aside>
 
-        <v-text-field id="search" hide-details solo style="--max-w: 14.6875em;--p: 0 1.5em" class="eliminarmobile">
+        <v-autocomplete 
+          v-model="artist"
+          :items="artistList"
+          placeholder="Search artist"
+          @change="searchArtist(artist)"
+          item-text="name"
+          item-value="wallet"
+          id="search" hide-details solo style="--max-w: 14.6875em;--p: 0 1.5em" class="eliminarmobile">
           <template v-slot:append>
             <img src="@/assets/icons/lupa.svg" alt="search">
           </template>
-        </v-text-field>
+
+          <template v-slot:item="data">
+            <template>
+              <v-list-item-avatar>
+                <v-img :src="data.item.img" />
+              </v-list-item-avatar>
+              <v-list-item-content>
+                <v-list-item-title>
+                  {{ data.item.name }}
+                </v-list-item-title>
+              </v-list-item-content>
+            </template>
+          </template>
+        </v-autocomplete>
       </aside>
 
       <!-- <v-btn icon style="--p:2.3em;">
@@ -57,6 +77,7 @@ import ModalConnect from "../modals/connect.vue"
 import "@near-wallet-selector/modal-ui/styles.css"
 import MenuHeader from "./MenuHeader.vue"
 import * as nearAPI from "near-api-js";
+import { eventBus } from '@/main';
 const { Contract } = nearAPI;
 
 const theme = localStorage.getItem("theme");
@@ -76,6 +97,9 @@ export default {
   },
   data() {
     return {
+      imgAux: null,
+      artist: null,
+      artistList: [],
       nearSocialAvatar: null,
       accountId: null,
       messages: 1,
@@ -86,9 +110,9 @@ export default {
       dataSidebar: [
         { key:"market", icon: "market", name:"Marketplace", position: 120, active: false },
         { key:"stats", icon: "stats", name:"stats", to:"/stats", position: 240, active: false },
-        { key:"chats", icon: "chats", name:"chats", to: "/chats", position: 360, active: false },
-        { key:"settings", icon: "settings", name:"settings", position: 480, active: false  },
-        { key:"faq", icon: "faq", name:"faq", position: 600, active: false  },
+        { key:"chats", icon: "chats", name:"chats", to: "/coming-soon", position: 360, active: false },
+        { key:"settings", icon: "settings", name:"settings", to:"/coming-soon", position: 480, active: false  },
+        { key:"faq", icon: "faq", name:"faq", position: 600, to:"/coming-soon", active: false  },
       ]
     };
   },
@@ -129,6 +153,8 @@ export default {
       this.$store.state.user.login = true
       this.getCollection()
     }
+
+    this.getArtists()
     
     // responsive
     // this.responsive()
@@ -159,6 +185,50 @@ export default {
     })
   },
   methods: {
+    searchArtist(item) {
+      localStorage.setItem("artist", item)
+      this.artist = null
+      this.$router.push('/artist-details')
+        .catch(() => {
+          // location.reload()
+          eventBus.$emit('artist-selected', item);
+        })
+    },
+    async getArtists() {
+      const getUser = gql`
+        query MyQuery {
+          users {
+            description
+            id
+            wallet
+            artist_name
+          }
+        }
+      `;
+      const res = await this.$apollo.query({
+        query: getUser
+      })
+
+      const data = res.data.users
+
+      // this.artistList = []
+      
+      for (let i = 0; i < data.length; i++) {
+        const element = data[i];
+  
+        const item = { 
+          id: element.id,
+          name: element.artist_name, 
+          wallet: element.wallet, 
+          creator: element.wallet, 
+          img: await this.getNearSocialFn(element.wallet)
+        }
+
+        this.imgAux = null
+
+        this.artistList.push(item)
+      }
+    },
     async getCollection() {
       this.axios.post(process.env.VUE_APP_NODE_API + "/api/get-collection/", {wallet: this.$ramper.getAccountId() || this.$selector.getAccountId()})
         .then(async (res) => {
@@ -223,6 +293,30 @@ export default {
         .catch((err) => {
           console.log(err)
         })
+    },
+    async getNearSocialFn(accountId) {
+      const account = await this.$near.account(accountId);
+      const contract = new Contract(account, process.env.VUE_APP_CONTRACT_SOCIAL, {
+        viewMethods: ["get"],
+        sender: account,
+      });
+
+      const myArray = [account.accountId + "/profile/**"];
+      //console.log(myArray)
+      const social = await contract.get({
+          keys: myArray
+        });
+
+      Object.entries(social).forEach(([key, value]) => {
+        this.imgAux = process.env.VUE_APP_API_BASE_URL_SOCIAL + value.profile.image.ipfs_cid
+      });
+
+      if (this.imgAux) {
+        return this.imgAux
+      } else {
+        let img = require("@/assets/miscellaneous/track.jpg")
+        return img
+      }
     },
     async getNearSocial(accountId) {
       localStorage.removeItem("nearSocialAvatar");

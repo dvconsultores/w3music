@@ -96,6 +96,11 @@ export default new Router({
       path: '*',
       name: 'error',
       component: () => import('@/layouts/error/Error'),
+    },
+    {
+      path: '/coming-soon',
+      name: 'coming-soon',
+      component: () => import('@/layouts/coming_soon/coming-soon'),
     }
   ],
 });

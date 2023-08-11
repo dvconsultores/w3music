@@ -132,6 +132,7 @@
 import gql from "graphql-tag";
 import moment from 'moment'
 import * as nearAPI from "near-api-js";
+import { eventBus } from '@/main';
 const { Contract } = nearAPI;
 
 export default {
@@ -225,11 +226,18 @@ export default {
       tracks: []
     }
   },
+  created() {
+    // Escuchar el evento y actualizar la información del artista
+    eventBus.$on('artist-selected', artist => {
+      this.artistId = localStorage.getItem("artist")
+      this.getArtist()
+      this.getData()
+    });
+  },
   async mounted() {
     this.getArtist()
     
     this.$emit('RouteValidator')
-    this.tracks = await this.getTracksByCreator()
     this.getData()
   },
   methods: {
@@ -237,7 +245,6 @@ export default {
       item.disabled = true
       this.axios.post(process.env.VUE_APP_NODE_API + "/api/add-shopping-cart/", {wallet: this.$ramper.getAccountId() || this.$selector.getAccountId(), tokenId: item.token_id})
         .then((res) => {
-          console.log(res.data)
           item.status = "success"
           // setTimeout(item.status = null, 1500);
           setTimeout(() => {
@@ -283,6 +290,9 @@ export default {
       }
     },
     async getData() {
+      this.dataTable = []
+      this.tracks = await this.getTracksByCreator()
+
       const getSeries = gql`
         query MyQuery($wallet: String) {
           series(where: {creator_id: $wallet, is_mintable: true}) {
@@ -320,8 +330,6 @@ export default {
       })
 
       const data = res.data.series
-
-      console.log("DATAAA", data)
       
       for (let i = 0; i < data.length; i++) {
         const element = data[i];
@@ -391,7 +399,6 @@ export default {
       return item;
     },
     async getArtist() {
-      
       const getDataUser = gql`
         query MyQuery($wallet: String!) {
           users(where: {wallet: $wallet}) {
@@ -415,6 +422,7 @@ export default {
 
       const data = res.data
 
+      this.nearSocialArtist = null
       this.getNearSocial(this.artistId)
       this.getUser(this.artistId)
 
@@ -446,6 +454,10 @@ export default {
         //   localStorage.setItem("nearSocialBanner", value.profile.backgroundImage.ipfs_cid);
         // }
       });
+
+      if (!this.nearSocialArtist) {
+        this.nearSocialArtist = require("@/assets/miscellaneous/track.jpg")
+      }
     },
   }
 };
