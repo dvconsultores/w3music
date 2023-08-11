@@ -230,7 +230,7 @@ export default {
         // },
       ],
       recent: "Recent",
-      dataRecent: ["any","recent", "ancient"],
+      dataRecent: ["any","recent", "latest"],
       atribute: null,
       dataAtribute: ["any","asc", "desc"],
       categoriesFilter: [],
@@ -274,7 +274,7 @@ export default {
         }
         this.getData()
         
-      } else if (this.recent === "ancient") {
+      } else if (this.recent === "latest") {
         this.dataAfrofusion = this.dataAfrofusion.reverse()
         if (this.atribute) {
           this.atribute = "any"

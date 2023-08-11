@@ -12,7 +12,8 @@
     <aside class="container-actions space gap2">
       <div class="wrap gap1 acenter font2" style="height:2.75em">
         <v-select
-          v-model="dataActions.value"
+          v-model="recent"
+          @change="selectRecent()"
           label="ORDER BY"
           :items="dataActions.data"
           hide-details
@@ -26,9 +27,18 @@
       </div>
 
       <div class="acenter gap1">
-        <v-btn icon style="--bg:var(--primary);--p:1.4em">
+        <!-- <v-btn icon style="--bg:var(--primary);--p:1.4em">
           <img src="@/assets/icons/lupa.svg" alt="search button" style="--w:1.5625em">
-        </v-btn>
+        </v-btn> -->
+        <v-text-field
+          v-model="search"
+          @input="searchLibrary()"
+          placeholder="Search"
+          id="search" hide-details solo style="--max-w: 14.6875em;--p: 0 1.5em" class="eliminarmobile">
+          <template v-slot:append>
+            <img src="@/assets/icons/lupa.svg" alt="search">
+          </template>
+        </v-text-field>
         <!-- <v-btn icon style="--bg:var(--primary);--p:1.4em">
           <img src="@/assets/icons/new-chat.svg" alt="new chat button" style="--w:1.5625em">
         </v-btn> -->
@@ -58,13 +68,15 @@ export default {
   name: "library",
   data() {
     return {
+      search: null,
       track: null,
+      recent: null,
       dataActions: {
         key:"by",
         value:"RECENT",
         active:false,
         data: [
-          "RECENT", "LATEST", "POPULAR"
+          "recent", "latest"
         ],
         filter: [
           { name: "ARTISTS", active: false },
@@ -75,6 +87,7 @@ export default {
         // { img: require("@/assets/tracks/track2.jpg"), name: "Tracks & Beats you like", track: "List- 459", like: false },
         // { img: require("@/assets/tracks/track1.jpg"), name: "Travis Poll", track: "Sunset dream", like: false }
       ],
+      dataCollectionAux: [],
     }
   },
   mounted() {
@@ -83,10 +96,32 @@ export default {
     this.getCollection()
   },
   methods: {
+    selectRecent() {
+      if (this.recent === "recent") {
+        this.getCollection()
+        
+      } else if (this.recent === "latest") {
+        this.dataCollection = this.dataCollection.reverse()
+      } else {
+        this.getCollection()
+      }
+    },
+    searchLibrary() {
+      if (this.search) {
+        this.dataCollection = this.dataCollectionAux.filter((element) => {
+          let name = element.name.toLowerCase()
+          let by = element.by.toLowerCase()
+          return name.includes(this.search.toLowerCase()) || by.includes(this.search.toLowerCase())
+        })
+      } else {
+        this.dataCollection = this.dataCollectionAux
+      }
+    },
     async getCollection() {
       this.axios.post(process.env.VUE_APP_NODE_API + "/api/get-collection/", {wallet: this.$ramper.getAccountId() || this.$selector.getAccountId()})
         .then(async (res) => {
           const nfts = res.data
+          this.dataCollection = []
           for (let i = 0; i < nfts.length; i++) {
             const nft = nfts[i];
             const sonido = document.createElement("audio");
@@ -108,7 +143,8 @@ export default {
               type: "full",
             }
             this.dataCollection.push(item)
-          }       
+          }     
+          this.dataCollectionAux = this.dataCollection  
         })
         .catch((err) => {
           console.log(err)
