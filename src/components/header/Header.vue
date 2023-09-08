@@ -112,7 +112,7 @@ export default {
         { key:"stats", icon: "stats", name:"stats", to:"/stats", position: 240, active: false },
         { key:"chats", icon: "chats", name:"chats", to: "/coming-soon", position: 360, active: false },
         { key:"settings", icon: "settings", name:"settings", to:"/coming-soon", position: 480, active: false  },
-        { key:"faq", icon: "faq", name:"faq", position: 600, to:"/coming-soon", active: false  },
+        { key:"faq", icon: "faq", name:"faq", position: 600, to:"/faq", active: false  },
       ]
     };
   },

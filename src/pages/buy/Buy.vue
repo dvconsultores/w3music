@@ -106,6 +106,8 @@
             <div class="divcol marginaright">
               <h6 class="p">{{item.name}}</h6>
               <span class="font2" style="font-size:0.875em">by <a :title="item.by" class="not_typography" href="#" @click="goArtistDetails(item)">{{limitStr(item.by, 25)}}</a></span>
+              <span class="font2" style="font-size:0.875em">type: Beat
+              </span>
             </div>
 
             <!-- <span class="font2 bold acenter" style="gap:.2em">

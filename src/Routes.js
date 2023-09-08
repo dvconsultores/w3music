@@ -85,6 +85,11 @@ export default new Router({
           component: () => import('@/pages/chats/Chats'),
         },
         {
+          path: '/faq',
+          name: 'faq',
+          component: () => import('@/pages/faq/faq'),
+        },
+        {
           path: '/results',
           name: 'results',
           component: () => import('@/pages/results/Results'),

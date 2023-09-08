@@ -148,7 +148,7 @@ export default {
             key: "faq",
             icon: "faq",
             name: "FAQ",
-            to: "/coming-soon",
+            to: "/faq",
             active: false,
           },
         ],
