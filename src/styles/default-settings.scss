@@ -313,6 +313,8 @@ img:not(.not_html, .not) {
     -ms-text-stroke: var(--stroke-label);
     -o-text-stroke: var(--stroke-label);
   }
+
+  .v-messages__message { font-size: 19px !important }
 }
 
 //- defaut badge -//
