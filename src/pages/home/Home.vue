@@ -28,9 +28,11 @@
               <div class="divcol">
                 <div class="acenter">
                   <h4 class="p">{{mainTrack}}</h4>
-                  <v-btn icon @click="like=!like">
+                  <!-- TODO missing for endpoint this like button -->
+                  <!-- ! commented for while -->
+                  <!-- <v-btn icon @click="like=!like">
                     <img :src="require(`@/assets/icons/like${like?'-active':''}.svg`)" alt="like">
-                  </v-btn>
+                  </v-btn> -->
                 </div>
                 <span style="font-size: 1.5em;transform:translateY(-5px)">{{mainArtist}}</span>
               </div>
