@@ -28,11 +28,9 @@
               <div class="divcol">
                 <div class="acenter">
                   <h4 class="p">{{mainTrack}}</h4>
-                  <!-- TODO missing for endpoint this like button -->
-                  <!-- ! commented for while -->
-                  <!-- <v-btn icon @click="like=!like">
+                  <v-btn icon @click="getCreateLikeTrack()">
                     <img :src="require(`@/assets/icons/like${like?'-active':''}.svg`)" alt="like">
-                  </v-btn> -->
+                  </v-btn>
                 </div>
                 <span style="font-size: 1.5em;transform:translateY(-5px)">{{mainArtist}}</span>
               </div>
@@ -245,7 +243,9 @@ export default {
       imgAux: null,
       mainTrack: "-",
       mainArtist: "-",
-      mainDesc: "-"
+      mainDesc: "-",
+      mainCreatorId: null,
+      mainTokenId: null,
     }
   },
   async mounted() {
@@ -361,9 +361,12 @@ export default {
           return
         }
         if (i===0) {
+          this.like = this.getLikeTrack(element.id)
           this.mainArtist = await this.getArtistName(element.creator_id),
           this.mainTrack = element.title
           this.mainDesc = element.description
+          this.mainCreatorId = element.creator_id
+          this.mainTokenId = element.typetoken_id
         }
   
         const item = { 
@@ -548,6 +551,18 @@ export default {
         return null
       }
     },
+    async getCreateLikeTrack() {
+      const data = {
+        token_id: this.mainTokenId,
+        creator: this.mainCreatorId,
+        like: this.like,
+      }
+      console.log(data);
+
+      // FIXME failed request
+      this.createLikeTrack(data)
+      this.like = data.like
+    }
   }
 };
 </script>
