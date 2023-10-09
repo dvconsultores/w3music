@@ -42,6 +42,7 @@
     "moment": "^2.29.4",
     "near-api-js": "^0.44.2",
     "parallax-js": "^3.1.0",
+    "v-emoji-picker": "^2.3.3",
     "vanilla-tilt": "^1.7.2",
     "vue": "^2.6.12",
     "vue-advanced-chat": "^1.5.4",
