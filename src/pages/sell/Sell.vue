@@ -41,16 +41,13 @@
         
         <div class="divcol" style="--gr:span 2">
           <label for="description">TRACK DESCRIPTION</label>
-          <v-textarea
-            id="description"
-            :disabled="disabledSave"
+          <vue-editor
             v-model="sample.description"
-            :rules="rules.required"
+            :disabled="disabledSave"
             placeholder="Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s,"
-            style="--br:1.5vmax;--p:.5em"
-            no-resize
-            solo
-          ></v-textarea>
+            :style="`--error-message: '${errorText}'; --br: 1.5vmax`"
+            @text-change="hasUserInteraction = true"
+          />
         </div>
         
         <div class="divcol">
@@ -115,12 +112,13 @@
 <script>
 import ModalConnect from "../../components/modals/connect.vue"
 import crypto from "crypto";
+import { VueEditor } from "vue2-editor";
 import * as nearAPI from 'near-api-js'
 import gql from "graphql-tag";
 const { Contract } = nearAPI
 export default {
   name: "sell",
-  components: { ModalConnect },
+  components: { ModalConnect, VueEditor },
   data() {
     return {
       modeConnect: localStorage.getItem("modeConnect"),
@@ -147,6 +145,16 @@ export default {
         required: [(v) => !!v || "Field required"],
         percentage_split: [(v) => !!v || "Field required", () => (this.currentPercentage_split > 50 ? "must be 50% or less" : null)],
       },
+      hasUserInteraction: false,
+    }
+  },
+  computed: {
+    errorText() {
+      if (!this.hasUserInteraction) return ''
+
+      if (!this.sample.description) return 'Field Required'
+
+      return ''
     }
   },
   async mounted() {

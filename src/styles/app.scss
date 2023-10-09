@@ -46,3 +46,87 @@
   right: var(--right);
 }
 
+
+//- vue-editor -//
+.quillWrapper {
+  --br: 2vmax;
+  --b: 1px solid #000000;
+
+  &::after {
+    content: var(--error-message);
+    color: var(--error);
+    font-size: 19px;
+    padding-left: 12px;
+  }
+
+  // &.rules {
+  //   .ql {
+  //     &-toolbar.ql-snow {
+  //       border: 1.5px solid red !important;
+  //       border-bottom: none !important;
+  //     }
+  //     &-container.ql-snow {
+  //       border: 1.5px solid red !important;
+  //       border-top: none !important;
+  //     }
+  //   }
+  // }
+
+
+  p, blockquote, h1, h2, h3, h4, h5, h6, li {color: #000 !important}
+  li:before {color: #000}
+
+  * { caret-color: #000 }
+
+  .ql {
+    &-toolbar.ql-snow {
+      border-radius: var(--br) var(--br) 0 0 !important;
+      background: rgba(245, 245, 245, 0.4) !important;
+      border: var(--b);
+      border-bottom: none;
+      box-shadow: inset 0px 4px 4px rgba(0, 0, 0, 0.25) !important;
+      padding-inline: 12px;
+      position: relative;
+      &::before {
+        content: "";
+        position: absolute;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        width: calc(100% - 2em);
+        margin: auto;
+        height: 1px;
+        background-color: #000;
+      }
+      * {color: #000;stroke: #000;}
+    }
+
+    &-editor {
+      max-height: 100% !important;
+      min-height: 100% !important;
+      height: 100% !important;
+      padding-block: 0 !important;
+      padding-right: 5px !important;
+    }
+
+    &-container.ql-snow {
+      background: rgba(245, 245, 245, 0.4) !important;
+      border-radius: 0 0 var(--br) var(--br) !important;
+      border: var(--b);
+      border-top: none;
+      height: var(--h, 180px);
+      padding-block: 12px;
+      padding-right: 10px !important;
+    }
+
+    &-picker {
+      &-label {border-radius: .3vmax}
+      &-options {
+        background-color: #292929;
+        border-radius: .5vmax;
+      }
+    }
+
+    &-link, &-image, &-video {display: none}
+  }
+}

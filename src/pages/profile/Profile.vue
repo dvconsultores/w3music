@@ -117,14 +117,17 @@
       
       <div class="divcol">
         <label for="description">PROFILE DESCRIPTION</label>
-        <v-textarea
+        <vue-editor
           id="description"
-          :disabled="disabledSave"
           v-model="dataUser.description"
-          no-resize
-          solo
-          style="--br:1.5vmax;--p:.5em"
-        ></v-textarea>
+          :disabled="disabledSave"
+          :style="`
+            --error-message: '${errorText}';
+            --br: 1.5vmax;
+            --h: 95.94px;
+          `"
+          @text-change="hasUserInteraction = true"
+        />
       </div>
       
       <div v-if="profileType=='artist'" class="divcol">
@@ -146,9 +149,11 @@
 
 <script>
 import gql from "graphql-tag";
-
+import { VueEditor } from "vue2-editor";
+  
 export default {
   name: "profile",
+  components: { VueEditor },
   data() {
     return {
       modeConnect: localStorage.getItem("modeConnect"),
@@ -179,7 +184,17 @@ export default {
         publicUrl: null,
         dataMusicPreference: [],
         dataMusicPreferenceSelected: [],
+        hasUserInteraction: false,
       }, 
+    }
+  },
+  computed: {
+    errorText() {
+      if (!this.hasUserInteraction) return ''
+
+      if (!this.sample.description) return 'Field Required'
+
+      return ''
     }
   },
   async mounted() {
