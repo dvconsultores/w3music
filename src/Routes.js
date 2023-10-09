@@ -58,6 +58,11 @@ export default new Router({
               component: () => import('@/pages/buy/Buy'),
             },
             {
+              path: '/genres',
+              name: 'genres',
+              component: () => import('@/pages/buy/Genres'),
+            },
+            {
               path: 'checkout',
               name: 'checkout',
               component: () => import('@/pages/buy/Checkout'),

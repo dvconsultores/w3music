@@ -6,7 +6,7 @@
       <div class="space wrap" style="gap: 1em 0">
         <div id="container-title" class="divcol" :class="{checkoutClass: $router.currentRoute.name=='checkout'}">
           <span class="font2" style="font-size:16px">MARKETPLACE</span>
-          <h1 class="p">{{$router.currentRoute.name=='buy'?'BUY':'CHECKOUT'}}</h1>
+          <h1 class="p">{{$router.currentRoute.name === 'buy' ? 'BUY' : $router.currentRoute.name === 'genres' ? 'DESCRIPTION' :  'CHECKOUT'}}</h1>
         </div>
 
         <v-btn v-show="$router.currentRoute.name=='buy'" class="btn font2 vermobile marginaleft" style="--max-w:13.9375em;--h:2.75em;--bg:hsl(0, 0%, 96%, .75);--b:2.5px solid var(--primary)" @click="$router.push('/buy/checkout')">

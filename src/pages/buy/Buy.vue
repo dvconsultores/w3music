@@ -4,6 +4,7 @@
     <aside class="divcol eliminarmobile">
       <div class="section-header">
         <h2>CATEGORIES</h2>
+        <h5><router-link to="/genres"><div style="float: right;">More about genres</div></router-link></h5>
 
         <v-expansion-panels accordion class="font2">
           <!-- <v-list class="fill_w" color="transparent">
