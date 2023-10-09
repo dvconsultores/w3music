@@ -462,6 +462,8 @@ export default {
 
       const data = res.data.genders
 
+      let dataCategories = []
+
       for (let i = 0; i < data.length; i++) {
         const element = data[i];
         const item = { 
@@ -469,9 +471,22 @@ export default {
           active: false 
         }
 
-        this.dataCategories.push(item)
+        dataCategories.push(item)
         this.categoriesFilter.push(item.name)
       }
+      this.dataCategories = dataCategories.sort((a, b) => {
+        // Compara las propiedades 'name' de los objetos a y b
+        const nameA = a.name.toUpperCase(); // Convierte a mayúsculas para hacer la comparación insensible a mayúsculas/minúsculas
+        const nameB = b.name.toUpperCase();
+
+        if (nameA < nameB) {
+          return -1; // a debe ir antes que b en la ordenación
+        }
+        if (nameA > nameB) {
+          return 1; // b debe ir antes que a en la ordenación
+        }
+        return 0; // a y b son iguales en términos de ordenación
+      });
       this.getData()
     },
     getSeriesGQL() {

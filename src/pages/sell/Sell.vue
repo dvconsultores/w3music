@@ -244,7 +244,19 @@ export default {
         })
         .subscribe(({ data }) => {
           console.log(data);
-          this.dataGenre = data.genders;
+          this.dataGenre = data.genders.sort((a, b) => {
+            // Compara las propiedades 'name' de los objetos a y b
+            const nameA = a.name.toUpperCase(); // Convierte a mayúsculas para hacer la comparación insensible a mayúsculas/minúsculas
+            const nameB = b.name.toUpperCase();
+
+            if (nameA < nameB) {
+              return -1; // a debe ir antes que b en la ordenación
+            }
+            if (nameA > nameB) {
+              return 1; // b debe ir antes que a en la ordenación
+            }
+            return 0; // a y b son iguales en términos de ordenación
+          });
 
         });
     },
