@@ -315,7 +315,7 @@ export default {
       this.disabledSave = true
       if (this.$selector.getAccountId()) {
         localStorage.setItem("typeResult", "profile")
-        fire.collection('CHATS').doc(this.walletNear).set({artist: this.dataUser.artistName || "",})
+        fire.collection(process.env.VUE_APP_CHAT_FIREBASE || "TESTNET").doc(this.walletNear).set({artist: this.dataUser.artistName || "",})
         const resTx = await this.$selector.wallet.signAndSendTransactions({
           transactions: [
             {
@@ -395,7 +395,7 @@ export default {
           localStorage.setItem("results", true)
           localStorage.setItem("typeResult", "profile")
           localStorage.setItem("linkHash", this.urlTx)
-          fire.collection('CHATS').doc(this.walletNear).set({artist: this.dataUser.artistName || "",})
+          fire.collection(process.env.VUE_APP_CHAT_FIREBASE || "TESTNET").doc(this.walletNear).set({artist: this.dataUser.artistName || "",})
           this.$router.push('/results')
         } else {
           localStorage.setItem("results", false)

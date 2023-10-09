@@ -352,7 +352,7 @@ export default {
     },
     getChats() {
       this.dataChats = []
-      fire.collection('CHATS').onSnapshot((snapshot) => {
+      fire.collection(process.env.VUE_APP_CHAT_FIREBASE || "TESTNET").onSnapshot((snapshot) => {
         let dataChats = []
         snapshot.forEach(async (doc) => {
           const item = { ...doc.data(), id: doc.id, img: await this.getNearSocial(doc.id) }
@@ -410,7 +410,7 @@ export default {
       if (window.innerWidth <= 1128) {this.activeChat.state = true}
     },
     getMessages(item) {
-      fire.collection('CHATS').doc(item.id).collection("MESSAGES").orderBy("created").onSnapshot((snapshot) => {
+      fire.collection(process.env.VUE_APP_CHAT_FIREBASE || "TESTNET").doc(item.id).collection("MESSAGES").orderBy("created").onSnapshot((snapshot) => {
         const postData = [];
     
         snapshot.forEach((doc) => {
@@ -432,8 +432,8 @@ export default {
           created: Date.now(),
         };
         
-        fire.collection("CHATS").doc(this.activeChat.id).collection("MESSAGES").add(messageInfo)
-        fire.collection('CHATS').doc(this.activeChat.id).set({artist: this.activeChat.artist || "", ago: Date.now()})
+        fire.collection(process.env.VUE_APP_CHAT_FIREBASE || "TESTNET").doc(this.activeChat.id).collection("MESSAGES").add(messageInfo)
+        fire.collection(process.env.VUE_APP_CHAT_FIREBASE || "TESTNET").doc(this.activeChat.id).set({artist: this.activeChat.artist || "", ago: Date.now()})
 
         this.getMessages(this.activeChat)
 
