@@ -110,7 +110,7 @@ export default {
       dataSidebar: [
         { key:"market", icon: "market", name:"Marketplace", position: 120, active: false },
         { key:"stats", icon: "stats", name:"stats", to:"/stats", position: 240, active: false },
-        { key:"chats", icon: "chats", name:"chats", to: "/coming-soon", position: 360, active: false },
+        { key:"chats", icon: "chats", name:"chats", to: "/chats", position: 360, active: false },
         { key:"settings", icon: "settings", name:"settings", to:"/coming-soon", position: 480, active: false  },
         { key:"faq", icon: "faq", name:"faq", position: 600, to:"/faq", active: false  },
       ]
@@ -122,9 +122,9 @@ export default {
     if (urlParams.get("transactionHashes") !== null) {
       let urlTx
       if (process.env.VUE_APP_NETWORK === "mainnet") {
-        urlTx = "https://explorer.near.org/transactions/" + urlParams.get("transactionHashes")
+        urlTx = "https://nearblocks.io/txns/" + urlParams.get("transactionHashes")
       } else {
-        urlTx = "https://explorer.testnet.near.org/transactions/" + urlParams.get("transactionHashes")
+        urlTx = "https://testnet.nearblocks.io/txns/" + urlParams.get("transactionHashes")
       }
 
       this.transactionHashes = urlParams.get("transactionHashes")

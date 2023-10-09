@@ -370,11 +370,11 @@ export default {
             .signupSource === 'near_wallet' &&
             resTx.txHashes.length > 0) || (resTx.result || resTx.result[0]?.status?.SuccessValue || resTx.result[0]?.status?.SuccessValue === "")) {
   
-          if (process.env.VUE_APP_NETWORK === "mainnet") {
-            this.urlTx = "https://explorer.near.org/transactions/" + resTx.txHashes[0];
-          } else {
-            this.urlTx = "https://explorer.testnet.near.org/transactions/" + resTx.txHashes[0];
-          }
+            if (process.env.VUE_APP_NETWORK === "mainnet") {
+              this.urlTx = "https://nearblocks.io/txns/" + urlParams.get("transactionHashes")
+            } else {
+              this.urlTx = "https://testnet.nearblocks.io/txns/" + urlParams.get("transactionHashes")
+            }
           localStorage.setItem("results", true)
           localStorage.setItem("typeResult", "profile")
           localStorage.setItem("linkHash", this.urlTx)
