@@ -337,11 +337,9 @@ export default {
     this.$emit('RouteValidator');
     this.wallet = this.$ramper.getAccountId() || this.$selector.getAccountId()
     this.getChats()
-    console.log("FIREEE", fire)
   },
   methods: {
     searchChats() {
-      console.log(this.search)
       this.dataChats = this.dataChatsAux.filter(e => e.artist.toLowerCase().includes(this.search.toLowerCase()))
     },
     selectEmoji(event) {
@@ -356,7 +354,6 @@ export default {
         let dataChats = []
         snapshot.forEach(async (doc) => {
           const item = { ...doc.data(), id: doc.id, img: await this.getNearSocial(doc.id) }
-          console.log(item)
           if (!this.activeChat) {
             if (item.id === "w3music") {
               item.active = true
@@ -415,7 +412,6 @@ export default {
     
         snapshot.forEach((doc) => {
           const item = { ...doc.data(), id: doc.id, active: false }
-          console.log(item)
           postData.push(item)
 
         });
@@ -423,7 +419,6 @@ export default {
       });
     },
     async sendMessage() {
-      console.log(this.messageContent)
       if (this.messageContent) {
         const messageInfo = {
           wallet: this.$ramper.getAccountId() || this.$selector.getAccountId(),

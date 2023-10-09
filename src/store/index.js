@@ -13,7 +13,7 @@ export default new Vuex.Store({
     },
     track: {},
     library: [],
-    baseURL: process.env.BASE_URL,
+    baseURL: process.env.BASE_URL || "",
     theme: "light",
     overlay: { opacity: 0.2, color: "black" },
     user: {
