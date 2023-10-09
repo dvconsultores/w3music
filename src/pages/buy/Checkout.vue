@@ -236,9 +236,9 @@ export default {
           this.axios.post(process.env.VUE_APP_NODE_API + "/api/delete-array-shopping-cart/", {wallet: this.$ramper.getAccountId(), tokenIds: tokenIds})
   
           if (process.env.VUE_APP_NETWORK === "mainnet") {
-            this.urlTx = "https://explorer.near.org/transactions/" + resTx.txHashes[0];
+            this.urlTx = "https://nearblocks.io/txns/" + urlParams.get("transactionHashes")
           } else {
-            this.urlTx = "https://explorer.testnet.near.org/transactions/" + resTx.txHashes[0];
+            this.urlTx = "https://testnet.nearblocks.io/txns/" + urlParams.get("transactionHashes")
           }
           localStorage.setItem("results", true)
           localStorage.setItem("typeResult", "buy")

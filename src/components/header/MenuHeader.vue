@@ -134,7 +134,7 @@ export default {
             key: "chats",
             icon: "chats",
             name: "CHATS",
-            to: "/coming-soon",
+            to: "/chats",
             active: false,
           },
           {
