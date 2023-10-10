@@ -120,10 +120,11 @@
     </section>
 
 
-    <!-- mobile -->
+
+    <!--* mobile -->
     <section id="mobile" class="container-content grid" style="--gtc: repeat(auto-fit,minmax(min(100%,24.4375em),1fr));gap:clamp(3em, 5vw, 4em)">
       <!-- section left -->
-      <section v-if="!activeChat.state || ''" id="section-left" class="divcol gap2">
+      <section v-if="!isChatActive" id="section-left" class="divcol gap2">
         <aside class="container-actions acenter gap2 font2" style="height:2.75em">
           <v-text-field
             v-model="search"
@@ -141,21 +142,21 @@
             <img src="@/assets/icons/lupa.svg" alt="search button" style="--w:1.5625em">
           </v-btn>
         </aside>
-        
+
         <aside class="divcol isolate relative">
           <v-card v-for="(item,i) in dataChats" :key="i" class="chat card space font2" :class="{active: item.active}"
             @click="dataChats.forEach(e=>{e.active=false});item.active=true;SelectChat(item)">
             <div class="acenter gap1">
               <img :src="item.img" alt="profile image" style="--w:4em;--br:50%">
               <div class="divcol">
-                <h6 class="p font2">{{item.name}}</h6>
-                <span class="preview-text">{{item.previewText}}</span>
+                <h6 class="p font2">{{item.artist}}</h6>
+                <!-- <span class="preview-text">{{item.previewText}}</span> -->
               </div>
             </div>
 
             <div class="divcol bold" style="gap:.1em">
               <span>{{item.ago? convertDate(item.ago) : null}}</span>
-              <v-chip color="var(--primary)">{{item.messages}}</v-chip>
+              <!-- <v-chip color="var(--primary)">{{item.messages}}</v-chip> -->
             </div>
           </v-card>
 
@@ -241,6 +242,7 @@ export default {
       search: null,
       wallet: null,
       messageContent: "",
+      isChatActive: false,
       activeChat: null,
       chat: [
       //   { text: "Hey! Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy", ago: "9:10", type: "chat" },
@@ -396,7 +398,7 @@ export default {
     },
     Back() {
       if (window.innerWidth <= 1128) {
-        this.activeChat.state?this.activeChat.state = false:this.$router.push('/home')
+        this.isChatActive?this.isChatActive = false:this.$router.push('/home')
       }
       else {this.$router.push('/home')}
     },
@@ -404,7 +406,7 @@ export default {
       this.activeChat = item
       this.getMessages(item)
       
-      if (window.innerWidth <= 1128) {this.activeChat.state = true}
+      if (window.innerWidth <= 1128) {this.isChatActive = true}
     },
     getMessages(item) {
       fire.collection(process.env.VUE_APP_CHAT_FIREBASE || "TESTNET").doc(item.id).collection("MESSAGES").orderBy("created").onSnapshot((snapshot) => {
