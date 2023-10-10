@@ -28,122 +28,200 @@
       </div>
     </section>
 
-    <section class="container-content grid">
-      <div class="divcol">
-        <label for="name">ARTIST NAME</label>
-        <v-text-field id="name" :disabled="disabledSave" v-model="dataUser.artistName" solo>
-        </v-text-field>
-      </div>
-      
-      <div class="divcol">
-        <label for="url">PUBLIC URL</label>
-        <v-text-field id="url" :disabled="disabledSave" v-model="dataUser.publicUrl" solo placeholder="http://examplew3music.com">
-          <template v-slot:append>
-            <img src="@/assets/icons/url.svg" alt="url icon">
-          </template>
-        </v-text-field>
-      </div>
+    
+    <aside id="profile-actions" class="wrap gap1 font2">
+      <v-chip v-for="(item,i) in dataActions" :key="i" :class="{active: item.active}" :disabled="item.disabled"
+        @click="dataActions.forEach(e=>{e.active=false});item.active=true">
+        {{item.name}} {{item.amount}}
+      </v-chip>
+    </aside>
 
-      <div class="fwrap gap2" style="--fb: 1 1 7.9375em">
-        <div class="divcol" style="max-width:7.9375em">
-          <label for="age">AGE</label>
-          <v-text-field id="age" :disabled="disabledSave" v-model="dataUser.age" solo type="number">
+
+    <template v-if="dataActions[dataActions.findIndex(e=>e.key=='profile')].active">
+      <section class="container-content grid">
+        <div class="divcol">
+          <label for="name">ARTIST NAME</label>
+          <v-text-field id="name" :disabled="disabledSave" v-model="dataUser.artistName" solo>
           </v-text-field>
         </div>
         
         <div class="divcol">
-          <label for="location">LOCATION</label>
+          <label for="url">PUBLIC URL</label>
+          <v-text-field id="url" :disabled="disabledSave" v-model="dataUser.publicUrl" solo placeholder="http://examplew3music.com">
+            <template v-slot:append>
+              <img src="@/assets/icons/url.svg" alt="url icon">
+            </template>
+          </v-text-field>
+        </div>
+
+        <div class="fwrap gap2" style="--fb: 1 1 7.9375em">
+          <div class="divcol" style="max-width:7.9375em">
+            <label for="age">AGE</label>
+            <v-text-field id="age" :disabled="disabledSave" v-model="dataUser.age" solo type="number">
+            </v-text-field>
+          </div>
+          
+          <div class="divcol">
+            <label for="location">LOCATION</label>
+            <v-select
+              v-model="dataUser.location"
+              :disabled="disabledSave"
+              id="location"
+              :items="dataUser.dataLocation"
+              solo
+            ></v-select>
+          </div>
+        </div>
+        
+        <div class="divcol">
+          <label for="you-are">YOU ARE?</label>
           <v-select
-            v-model="dataUser.location"
+            v-model="dataUser.youAre"
             :disabled="disabledSave"
-            id="location"
-            :items="dataUser.dataLocation"
+            id="you-are"
+            :items="dataUser.dataYouAre"
             solo
           ></v-select>
         </div>
-      </div>
-      
-      <div class="divcol">
-        <label for="you-are">YOU ARE?</label>
-        <v-select
-          v-model="dataUser.youAre"
-          :disabled="disabledSave"
-          id="you-are"
-          :items="dataUser.dataYouAre"
-          solo
-        ></v-select>
-      </div>
-      
-      <div class="divcol">
-        <label for="email">EMAIL</label>
-        <v-text-field id="email" :disabled="disabledSave" v-model="dataUser.email" solo placeholder="examplew3music@domain.com">
-        </v-text-field>
-      </div>
-      
-      <div id="music_genre" :style="profileType=='fan'?'grid-row:span 2':null">
-        <label for="music-genre">MUSIC {{profileType=='fan'?'PREFERENCE':'GENRE'}}</label>
-        <v-select
-          v-if="profileType=='artist'"
-          :disabled="disabledSave"
-          v-model="dataUser.musicGenre"
-          id="music-genre"
-          item-text="name"
-          item-value="id"
-          :items="dataUser.dataMusicGenre"
-          solo
-        ></v-select>
-        <!-- mejorar funcion -->
-        <v-select
-          v-else
-          id="music-genre"
-          :disabled="disabledSave"
-          v-model="dataUser.musicGenre"
-          :items="dataUser.dataMusicPreference"
-          item-text="name"
-          item-value="id"
-          placeholder="Select"
-          solo
-          @change="dataMusicPreferenceSelected.includes(dataMusicPreferenceSelected.indexOf(name))?null:dataMusicPreferenceSelected.push(name)"
-        ></v-select>
-        <!-- mejorar funcion -->
+        
+        <div class="divcol">
+          <label for="email">EMAIL</label>
+          <v-text-field id="email" :disabled="disabledSave" v-model="dataUser.email" solo placeholder="examplew3music@domain.com">
+          </v-text-field>
+        </div>
+        
+        <div id="music_genre" :style="profileType=='fan'?'grid-row:span 2':null">
+          <label for="music-genre">MUSIC {{profileType=='fan'?'PREFERENCE':'GENRE'}}</label>
+          <v-select
+            v-if="profileType=='artist'"
+            :disabled="disabledSave"
+            v-model="dataUser.musicGenre"
+            id="music-genre"
+            item-text="name"
+            item-value="id"
+            :items="dataUser.dataMusicGenre"
+            solo
+          ></v-select>
+          <!-- mejorar funcion -->
+          <v-select
+            v-else
+            id="music-genre"
+            :disabled="disabledSave"
+            v-model="dataUser.musicGenre"
+            :items="dataUser.dataMusicPreference"
+            item-text="name"
+            item-value="id"
+            placeholder="Select"
+            solo
+            @change="dataMusicPreferenceSelected.includes(dataMusicPreferenceSelected.indexOf(name))?null:dataMusicPreferenceSelected.push(name)"
+          ></v-select>
+          <!-- mejorar funcion -->
 
-        <section class="fwrap gap1">
-          <v-chip v-for="(item,i) in dataUser.dataMusicPreferenceSelected" :key="i" close close-icon="mdi-close" class="font2 maxsize_w"
-            @click:close="dataUser.dataMusicPreferenceSelected.splice(dataUser.dataMusicPreferenceSelected.indexOf(item),1)">
-            {{item}}
-          </v-chip>
-        </section>
-      </div>
-      
-      <div class="divcol">
-        <label for="description">PROFILE DESCRIPTION</label>
-        <vue-editor
-          id="description"
-          v-model="dataUser.description"
-          :disabled="disabledSave"
-          :style="`
-            --error-message: '${errorText}';
-            --br: 1.5vmax;
-            --h: 95.94px;
-          `"
-          @text-change="hasUserInteraction = true"
-        />
-      </div>
-      
-      <div v-if="profileType=='artist'" class="divcol">
-        <label>NEAR WALLET</label>
-        <v-text-field v-model="walletNear" solo disabled>
-        </v-text-field>
-      </div>
-    </section>
+          <section class="fwrap gap1">
+            <v-chip v-for="(item,i) in dataUser.dataMusicPreferenceSelected" :key="i" close close-icon="mdi-close" class="font2 maxsize_w"
+              @click:close="dataUser.dataMusicPreferenceSelected.splice(dataUser.dataMusicPreferenceSelected.indexOf(item),1)">
+              {{item}}
+            </v-chip>
+          </section>
+        </div>
+        
+        <div class="divcol">
+          <label for="description">PROFILE DESCRIPTION</label>
+          <vue-editor
+            id="description"
+            v-model="dataUser.description"
+            :disabled="disabledSave"
+            :style="`
+              --error-message: '${errorText}';
+              --br: 1.5vmax;
+              --h: 95.94px;
+            `"
+            @text-change="hasUserInteraction = true"
+          />
+        </div>
+        
+        <div v-if="profileType=='artist'" class="divcol">
+          <label>NEAR WALLET</label>
+          <v-text-field v-model="walletNear" solo disabled>
+          </v-text-field>
+        </div>
+      </section>
 
-    <v-btn class="btn font2 align" @click="saveProfile()" :disabled="disabledSave" style="--w:7.25em">SAVE
-      <v-progress-circular
-        v-if="disabledSave"
-        :size="21"
-        indeterminate
-      ></v-progress-circular>
-    </v-btn>
+      <v-btn class="btn font2 align" @click="saveProfile()" :disabled="disabledSave" style="--w:7.25em">SAVE
+        <v-progress-circular
+          v-if="disabledSave"
+          :size="21"
+          indeterminate
+        ></v-progress-circular>
+      </v-btn>
+    </template>
+
+
+    <template v-if="dataActions[dataActions.findIndex(e=>e.key=='sales')].active">
+      <!-- desktop -->
+      <v-data-table
+        id="dataTable"
+        :headers="headersTable"
+        :items="dataTable"
+        hide-default-footer
+      >
+        <template v-slot:[`item.name`]="{ item }">
+          <div class="center gap2 tstart">
+            <img :src="item.img" alt="track image" style="--w:4.1875em">
+            <span>{{item.name}}</span>
+          </div>
+        </template>
+
+        <template v-slot:[`item.price`]="{ item }">
+          <div class="center gap2 tstart">
+            <span>{{item.price}}$</span>
+            
+          </div>
+        </template>
+
+        <template v-slot:[`item.plays`]="{ item }">
+          <div class="center" style="gap:.5em">
+            <img class="play" :src="require(`@/assets/icons/${item.play?'pause':'play'}.svg`)" alt="play/pause icon" style="--w:3.095625em"
+              @click="item.play?item.play=!item.play:dataTable.forEach(e=>{e.play=false;item.play=true}); playPreview(item)">
+            <span>{{item.plays}}</span>
+          </div>
+        </template>
+        
+        <template v-slot:[`item.time`]="{ item }">
+          {{item.time}}
+        </template>
+      </v-data-table>
+
+      <!-- mobile -->
+      <section id="dataTableMobile" class="font2">
+        <v-card v-for="(item,i) in dataTable" :key="i" color="transparent" class="space wrap gap1">
+          <aside class="acenter gap1">
+            <img src="@/assets/miscellaneous/track.jpg" alt="track image" class="aspect" style="--h:100%">
+            <div class="divcol gap1">
+              <span>
+                <b>PRICE: </b>{{item.price}}
+              </span>
+              <span>
+                <b>GENRE: </b>{{item.genre}}
+              </span>
+              <span>
+                <b>TO: </b>{{item.to}}
+              </span>
+            </div>
+          </aside>
+
+          <aside class="space gap2 marginaleft">
+            <div class="divcol center">
+              <img class="play" :src="require(`@/assets/icons/${item.play?'pause':'play'}.svg`)" alt="play/pause button" style="--w:1.9em"
+                @click="item.play?item.play=!item.play:dataTable.forEach(e=>{e.play=false;item.play=true}); playPreview(item)">
+              <span>{{item.plays}}</span>
+            </div>
+
+            <span>{{item.time}} ago</span>
+          </aside>
+        </v-card>
+      </section>
+    </template>
   </section>
 </template>
 
@@ -164,6 +242,30 @@ export default {
       walletNear: null,
       // profile validation ("fan" or "artist")
       profileType: "artist",
+      dataActions: [
+        { key:"profile", name:"Mi Perfil", active: true, disabled: false },
+        { key:"sales", name:"Ventas", active: false, disabled: false },
+      ],
+      headersTable: [
+        { value:"name", text:"TRACK", align:"center" },
+        { value:"price", text:"PRICE", align:"center" },
+        { value:"genre", text:"GENRE", align:"center" },
+        { value:"plays", text:"PLAYS", align:"center" },
+        // { value:"to", text:"TO", align:"center" },
+        { value:"time", text:"TIME", align:"center" },
+      ],
+      dataTable: [
+        {
+          img: require("@/assets/miscellaneous/track.jpg"),
+          price: "-----",
+          genre: "DANCE POP",
+          name: "DANCE POP",
+          plays: 4.679,
+          play: false,
+          to: "patysb.near",
+          time: "3 days",
+        },
+      ],
       // data
       dataUser: {
         youAre: null,
