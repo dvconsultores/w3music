@@ -5,7 +5,15 @@
 // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // /
 #marketplaceBuy {
   font-size: 16px;
-  h1 {max-width: 14ch}
+  h1 {
+    max-width: 14ch;
+
+    @include media(max,small) {
+      font-size: clamp(20px, 6vw, 40px) !important;
+    }
+  }
+
+
   .container-header {
     span {font-size: clamp(1em, 1.2vw, 1.25em)}
     #container-title {
