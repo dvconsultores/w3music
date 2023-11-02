@@ -544,15 +544,23 @@ export default {
         this.categoriesFilter.push(item.name);
       }
       this.dataCategories = dataCategories.sort((a, b) => {
-        // Compara las propiedades 'name' de los objetos a y b
-        const nameA = a.name.toUpperCase(); // Convierte a mayúsculas para hacer la comparación insensible a mayúsculas/minúsculas
-        const nameB = b.name.toUpperCase();
-
-        if (a.priority) {
-          return -1;
+        if (a.priority === b.priority) {
+          // Si ambos elementos tienen la misma prioridad, ordenar alfabéticamente
+          return a.name.localeCompare(b.name);
         }
-        return 0; // a y b son iguales en términos de ordenación
+        // Si los elementos tienen diferente prioridad, poner los de prioridad true primero
+        return b.priority - a.priority;
       });
+      // this.dataCategories = dataCategories.sort((a, b) => {
+      //   // Compara las propiedades 'name' de los objetos a y b
+      //   const nameA = a.name.toUpperCase(); // Convierte a mayúsculas para hacer la comparación insensible a mayúsculas/minúsculas
+      //   const nameB = b.name.toUpperCase();
+
+      //   if (a.priority) {
+      //     return -1;
+      //   }
+      //   return 0; // a y b son iguales en términos de ordenación
+      // });
       this.getData();
     },
     getSeriesGQL() {
