@@ -4,7 +4,9 @@
     <aside class="divcol eliminarmobile">
       <div class="section-header">
         <h2>CATEGORIES</h2>
-        <h5><router-link to="/genres"><div style="float: right;">More about genres</div></router-link></h5>
+        <h5>
+          <router-link to="/genres"><div style="float: right">More about genres</div></router-link>
+        </h5>
 
         <v-expansion-panels accordion class="font2">
           <!-- <v-list class="fill_w" color="transparent">
@@ -15,12 +17,12 @@
           </v-list> -->
 
           <v-list class="fill_w" color="transparent">
-            <v-list-item :class="{activeClass2: allFilter}" @click="clickCategories({name: 'ALL'})" >
+            <v-list-item :class="{ activeClass2: allFilter }" @click="clickCategories({ name: 'ALL' })">
               <v-list-item-title>ALL</v-list-item-title>
             </v-list-item>
-            <v-list-item v-for="(item2,i2) in dataCategories" :key="i2" :class="{activeClass2: item2.active}" @click="clickCategories(item2)">
-                <v-list-item-title>{{item2.name.toUpperCase()}}</v-list-item-title>
-              </v-list-item>
+            <v-list-item v-for="(item2, i2) in dataCategories" :key="i2" :class="{ activeClass2: item2.active }" @click="clickCategories(item2)">
+              <v-list-item-title>{{ item2.name.toUpperCase() }}</v-list-item-title>
+            </v-list-item>
           </v-list>
 
           <!-- <v-expansion-panel v-for="(item,i) in dataCategories" :key="i">
@@ -49,8 +51,9 @@
           <div class="fwrap gap1" style="--fb: 1 1">
             <v-select
               v-model="all"
-              :items="dataAll"
-              item-text="all"
+              :items="dataCategories"
+              @change="clickCategories({ name: all })"
+              item-text="name"
               placeholder="ALL"
               hide-details
               solo
@@ -76,9 +79,13 @@
             ></v-select>
           </div>
 
-          <v-btn class="btn font2 eliminarmobile" style="--h:2.75em;--bg:hsl(0, 0%, 96%, .75);--b:2.5px solid var(--primary)" @click="$router.push('/buy/checkout')">
-            <span class="acenter" style="gap:.5em;font-size: 20px">
-              <img src="@/assets/icons/market-active.svg" alt="market icon" style="--w:25px">
+          <v-btn
+            class="btn font2 eliminarmobile"
+            style="--h: 2.75em; --bg: hsl(0, 0%, 96%, 0.75); --b: 2.5px solid var(--primary)"
+            @click="$router.push('/buy/checkout')"
+          >
+            <span class="acenter" style="gap: 0.5em; font-size: 20px">
+              <img src="@/assets/icons/market-active.svg" alt="market icon" style="--w: 25px" />
               <span>CART: {{ cart.quantity }}</span>
             </span>
 
@@ -86,28 +93,49 @@
               {{ cart.totalPrice }} <img src="@/assets/logos/near.svg" alt="near" style="--w:13px;--t:translateY(-2px)">
             </span> -->
 
-            <span class="acenter margin2left" style="gap:.2em;font-size:17px">
-              {{ cart.totalPrice }}$<span style="font-size:0.875em"> ≈ {{ convertPrice(cart.totalPrice) }}<img src="@/assets/logos/near.svg" alt="near" style="--w:0.75em"></span>
+            <span class="acenter margin2left" style="gap: 0.2em; font-size: 17px">
+              {{ cart.totalPrice }}$<span style="font-size: 0.875em">
+                ≈ {{ convertPrice(cart.totalPrice) }}<img src="@/assets/logos/near.svg" alt="near" style="--w: 0.75em"
+              /></span>
             </span>
           </v-btn>
         </aside>
       </div>
-      
+
       <aside class="section-content grid gap2">
-        <v-card v-for="(item,i) in dataAfrofusion" :key="i" class="isolate">
-          <v-btn id="play" class="play" icon @click="item.play?item.play=!item.play:dataAfrofusion.forEach(e=>{e.play=false;item.play=true}); playPreview(item)">
-            <img :src="require(`@/assets/icons/${item.play?'pause':'play'}-simple.svg`)" alt="play button" :style="`transform:${item.play?'translatex(0)':'translateX(3px)'}`">
+        <v-card v-for="(item, i) in dataAfrofusion" :key="i" class="isolate">
+          <v-btn
+            id="play"
+            class="play"
+            icon
+            @click="
+              item.play
+                ? (item.play = !item.play)
+                : dataAfrofusion.forEach((e) => {
+                    e.play = false;
+                    item.play = true;
+                  });
+              playPreview(item);
+            "
+          >
+            <img
+              :src="require(`@/assets/icons/${item.play ? 'pause' : 'play'}-simple.svg`)"
+              alt="play button"
+              :style="`transform:${item.play ? 'translatex(0)' : 'translateX(3px)'}`"
+            />
           </v-btn>
 
           <v-avatar size="4.8125em">
-            <img :src="item.img" alt="profile image" style="--w:100%">
+            <img :src="item.img" alt="profile image" style="--w: 100%" />
           </v-avatar>
 
           <v-sheet color="var(--primary)" class="fill_w divcol center gap1 padd2">
             <div class="divcol marginaright">
-              <h6 class="p">{{item.name}}</h6>
-              <span class="font2" style="font-size:0.875em">by <a :title="item.by" class="not_typography" href="#" @click="goArtistDetails(item)">{{limitStr(item.by, 25)}}</a></span>
-              <span class="font2" style="font-size:0.875em" v-html="item.description"></span>
+              <h6 class="p">{{ item.name }}</h6>
+              <span class="font2" style="font-size: 0.875em"
+                >by <a :title="item.by" class="not_typography" href="#" @click="goArtistDetails(item)">{{ limitStr(item.by, 25) }}</a></span
+              >
+              <span class="font2" style="font-size: 0.875em" v-html="item.description"></span>
               <!-- <p v-html="item.description"></p> -->
             </div>
 
@@ -115,14 +143,23 @@
               FLOOR PRICE {{item.price}} <img src="@/assets/logos/near.svg" alt="near" style="--w:0.75em">
             </span> -->
 
-            <span class="font2 bold acenter" style="gap:.2em">
-              PRICE {{item.price}}$<span style="font-size:0.875em"> ≈ {{ convertPrice(item.price) }}<img src="@/assets/logos/near.svg" alt="near" style="--w:0.75em"></span>
+            <span class="font2 bold acenter" style="gap: 0.2em">
+              PRICE {{ item.price }}$<span style="font-size: 0.875em">
+                ≈ {{ convertPrice(item.price) }}<img src="@/assets/logos/near.svg" alt="near" style="--w: 0.75em"
+              /></span>
             </span>
 
             <div class="center gap1">
-              <v-btn class="btn align font2" :disabled="item.disabled" style="--bg:#000000;--c:var(--primary);--fs:1.2em" @click="addToCart(item)">{{ item.status == "success" ? "SUCCESS " : item.status == "error" ? "FAILED " : "ADD TO CART"}} <v-icon>{{ item.status == "success" ? "mdi-check-circle" : item.status == "error" ? "mdi-close-circle" : null }}</v-icon></v-btn>
-              <v-btn icon style="--b:1px solid #000000" @click="createLikeTrack(item)">
-                <img :src="require(`@/assets/icons/like${item.like?'-active':''}.svg`)" alt="like button">
+              <v-btn
+                class="btn align font2"
+                :disabled="item.disabled"
+                style="--bg: #000000; --c: var(--primary); --fs: 1.2em"
+                @click="addToCart(item)"
+                >{{ item.status == "success" ? "SUCCESS " : item.status == "error" ? "FAILED " : "ADD TO CART" }}
+                <v-icon>{{ item.status == "success" ? "mdi-check-circle" : item.status == "error" ? "mdi-close-circle" : null }}</v-icon></v-btn
+              >
+              <v-btn icon style="--b: 1px solid #000000" @click="createLikeTrack(item)">
+                <img :src="require(`@/assets/icons/like${item.like ? '-active' : ''}.svg`)" alt="like button" />
               </v-btn>
             </div>
           </v-sheet>
@@ -134,8 +171,8 @@
 
 <script>
 import gql from "graphql-tag";
-import axios from 'axios';
-import ModalConnect from "../../components/modals/connect.vue"
+import axios from "axios";
+import ModalConnect from "../../components/modals/connect.vue";
 import * as nearAPI from "near-api-js";
 const { Contract } = nearAPI;
 
@@ -233,13 +270,13 @@ export default {
         // },
       ],
       recent: "Recent",
-      dataRecent: ["any","recent", "latest"],
+      dataRecent: ["any", "recent", "latest"],
       atribute: null,
-      dataAtribute: ["any","asc", "desc"],
+      dataAtribute: ["any", "asc", "desc"],
       categoriesFilter: [],
       cart: {
         quantity: "0",
-        totalPrice: "0"
+        totalPrice: "0",
       },
       all: "ALL",
       dataAll: [],
@@ -254,103 +291,104 @@ export default {
         // { img: require("@/assets/avatars/a2.jpg"), name: "LOVE ARROW", by: "Travis Poll", price: "20", play: false, like: false },
         // { img: require("@/assets/avatars/a2.jpg"), name: "LOVE ARROW", by: "Travis Poll", price: "20", play: false, like: false },
       ],
-    }
+    };
   },
   computed: {
     route() {
-      return this.$router.currentRoute.name
-    }
+      return this.$router.currentRoute.name;
+    },
   },
   async mounted() {
-    this.$emit('RouteValidator')
-    this.getNearPrice()
-    this.likesTrack = await this.getAllLikeTrack()
-    this.getShoppingCart()
-    this.getGenders()
-    
+    this.$emit("RouteValidator");
+    this.getNearPrice();
+    this.likesTrack = await this.getAllLikeTrack();
+    this.getShoppingCart();
+    this.getGenders();
   },
   methods: {
     selectRecent() {
       if (this.recent === "recent") {
         if (this.atribute) {
-          this.atribute = "any"
+          this.atribute = "any";
         }
-        this.getData()
-        
+        this.getData();
       } else if (this.recent === "latest") {
-        this.dataAfrofusion = this.dataAfrofusion.reverse()
+        this.dataAfrofusion = this.dataAfrofusion.reverse();
         if (this.atribute) {
-          this.atribute = "any"
+          this.atribute = "any";
         }
       } else {
-        this.getData()
+        this.getData();
       }
     },
     goArtistDetails(item) {
-      localStorage.setItem("artist", item.creator)
-      this.$router.push('/artist-details')
+      localStorage.setItem("artist", item.creator);
+      this.$router.push("/artist-details");
     },
     getAllLikeTrack() {
       if (this.$ramper.getAccountId() || this.$selector.getAccountId()) {
-        let wallet = this.$ramper.getAccountId() || this.$selector.getAccountId()
-        const resp = this.axios.post(process.env.VUE_APP_NODE_API + "/api/get-all-like-track/", {wallet})
+        let wallet = this.$ramper.getAccountId() || this.$selector.getAccountId();
+        const resp = this.axios
+          .post(process.env.VUE_APP_NODE_API + "/api/get-all-like-track/", { wallet })
           .then((res) => {
             if (res.data) {
-              return res.data
+              return res.data;
             } else {
-              return []
+              return [];
             }
           })
           .catch((err) => {
-            console.log(err)
-            return []
-          })
-        return resp
+            console.log(err);
+            return [];
+          });
+        return resp;
       } else {
-        return []
+        return [];
       }
     },
     getLikeTrack(tokenId) {
       if (this.likesTrack.length > 0) {
-        const like = this.likesTrack.find((element) => element.tokenId === tokenId)
+        const like = this.likesTrack.find((element) => element.tokenId === tokenId);
         if (like) {
-          return true
+          return true;
         } else {
-          return false
+          return false;
         }
       } else {
-        return false
-      }   
+        return false;
+      }
     },
     createLikeTrack(item) {
-      console.log(item)
+      console.log(item);
       if (this.$ramper.getAccountId() || this.$selector.getAccountId()) {
-        let wallet = this.$ramper.getAccountId() || this.$selector.getAccountId()
+        let wallet = this.$ramper.getAccountId() || this.$selector.getAccountId();
         if (!item.like) {
-          this.axios.post(process.env.VUE_APP_NODE_API + "/api/create-like-track/", {wallet, tokenId: item.token_id, creatorId: item.creator})
+          this.axios
+            .post(process.env.VUE_APP_NODE_API + "/api/create-like-track/", { wallet, tokenId: item.token_id, creatorId: item.creator })
             .then((res) => {
-              console.log(res)
-              item.like=!item.like
+              console.log(res);
+              item.like = !item.like;
             })
             .catch((err) => {
-              console.log(err)
-            })
+              console.log(err);
+            });
         } else {
-          this.axios.post(process.env.VUE_APP_NODE_API + "/api/delete-like-track/", {wallet, tokenId: item.token_id, creatorId: item.creator})
+          this.axios
+            .post(process.env.VUE_APP_NODE_API + "/api/delete-like-track/", { wallet, tokenId: item.token_id, creatorId: item.creator })
             .then((res) => {
-              console.log(res)
-              item.like=!item.like
+              console.log(res);
+              item.like = !item.like;
             })
             .catch((err) => {
-              console.log(err)
-            })
-        }     
+              console.log(err);
+            });
+        }
       } else {
-        this.$refs.ModalConnect.modalConnect = true
-      }   
+        this.$refs.ModalConnect.modalConnect = true;
+      }
     },
     convertPrice(price) {
-      return (price / this.nearPrice).toFixed(3) || 0
+      return (price / this.nearPrice).toFixed(3) || 0;
     },
     async getNearPrice() {
       const account = await this.$near.account(this.$ramper.getAccountId() || this.$selector.getAccountId());
@@ -360,83 +398,100 @@ export default {
       });
 
       const price = await contract.get_tasa();
-      this.nearPrice = price
+      this.nearPrice = price;
     },
     getShoppingCart() {
-      this.axios.post(process.env.VUE_APP_NODE_API + "/api/get-all-shopping-cart/", {wallet: this.$ramper.getAccountId() || this.$selector.getAccountId()})
+      this.axios
+        .post(process.env.VUE_APP_NODE_API + "/api/get-all-shopping-cart/", { wallet: this.$ramper.getAccountId() || this.$selector.getAccountId() })
         .then((res) => {
-          let totalPrice = 0
+          let totalPrice = 0;
           for (let i = 0; i < res.data.length; i++) {
             const element = res.data[i];
-            totalPrice += Number(element.price)
+            totalPrice += Number(element.price);
           }
-          this.cart.totalPrice = String(totalPrice)
-          this.cart.quantity = String(res.data.length)
+          console.log("DATA CART", res.data);
+          this.cart.totalPrice = String(totalPrice);
+          this.cart.quantity = String(res.data.length);
         })
         .catch((err) => {
-          console.log(err)
-        })
+          console.log(err);
+        });
     },
     addToCart(item) {
-      item.disabled = true
-      this.axios.post(process.env.VUE_APP_NODE_API + "/api/add-shopping-cart/", {wallet: this.$ramper.getAccountId() || this.$selector.getAccountId(), tokenId: item.token_id})
+      item.disabled = true;
+      this.axios
+        .post(process.env.VUE_APP_NODE_API + "/api/add-shopping-cart/", {
+          wallet: this.$ramper.getAccountId() || this.$selector.getAccountId(),
+          tokenId: item.token_id,
+        })
         .then((res) => {
-          console.log(res.data)
-          item.status = "success"
-          this.getShoppingCart()
+          console.log(res.data);
+          item.status = "success";
+          this.getShoppingCart();
           // setTimeout(item.status = null, 1500);
           setTimeout(() => {
-            item.status = null
-            item.disabled = false
+            item.status = null;
+            item.disabled = false;
           }, 3000);
         })
         .catch((err) => {
-          item.status = "error"
+          item.status = "error";
           setTimeout(() => {
-            item.status = null
-            item.disabled = false
+            item.status = null;
+            item.disabled = false;
           }, 2000);
           // setTimeout(item.status = null, 1500);
-        })
+        });
     },
     playPreview(item) {
-      this.track = item
+      this.track = item;
       if (item.play) {
-        this.$store.dispatch('updateTrack', item);
-        let wallet = this.$ramper.getAccountId() || this.$selector.getAccountId()
-        this.axios.post(process.env.VUE_APP_NODE_API + "/api/play-track/", {wallet, tokenId: item.token_id, creatorId: item.creator})
+        this.$store.dispatch("updateTrack", item);
+        let wallet = this.$ramper.getAccountId() || this.$selector.getAccountId();
+        this.axios.post(process.env.VUE_APP_NODE_API + "/api/play-track/", { wallet, tokenId: item.token_id, creatorId: item.creator });
       } else {
-        this.$store.dispatch('updateTrack', item);
+        this.$store.dispatch("updateTrack", item);
       }
     },
-    clickCategories(item) {
-      if (item.name === "ALL") { 
-        this.allFilter = true
-        this.categoriesFilter = []
-        this.dataCategories.forEach(element => {
-          element.active = false
-          this.categoriesFilter.push(element.name)
-        })
+    clickCategories(item2) {
+      let item = item2;
+      if (item2.name !== "ALL") {
+        item = this.dataCategories.find((res) => {
+          return res.name === item2.name;
+        });
+      }
+
+      if (item.name === "ALL") {
+        this.allFilter = true;
+        this.categoriesFilter = [];
+        this.dataCategories.forEach((element) => {
+          element.active = false;
+          this.categoriesFilter.push(element.name);
+        });
       } else {
-        this.allFilter = false
-        item.active = !item.active
+        this.allFilter = false;
+        item.active = !item.active;
 
-        this.categoriesFilter = []
-        this.dataCategories.forEach(element => {
+        this.categoriesFilter = [];
+        this.dataCategories.forEach((element) => {
           if (element.active) {
-            this.categoriesFilter.push(element.name)
+            this.categoriesFilter.push(element.name);
           }
-        })
+        });
 
-        if (this.dataCategories.filter(function(element) { return element.active === true }).length === 0) {
-          this.allFilter = true
-          this.dataCategories.forEach(element => {
-            element.active = false
-            this.categoriesFilter.push(element.name)
-          })
+        if (
+          this.dataCategories.filter(function (element) {
+            return element.active === true;
+          }).length === 0
+        ) {
+          this.allFilter = true;
+          this.dataCategories.forEach((element) => {
+            element.active = false;
+            this.categoriesFilter.push(element.name);
+          });
         }
       }
-      this.getData()
+      this.getData();
     },
     limitStr(item, num) {
       if (item) {
@@ -449,7 +504,7 @@ export default {
     async getGenders() {
       const getGendersUser = gql`
         query MyQuery {
-          genders(where: {id_gt: "0"}) {
+          genders(where: { id_gt: "0" }) {
             id
             name
           }
@@ -457,42 +512,53 @@ export default {
       `;
 
       const res = await this.$apollo.query({
-        query: getGendersUser
-      })
+        query: getGendersUser,
+      });
 
-      const data = res.data.genders
+      const data = res.data.genders;
 
-      let dataCategories = []
+      let dataCategories = [];
 
       for (let i = 0; i < data.length; i++) {
         const element = data[i];
-        const item = { 
-          name: element.name, 
-          active: false 
+        const item = {
+          name: element.name,
+          active: false,
+        };
+
+        if (
+          item.name.toUpperCase() === "AFROBEAT" ||
+          item.name.toUpperCase() === "AFROPOP" ||
+          item.name.toUpperCase() === "HIGHLIFE" ||
+          item.name.toUpperCase() === "AFRO FUSION" ||
+          item.name.toUpperCase() === "FUJI" ||
+          item.name.toUpperCase() === "APALA" ||
+          item.name.toUpperCase() === "JUJU"
+        ) {
+          item.priority = true;
+        } else {
+          item.priority = false;
         }
 
-        dataCategories.push(item)
-        this.categoriesFilter.push(item.name)
+        dataCategories.push(item);
+        this.categoriesFilter.push(item.name);
       }
       this.dataCategories = dataCategories.sort((a, b) => {
         // Compara las propiedades 'name' de los objetos a y b
         const nameA = a.name.toUpperCase(); // Convierte a mayúsculas para hacer la comparación insensible a mayúsculas/minúsculas
         const nameB = b.name.toUpperCase();
 
-        if (nameA < nameB) {
-          return -1; // a debe ir antes que b en la ordenación
-        }
-        if (nameA > nameB) {
-          return 1; // b debe ir antes que a en la ordenación
+        if (a.priority) {
+          return -1;
         }
         return 0; // a y b son iguales en términos de ordenación
       });
-      this.getData()
+      this.getData();
     },
     getSeriesGQL() {
       if (this.atribute === "asc" || this.atribute === "desc") {
         if (this.recent) {
-          this.recent = "any"
+          this.recent = "any";
         }
         return gql`
           query MyQuery($categories: [String!]) {
@@ -528,7 +594,7 @@ export default {
       } else {
         return gql`
           query MyQuery($categories: [String!]) {
-            series(where: {reference_in: $categories, is_mintable: true}) {
+            series(where: { reference_in: $categories, is_mintable: true }) {
               aproved_event
               aproved_objects
               copies
@@ -560,21 +626,23 @@ export default {
       }
     },
     async getData() {
-      const getSeries = this.getSeriesGQL()
+      const getSeries = this.getSeriesGQL();
       const res = await this.$apollo.query({
         query: getSeries,
-        variables: {categories: this.categoriesFilter}
-      })
+        variables: { categories: this.categoriesFilter },
+      });
 
-      const data = res.data.series
+      const data = res.data.series;
 
-      this.dataAfrofusion = []
-      const dataAfrofusionAux = []
-      
+      this.dataAfrofusion = [];
+      const dataAfrofusionAux = [];
+
       for (let i = 0; i < data.length; i++) {
         const element = data[i];
-        const extra = JSON.parse(element.extra)
-        const trackPreview = extra.find(element => { return element.trait_type === "track_preview"})
+        const extra = JSON.parse(element.extra);
+        const trackPreview = extra.find((element) => {
+          return element.trait_type === "track_preview";
+        });
 
         const sonido = document.createElement("audio");
         sonido.src = trackPreview.value;
@@ -583,36 +651,35 @@ export default {
         sonido.style.display = "none"; // <-- oculto
         document.body.appendChild(sonido);
 
-        const item = { 
+        const item = {
           token_id: element.id,
           description: element.description,
           img: element.media,
-          name: element.title, 
+          name: element.title,
           preview: trackPreview.value,
-          by: await this.getArtistName(element.creator_id), 
-          creator: element.creator_id, 
-          price: element.price, 
-          play: false, 
+          by: await this.getArtistName(element.creator_id),
+          creator: element.creator_id,
+          price: element.price,
+          play: false,
           like: this.getLikeTrack(element.id),
           track: sonido,
           type: "preview",
           status: null,
-          disabled: false
-        }
+          disabled: false,
+        };
 
         if (this.track?.play && this.track?.token_id === item.token_id) {
-          item.play = true
+          item.play = true;
         }
 
-        dataAfrofusionAux.push(item)
+        dataAfrofusionAux.push(item);
       }
-      this.dataAfrofusion = dataAfrofusionAux.sort(this.compararPorLike)
+      this.dataAfrofusion = dataAfrofusionAux.sort(this.compararPorLike);
     },
     async getArtistName(wallet) {
-      
       const getDataUser = gql`
         query MyQuery($wallet: String!) {
-          users(where: {wallet: $wallet}) {
+          users(where: { wallet: $wallet }) {
             artist_name
             wallet
           }
@@ -621,12 +688,12 @@ export default {
 
       const res = await this.$apollo.query({
         query: getDataUser,
-        variables: {wallet: wallet},
-      })
+        variables: { wallet: wallet },
+      });
 
-      const data = res.data
+      const data = res.data;
 
-      return data.users[0].artist_name || null
+      return data.users[0].artist_name || null;
     },
     compararPorLike(a, b) {
       if (a.like && !b.like) {
@@ -636,8 +703,8 @@ export default {
       } else {
         return 0; // mantener el orden actual si ambos tienen el mismo valor 'like'
       }
-    }
-  }
+    },
+  },
 };
 </script>
 

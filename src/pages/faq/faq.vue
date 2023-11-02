@@ -1,33 +1,34 @@
 <template>
   <v-app id="FAQ">
-          <!-- content -->
-          <h1 class="h5_em bold">FAQs</h1>
-          <v-expansion-panels v-model="expansionModel" class="expansion-faqs">
-          <v-expansion-panel v-for="(item,i) in dataFaqs" :key="i">
-            <v-expansion-panel-header disable-icon-rotate>
-              {{item.question}}
+    <!-- content -->
+    <h1 class="h5_em bold">FAQs</h1>
+    <v-expansion-panels v-model="expansionModel" class="expansion-faqs">
+      <v-expansion-panel v-for="(item, i) in dataFaqs" :key="i">
+        <v-expansion-panel-header disable-icon-rotate>
+          {{ item.question }}
 
-              <template v-slot:actions>
-                <v-icon>{{expansionModel === i ? 'mdi-minus' : 'mdi-plus'}}</v-icon>
-              </template>
-            </v-expansion-panel-header>
+          <template v-slot:actions>
+            <v-icon>{{ expansionModel === i ? "mdi-minus" : "mdi-plus" }}</v-icon>
+          </template>
+        </v-expansion-panel-header>
 
-            <v-expansion-panel-content>{{item.answer}}</v-expansion-panel-content>
-          </v-expansion-panel>
-        </v-expansion-panels>
+        <v-expansion-panel-content>{{ item.answer }}</v-expansion-panel-content>
+      </v-expansion-panel>
+    </v-expansion-panels>
   </v-app>
 </template>
 
 <script>
 export default {
-  name: 'faq',
+  name: "faq",
   i18n: require("./i18n"),
   data() {
     return {
       dataFaqs: [
         {
-          question: "What is Young Fresh Dao?",
-          answer: "The Music and Entertainment industry is saturated with a lot of amazing talents with little encouragement for their craft and not enough exposure to the right audience, due to this a lot of underground musicians give up their music career in the process of trying to be heard.. \
+          question: "What is W3music?",
+          answer:
+            "The Music and Entertainment industry is saturated with a lot of amazing talents with little encouragement for their craft and not enough exposure to the right audience, due to this a lot of underground musicians give up their music career in the process of trying to be heard.. \
 The Music industry in Africa, don't pay a lot of attention to songwriters and producers ,like the singers. Most times songwriters are not given credit for their works and in most cases they don't get paid at all, this is very discouraging for people that would love to venture into songwriting. We are going to change that by integrating smart contract for the sales of your creative works. \n \
 W3 music is a stop shop for all your music needs (songwriting, production)e.t.c.\
 songwriters and producers can make income from their craft while they get credit for their works).\
@@ -47,11 +48,12 @@ This illustration also applies to a producer/ beatmaker, that posts his beat for
         },
         {
           question: "What kind of song/beat can I upload on W3music?",
-          answer: " You can only upload original beats / songs, beats or songs that was originally created by you."
+          answer: " You can only upload original beats / songs, beats or songs that was originally created by you.",
         },
         {
           question: "Do I make extra money from selling my beats /song on W3 music?",
-          answer: "You can earn extra 5$ , everytime a person buys your beat or song on W3 music, you get an extra $5 , for instance if you sell a beat for 100$, you get 105$.",
+          answer:
+            "You can earn extra 5$ , everytime a person buys your beat or song on W3 music, you get an extra $5 , for instance if you sell a beat for 100$, you get 105$.",
         },
         {
           question: "Can I register on W3music , if I don’t have a near wallet?",
@@ -66,7 +68,7 @@ This illustration also applies to a producer/ beatmaker, that posts his beat for
           answer: "",
         },
       ],
-    }
+    };
   },
 };
 </script>

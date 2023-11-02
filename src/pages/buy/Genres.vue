@@ -26,7 +26,7 @@ export default {
         dataFaqs: [
         {
           question: "Afrobeat",
-          answer: "Afrobeat is a Nigerian music genre that involves the combination of African musical styles (such as highlife, fuji and juju, and also with American funk, jazz, and soul influences, with a focus on chanted vocals, complex intersecting rhythms, and percussion. Afrobeat was pioneered in 1960 by Nigerian multi-instrumentalist and bandleader Fela Anikulapo kuti, and drummer Tony Allen.",
+          answer: "Afrobeat is a Nigerian music genre that involves the combination of African musical styles (such as highlife, fuji and juju, and also with American funck, jazz, and soul influences, with a focus on chanted vocals, complex intersecting rhythms, and percussion. Afrobeat was pioneered in 1960 by Nigerian multi-instrumentalist and bandleader Fela Anikulapo kuti, and drummer Tony Allen.",
         },
         {
           question: "Afropop",
@@ -86,7 +86,7 @@ export default {
         },
         {
           question: "HipHop",
-          answer: "Hiphop is a form of popular music that originated among inner-city African-American youths in the 1980s, drawing on rap, funk, street sounds, and fragments of melody and rhythm borrowed from previously recorded sources. 2. the culture or a fashion, dance, etc. associated with this music.",
+          answer: "Hiphop is a form of popular music that originated among inner-city African-American youths in the 1980s, drawing on rap, funck, street sounds, and fragments of melody and rhythm borrowed from previously recorded sources. 2. the culture or a fashion, dance, etc. associated with this music.",
         },
         {
           question: "Metal",
@@ -133,8 +133,8 @@ export default {
           answer: "Electronic Dance Music can be defined as a compilation of a great variety of electronic music subgenres intended specifically for dancing crowds to boogie to the music all night long. It encompasses styles such as house music, disco music, synthpop, techno, trance music, drum and bass, dubstep, trap, and much more."
         },
         {
-          question: "Funk",
-          answer: "Funk is a music genre that originated in African American communities in the mid-1960s when African American musicians created a rhythmic, danceable new form of music through a mixture of soul, bebop/hard bop, and R & B. Funk de-emphasizes melody and chord progressions and focuses on the strong rhythmic groove of a bass line played by an electric bassist and a drum part played by a drummer. The distinctive characteristics of \ funk are rooted in African music traditions of ring shout and call and response and find their earliest African American expression in Negro spirituals, work songs, blues, praise shouts, gospel, and body rhythms (hambone, patting juba, and ring shout clapping and stomping patterns)."
+          question: "Funck",
+          answer: "Funck is a music genre that originated in African American communities in the mid-1960s when African American musicians created a rhythmic, danceable new form of music through a mixture of soul, bebop/hard bop, and R & B. Funck de-emphasizes melody and chord progressions and focuses on the strong rhythmic groove of a bass line played by an electric bassist and a drum part played by a drummer. The distinctive characteristics of \ funck are rooted in African music traditions of ring shout and call and response and find their earliest African American expression in Negro spirituals, work songs, blues, praise shouts, gospel, and body rhythms (hambone, patting juba, and ring shout clapping and stomping patterns)."
         },
         {
           question: "Dubstep",
