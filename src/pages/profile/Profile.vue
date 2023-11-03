@@ -270,16 +270,16 @@ export default {
         { value: "time", text: "TIME", align: "center" },
       ],
       dataTable: [
-        {
-          img: require("@/assets/miscellaneous/track.jpg"),
-          price: "-----",
-          genre: "DANCE POP",
-          name: "DANCE POP",
-          plays: 4.679,
-          play: false,
-          to: "patysb.near",
-          time: "3 days",
-        },
+        // {
+        //   img: require("@/assets/miscellaneous/track.jpg"),
+        //   price: "-----",
+        //   genre: "DANCE POP",
+        //   name: "DANCE POP",
+        //   plays: 4.679,
+        //   play: false,
+        //   to: "patysb.near",
+        //   time: "3 days",
+        // },
       ],
       // data
       dataUser: {
