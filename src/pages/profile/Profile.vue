@@ -504,9 +504,9 @@ export default {
         ) {
           console.log("HASH", resTx);
           if (process.env.VUE_APP_NETWORK === "mainnet") {
-            this.urlTx = "https://nearblocks.io/txns/" + (urlParams.get("transactionHashes") || resTx.txHashes[0]);
+            this.urlTx = "https://nearblocks.io/txns/" + resTx.txHashes[0];
           } else {
-            this.urlTx = "https://testnet.nearblocks.io/txns/" + (urlParams.get("transactionHashes") || resTx.txHashes[0]);
+            this.urlTx = "https://testnet.nearblocks.io/txns/" + resTx.txHashes[0];
           }
           localStorage.setItem("results", true);
           localStorage.setItem("typeResult", "profile");
