@@ -135,6 +135,7 @@
               <span class="font2" style="font-size: 0.875em"
                 >by <a :title="item.by" class="not_typography" href="#" @click="goArtistDetails(item)">{{ limitStr(item.by, 25) }}</a></span
               >
+              <span class="font2" style="font-size: 0.875em">sold: {{ item.sold }}</span>
               <span class="font2" style="font-size: 0.875em" v-html="item.description"></span>
               <!-- <p v-html="item.description"></p> -->
             </div>
@@ -642,6 +643,8 @@ export default {
 
       const data = res.data.series;
 
+      // console.log("DATAAA", data)
+
       this.dataAfrofusion = [];
       const dataAfrofusionAux = [];
 
@@ -669,6 +672,7 @@ export default {
           creator: element.creator_id,
           price: element.price,
           play: false,
+          sold: element.nftsold,
           like: this.getLikeTrack(element.id),
           track: sonido,
           type: "preview",

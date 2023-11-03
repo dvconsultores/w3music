@@ -331,7 +331,7 @@ export default {
                           price: Number(this.sample.price)
                         },
                         gas: "50000000000000",
-                        deposit: "10000000000000000000000"
+                        deposit: "50000000000000000000000"
                       },
                     },
                   ],
@@ -381,7 +381,7 @@ export default {
                   price: Number(this.sample.price)
                 },
                 "50000000000000",
-                "10000000000000000000000"
+                "50000000000000000000000"
               ),
             ]
 
