@@ -4,6 +4,7 @@ import Vue from "vue";
 
 export default function RamperApi() {
   init({
+    appId: "nedctrlskw",
     appName: "W3 Music",
     chainName: CHAIN.NEAR,
     walletProviders: [],
