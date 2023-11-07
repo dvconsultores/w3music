@@ -4,6 +4,10 @@
     <MenuHeader ref="menu"></MenuHeader>
     <v-app-bar id="headerApp" color="transparent" height="100px" absolute class="font2 isolate">
       <aside class="acenter gap2" style="padding-left:calc(48px + 2em)">
+        <router-link to="/" style="transform: translateY(4px);">
+          <img src="@/assets/logos/logo-w3music.svg" alt="logo w3music" style="width: 45px; height: 45px;">
+        </router-link>
+
         <aside class="sidebar divcol acenter jspace isolate" :class="{active: sidebar}">
           <v-btn icon @click="toggleFunc()">
             <img :src="require(`@/assets/icons/menu${positionFocus==0||positionFocus==16?'':'-active-sidebar'}.svg`)" alt="toggle">

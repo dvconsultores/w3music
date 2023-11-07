@@ -140,7 +140,7 @@
             :style="`
               --error-message: '${errorText}';
               --br: 1.5vmax;
-              --h: 95.94px;
+              --h: 140px;
             `"
             @text-change="hasUserInteraction = true"
           />
