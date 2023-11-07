@@ -258,8 +258,8 @@ export default {
       // profile validation ("fan" or "artist")
       profileType: "artist",
       dataActions: [
-        { key: "profile", name: "Mi Perfil", active: true, disabled: false },
-        { key: "sales", name: "Ventas", active: false, disabled: false },
+        { key: "profile", name: "My Profile", active: true, disabled: false },
+        { key: "sales", name: "My sales", active: false, disabled: false },
       ],
       headersTable: [
         { value: "name", text: "TRACK", align: "center" },
@@ -310,7 +310,6 @@ export default {
     },
   },
   async mounted() {
-    console.log(!this.$ramper.getUser(), !this.$selector.getAccountId());
     if (!this.$ramper.getUser() && !this.$selector?.getAccountId()) {
       this.$router.push("/");
     }
@@ -340,15 +339,12 @@ export default {
         }
       `;
 
-      console.log("ASD");
-
       this.$apollo
         .watchQuery({
           query: getGendersUser,
           pollInterval: 10000, // 10 seconds in milliseconds
         })
         .subscribe(({ data }) => {
-          console.log(data);
           this.dataUser.dataMusicGenre = data.genders;
           this.dataUser.dataMusicPreference = data.genders;
         });
@@ -380,7 +376,6 @@ export default {
 
       const data = res.data;
 
-      console.log(data);
       (this.dataUser.youAre = data.users[0].youare || null),
         (this.dataUser.location = data.users[0].location || null),
         (this.dataUser.musicGenre = String(data.users[0].music_genre) || "0"),
@@ -465,7 +460,6 @@ export default {
     async saveProfileRamper() {
       this.disabledSave = true;
       if (this.$ramper.getUser()) {
-        console.log(this.dataUser.musicGenre);
         const actions = [
           this.$ramper.functionCall(
             "set_user",
@@ -482,10 +476,9 @@ export default {
                 wallet: this.$ramper.getAccountId(),
               },
             },
-            "50000000000000",
+            "100000000000000",            
           ),
         ];
-
         const resTx = await this.$ramper.sendTransaction({
           transactionActions: [
             {
@@ -495,31 +488,30 @@ export default {
           ],
           network: process.env.VUE_APP_NETWORK,
         });
-
-        if (
-          (resTx && JSON.parse(localStorage.getItem("ramper_loggedInUser")).signupSource === "near_wallet" && resTx.txHashes.length > 0) ||
-          resTx.result ||
-          resTx.result[0]?.status?.SuccessValue ||
-          resTx.result[0]?.status?.SuccessValue === ""
-        ) {
-          console.log("HASH", resTx);
-          if (process.env.VUE_APP_NETWORK === "mainnet") {
-            this.urlTx = "https://nearblocks.io/txns/" + resTx.txHashes[0];
-          } else {
-            this.urlTx = "https://testnet.nearblocks.io/txns/" + resTx.txHashes[0];
-          }
-          localStorage.setItem("results", true);
-          localStorage.setItem("typeResult", "profile");
-          localStorage.setItem("linkHash", this.urlTx);
-          fire
-            .collection(process.env.VUE_APP_CHAT_FIREBASE || "TESTNET")
-            .doc(this.walletNear)
-            .set({ artist: this.dataUser.artistName || "" });
-          this.$router.push("/results");
-        } else {
-          localStorage.setItem("results", false);
-          this.$router.push("/results");
-        }
+        console.log("resTx", resTx)
+        // if (
+        //   (resTx && JSON.parse(localStorage.getItem("ramper_loggedInUser")).signupSource === "near_wallet" && resTx.txHashes.length > 0) ||
+        //   resTx.result ||
+        //   resTx.result[0]?.status?.SuccessValue ||
+        //   resTx.result[0]?.status?.SuccessValue === ""
+        // ) {
+        //   if (process.env.VUE_APP_NETWORK === "mainnet") {
+        //     this.urlTx = "https://nearblocks.io/txns/" + resTx.txHashes[0];
+        //   } else {
+        //     this.urlTx = "https://testnet.nearblocks.io/txns/" + resTx.txHashes[0];
+        //   }
+        //   localStorage.setItem("results", true);
+        //   localStorage.setItem("typeResult", "profile");
+        //   localStorage.setItem("linkHash", this.urlTx);
+        //   fire
+        //     .collection(process.env.VUE_APP_CHAT_FIREBASE || "TESTNET")
+        //     .doc(this.walletNear)
+        //     .set({ artist: this.dataUser.artistName || "" });
+        //   this.$router.push("/results");
+        // } else {
+        //   localStorage.setItem("results", false);
+        //   this.$router.push("/results");
+        // }
       } else {
         const login = await this.$ramper.signIn();
         if (login) {
