@@ -59,7 +59,8 @@
       </v-btn> -->
 
       <aside class="acenter gap2">
-        <v-btn v-show="!$store.state.user.login" class="btn eliminarmobile" @click="$refs.ModalConnect.modalConnect = true">LOG IN</v-btn>
+        <!-- <v-btn v-show="!$store.state.user.login" class="btn eliminarmobile" @click="$refs.ModalConnect.modalConnect = true">LOG IN</v-btn> -->
+        <v-btn v-show="!$store.state.user.login" class="btn eliminarmobile" @click="walletSelector">LOG IN</v-btn>
 
         <div v-show="$store.state.user.login" :class="{acenter: $store.state.user.login, contents: !$store.state.user.login}" style="cursor:pointer;border-radius:4vmax" class="openMenuLogin">
           <v-btn icon @click="$store.state.user.login?null:$router.push('/login')">
@@ -189,6 +190,12 @@ export default {
     })
   },
   methods: {
+    async walletSelector() {
+      this.modalConnect = false
+      localStorage.setItem('modeConnect', 'walletSelector')
+
+      this.$selector.modal.show();
+    },
     searchArtist(item) {
       localStorage.setItem("artist", item)
       this.artist = null
