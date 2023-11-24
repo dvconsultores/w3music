@@ -192,12 +192,12 @@
     </v-dialog> -->
     <v-row justify="center">
       <v-dialog persistent v-model="dialogDescAux" width="800">
-        <v-card>
+        <v-card style="background-color: #fdd34e !important">
           <v-card-title>
-            <span class="text-h5">Read more</span>
+            <span class="text-h4">Read more</span>
           </v-card-title>
           <v-card-text>
-            <span class="font2" style="font-size: 1.3em" v-html="dialogDesc"></span>
+            <span class="font2" style="font-size: 1.5em" v-html="dialogDesc"></span>
           </v-card-text>
           <v-card-actions>
             <v-spacer></v-spacer>
