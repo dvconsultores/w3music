@@ -192,7 +192,7 @@
     </v-dialog> -->
     <v-row justify="center">
       <v-dialog persistent v-model="dialogDescAux" width="800">
-        <v-card style="background-color: #fdd34e !important">
+        <v-card style="background-color: #eae823 !important">
           <v-card-title>
             <span class="text-h4">Read more</span>
           </v-card-title>
