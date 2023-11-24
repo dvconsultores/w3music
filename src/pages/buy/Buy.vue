@@ -135,8 +135,14 @@
               <span class="font2" style="font-size: 0.875em"
                 >by <a :title="item.by" class="not_typography" href="#" @click="goArtistDetails(item)">{{ limitStr(item.by, 25) }}</a></span
               >
-              <span class="font2" style="font-size: 0.875em">sold: {{ item.sold }}</span>
-              <span class="font2" style="font-size: 0.875em" v-html="item.description"></span>
+              <span class="font2" style="font-size: 0.9em">sold: {{ item.sold }}</span>
+              <span class="font2" style="font-size: 0.9em" v-html="limitStr(item.description, 100)"></span>
+              <span
+                class="font2 pointer"
+                style="aling: center !important; justify: center !important; font-size: 0.9em; color: blue"
+                @click="readMore(item.description)"
+                >Read more</span
+              >
               <!-- <p v-html="item.description"></p> -->
             </div>
 
@@ -167,6 +173,48 @@
         </v-card>
       </aside>
     </aside>
+    <!-- <v-dialog v-model="dialogDescAux" persistent content-class="modal-connect divcol relative">
+      <aside>
+        <v-btn
+          icon
+          @click="
+            dialogDescAux = false;
+            dialogDesc = null;
+          "
+        >
+          <v-icon size="1em">mdi-close</v-icon>
+        </v-btn>
+      </aside>
+
+      <v-sheet class="grid" color="transparent">
+        <span class="font2" color="white" style="color: white !important; font-size: 1.3em" v-html="dialogDesc"></span>
+      </v-sheet>
+    </v-dialog> -->
+    <v-row justify="center">
+      <v-dialog persistent v-model="dialogDescAux" width="800">
+        <v-card>
+          <v-card-title>
+            <span class="text-h5">Read more</span>
+          </v-card-title>
+          <v-card-text>
+            <span class="font2" style="font-size: 1.3em" v-html="dialogDesc"></span>
+          </v-card-text>
+          <v-card-actions>
+            <v-spacer></v-spacer>
+            <v-btn
+              color="green-darken-1"
+              variant="text"
+              @click="
+                dialogDescAux = false;
+                dialogDesc = null;
+              "
+            >
+              Close
+            </v-btn>
+          </v-card-actions>
+        </v-card>
+      </v-dialog>
+    </v-row>
   </section>
 </template>
 
@@ -182,6 +230,8 @@ export default {
   components: { ModalConnect },
   data() {
     return {
+      dialogDesc: null,
+      dialogDescAux: false,
       track: null,
       allFilter: true,
       dataCategories: [
@@ -307,6 +357,19 @@ export default {
     this.getGenders();
   },
   methods: {
+    readMore(desc) {
+      console.log(desc);
+      this.dialogDescAux = true;
+      this.dialogDesc = desc;
+    },
+    limitStr(item, num) {
+      if (item) {
+        if (item.length > num) {
+          return item.substring(0, num) + "...";
+        }
+      }
+      return item;
+    },
     selectRecent() {
       if (this.recent === "recent") {
         if (this.atribute) {

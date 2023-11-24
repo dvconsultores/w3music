@@ -1,7 +1,7 @@
 <template>
   <section id="marketplaceBuy" class="divcol overflow margin_global gap2 isolate">
     <section class="container-header divcol" style="gap: 2em">
-      <img class="pointer back" src="@/assets/icons/back.svg" alt="back" style="--w: 100px" @click="$router.push('/buy/checkout')" />
+      <img class="pointer back" src="@/assets/icons/back.svg" alt="back" style="--w: 100px" @click="back()" />
 
       <div class="space wrap" style="gap: 1em 0">
         <div id="container-title" class="divcol" :class="{ checkoutClass: $router.currentRoute.name == 'checkout' }">
@@ -47,6 +47,9 @@ export default {
     this.getShoppingCart();
   },
   methods: {
+    back() {
+      window.history.go(-1);
+    },
     getShoppingCart() {
       this.axios
         .post(process.env.VUE_APP_NODE_API + "/api/get-all-shopping-cart/", { wallet: this.$ramper.getAccountId() || this.$selector.getAccountId() })
