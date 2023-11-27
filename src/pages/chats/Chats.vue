@@ -342,6 +342,9 @@ export default {
   mounted() {
     this.$emit("RouteValidator");
     this.wallet = this.$ramper.getAccountId() || this.$selector.getAccountId();
+    if (!this.wallet) {
+      this.$selector.modal.show();
+    }
     this.getChats();
   },
   methods: {

@@ -82,7 +82,7 @@
           <v-btn
             class="btn font2 eliminarmobile"
             style="--h: 2.75em; --bg: hsl(0, 0%, 96%, 0.75); --b: 2.5px solid var(--primary)"
-            @click="$router.push('/buy/checkout')"
+            @click="goToCheckout()"
           >
             <span class="acenter" style="gap: 0.5em; font-size: 20px">
               <img src="@/assets/icons/market-active.svg" alt="market icon" style="--w: 25px" />
@@ -357,6 +357,14 @@ export default {
     this.getGenders();
   },
   methods: {
+    goToCheckout() {
+      let wallet = this.$ramper.getAccountId() || this.$selector.getAccountId();
+      if (wallet) {
+        this.$router.push("/buy/checkout");
+      } else {
+        this.$selector.modal.show();
+      }
+    },
     readMore(desc) {
       console.log(desc);
       this.dialogDescAux = true;
@@ -466,7 +474,9 @@ export default {
     },
     getShoppingCart() {
       this.axios
-        .post(process.env.VUE_APP_NODE_API + "/api/get-all-shopping-cart/", { wallet: this.$ramper.getAccountId() || this.$selector.getAccountId() })
+        .post(process.env.VUE_APP_NODE_API + "/api/get-all-shopping-cart/", {
+          wallet: this.$ramper.getAccountId() || this.$selector.getAccountId() || "test",
+        })
         .then((res) => {
           let totalPrice = 0;
           for (let i = 0; i < res.data.length; i++) {

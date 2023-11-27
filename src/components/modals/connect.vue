@@ -1,8 +1,8 @@
 <template>
   <v-dialog v-model="modalConnect" content-class="modal-connect divcol relative isolate">
     <aside class="space">
-      <span class="h9_em" style="color:#fff !important">Connect Wallet</span>
-      
+      <span class="h9_em" style="color: #fff !important">Connect Wallet</span>
+
       <v-btn icon @click="closeDialog()">
         <v-icon size="1.5em">mdi-close</v-icon>
       </v-btn>
@@ -10,18 +10,18 @@
 
     <v-sheet class="grid" color="transparent">
       <v-btn plain color="hsl(0 0% 0% / .5)" @click="logIn()">
-        <img src="@/assets/sources/logos/ramper.svg" alt="near">
-        
+        <img src="@/assets/sources/logos/ramper.svg" alt="near" />
+
         <div class="divcol astart" style="gap: 5px">
-          <span class="h12_em bold" style="color:#fff !important">Email</span>
+          <span class="h12_em bold" style="color: #fff !important">Email</span>
           <span class="h13_em">ramper.xyz</span>
         </div>
       </v-btn>
       <v-btn plain @click="walletSelector()">
-        <img src="@/assets/sources/logos/near-wallet-icon.svg" alt="near">
-        
+        <img src="@/assets/sources/logos/near-wallet-icon.svg" alt="near" />
+
         <div class="divcol astart" style="gap: 5px">
-          <span class="h12_em bold" style="color:#fff !important">WALLET</span>
+          <span class="h12_em bold" style="color: #fff !important">WALLET</span>
           <span class="h13_em">near</span>
         </div>
       </v-btn>
@@ -55,35 +55,34 @@ export default {
       modalConnect: false,
     };
   },
-  mounted() {
-  },
+  mounted() {},
   methods: {
-    closeDialog(){
-      this.modalConnect = false
+    closeDialog() {
+      this.modalConnect = false;
     },
     async walletSelector() {
-      this.modalConnect = false
-      localStorage.setItem('modeConnect', 'walletSelector')
+      this.modalConnect = false;
+      localStorage.setItem("modeConnect", "walletSelector");
 
       this.$selector.modal.show();
     },
     async logIn() {
-      this.modalConnect = false
-      const login = await this.$ramper.signIn()
+      this.modalConnect = false;
+      const login = await this.$ramper.signIn();
       if (login) {
         if (login.user) {
-          localStorage.setItem('modeConnect', 'ramper')
-          localStorage.setItem('logKey', 'in')
-          location.reload()
+          localStorage.setItem("modeConnect", "ramper");
+          localStorage.setItem("logKey", "in");
+          location.reload();
         }
       }
     },
     closeDialog() {
-      this.modalConnect = false
-      if (JSON.parse(localStorage.getItem('discord_sinc'))) {
-        localStorage.removeItem('discord_sinc')
+      this.modalConnect = false;
+      if (JSON.parse(localStorage.getItem("discord_sinc"))) {
+        localStorage.removeItem("discord_sinc");
       }
-    }
+    },
     // async loginRamper() {
     //   const userData = await signIn()
     //   this.user = userData.user || null
@@ -97,12 +96,12 @@ export default {
     // },
     // async sendSampleTransaction() {
     //   const actions2 = [functionCall(
-    //     "nft_buy",       
+    //     "nft_buy",
     //     {
-    //       token_series_id: "1:1", 
+    //       token_series_id: "1:1",
     //       receiver_id: "c9ec2aeeaaba6154ac224ebfa27d50615d1d0699ce539d1ea4da7136b8f350de",
-    //     }, 
-    //     '300000000000000', 
+    //     },
+    //     '300000000000000',
     //     '1500000000000000000000000'
     //   )]
     //   const res = await sendTransaction({
@@ -116,7 +115,7 @@ export default {
     //   })
     //   // console.log("Transaction Result: ", res)
     // }
-  }
+  },
 };
 </script>
 
@@ -132,7 +131,7 @@ export default {
   --p: 30px;
   --tt: capitalize;
   gap: 20px;
-  
+
   &::before {
     content: "";
     position: absolute;
@@ -140,25 +139,28 @@ export default {
     border-radius: inherit;
     padding: 2px;
     background-clip: content-box, border-box;
-    background-image: linear-gradient(var(--bg),var(--bg)),
-      linear-gradient(135deg, rgba($primary,.2), rgba($secondary,.2));
+    background-image: linear-gradient(var(--bg), var(--bg)), linear-gradient(135deg, rgba($primary, 0.2), rgba($secondary, 0.2));
     z-index: -1;
   }
 
-  i {color: hsl(225 225% 225% / .5) !important}
+  i {
+    color: hsl(225 225% 225% / 0.5) !important;
+  }
 
   .v-sheet.grid {
-    @include media(min, 500px) {--gtc: 1fr 1fr}
+    @include media(min, 500px) {
+      --gtc: 1fr 1fr;
+    }
     gap: 20px;
     .v-btn {
       --fs: 20px;
       width: 100%;
       min-height: 70px;
       border-radius: 10px;
-      background-color: hsl(0 0% 0% / .2);
-      transition: .2s $ease-return;
+      background-color: hsl(0 0% 0% / 0.2);
+      transition: 0.2s $ease-return;
       &:hover {
-        background-color: hsl(0 0% 0% / .4);
+        background-color: hsl(0 0% 0% / 0.4);
         transform: translateY(-5px) !important;
       }
       &__content {
@@ -169,7 +171,7 @@ export default {
           --of: cover;
         }
         span + span {
-          --c: hsl(225 225% 225% / .5);
+          --c: hsl(225 225% 225% / 0.5);
         }
       }
     }
