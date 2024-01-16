@@ -145,6 +145,8 @@ export default {
     }
   },
   async mounted() {
+    console.log(this.$selector.selector.isSignedIn())
+    console.log(this.$ramper.getUser())
     if (this.$selector.selector.isSignedIn()) {
       this.getNearSocial(this.$selector.getAccountId())
       this.initUser(this.$selector.getAccountId())
