@@ -8,7 +8,7 @@ import { setupModal } from "@near-wallet-selector/modal-ui";
 
 export default function RamperApi() {
   setupWalletSelector({
-    network: "testnet",
+    network:process.env.VUE_APP_NETWORK,
     modules: [
       setupNearWallet(),
       setupMyNearWallet(),
@@ -27,7 +27,7 @@ export default function RamperApi() {
           wallet: wallet,
           getAccountId: () => accounts.length > 0 ? accounts[0].accountId : null,
           modal: setupModal(res, {
-            contractId: "test.testnet",
+            contractId: process.env.VUE_APP_CONTRACT_ID,
           })
         }
     
@@ -38,7 +38,7 @@ export default function RamperApi() {
           selector: res,
           getAccountId: () => null,
           modal: setupModal(res, {
-            contractId: "test.testnet",
+            contractId: process.env.VUE_APP_CONTRACT_ID,
           })
         }
     
