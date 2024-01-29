@@ -52,7 +52,7 @@
             <vue-editor
               v-model="sample.description"
               :disabled="disabledSave"
-              placeholder="Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s,"
+              placeholder="Add track description"
               :style="`--error-message: '${errorText}'; --br: 1.5vmax`"
               @text-change="hasUserInteraction = true"
               @input="reviewInputs"
