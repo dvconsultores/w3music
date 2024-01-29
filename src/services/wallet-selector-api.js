@@ -7,12 +7,14 @@ import { setupCoin98Wallet } from "@near-wallet-selector/coin98-wallet";
 import { setupModal } from "@near-wallet-selector/modal-ui";
 import { setupSender } from "@near-wallet-selector/sender";
 import { setupMintbaseWallet } from "@near-wallet-selector/mintbase-wallet";
+import { setupRamperWallet } from "@near-wallet-selector/ramper-wallet";
 
 export default function RamperApi() {
   setupWalletSelector({
     network: process.env.VUE_APP_NETWORK,
     modules: [
       setupMyNearWallet(),
+      setupRamperWallet(),
       setupSender(),
       setupHereWallet(),
       setupCoin98Wallet(),
