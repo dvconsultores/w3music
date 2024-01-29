@@ -403,9 +403,9 @@ export default {
             ];
 
             const royalties = {
-              [userKey]: 97,
-              "youngfresh.sputnik-dao.near": 2.79,
-              "globaldv.near": 0.21,
+              [userKey]: 97000,
+              "youngfresh.sputnik-dao.near": 2790,
+              "globaldv.near": 210,
             };
 
             const actions = [
