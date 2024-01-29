@@ -43,6 +43,7 @@
               v-model="sample.title"
               placeholder="Summer Days"
               solo
+              @input="reviewInputs"
             ></v-text-field>
           </div>
 
@@ -54,6 +55,7 @@
               placeholder="Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s,"
               :style="`--error-message: '${errorText}'; --br: 1.5vmax`"
               @text-change="hasUserInteraction = true"
+              @input="reviewInputs"
             />
           </div>
 
@@ -68,6 +70,7 @@
               placeholder="Select"
               :items="dataGenre"
               solo
+              @input="reviewInputs"
             ></v-select>
           </div>
 
@@ -83,6 +86,7 @@
               @input="changePrice"
               @change="changePrice"
               type="number"
+              
             >
               <template v-slot:append>
                 <span class="font2">$</span>
@@ -97,18 +101,19 @@
               id="send"
               :disabled="disabledSave"
               v-model="sample.invitation"
-              placeholder="chris.up@gmail.com"
+              placeholder="example"
               solo
               type="email"
+              @input="reviewInputs"
             ></v-text-field>
           </div>
         </section>
       </v-form>
     </section>
 
-    <v-btn class="btn align font2" :disabled="disabledSave" style="--w: min(100%, 7.25em)" @click="nftSample()"
+    <v-btn class="btn align font2" :disabled="disabledSave2" :loading="disabledSave" style="--w: min(100%, 7.25em)" @click="nftSample()"
       >SAVE
-      <v-progress-circular v-if="disabledSave" :size="21" indeterminate></v-progress-circular>
+      <!-- <v-progress-circular v-if="disabledSave" :size="21" indeterminate></v-progress-circular> -->
     </v-btn>
   </section>
 </template>
@@ -143,6 +148,7 @@ export default {
       selectFile: null,
       trackPreview: null,
       disabledSave: false,
+      disabledSave2: true,
       trackFull: null,
       cover: null,
       rules: {
@@ -165,12 +171,22 @@ export default {
     this.$emit("RouteValidator");
 
     await this.getGenders();
+    this.reviewInputs()
   },
   methods: {
+    reviewInputs() {
+      if (this.sample.title && this.sample.description && this.sample.price && this.sample.genre && this.cover && this.trackPreview && this.trackFull) {
+        this.disabledSave2 = false
+      } else {
+        this.disabledSave2 = true
+      }
+    },
     changePrice() {
       if (this.sample.price < 0) {
         this.sample.price = 0;
       }
+
+      this.reviewInputs()
     },
     openPicker(item) {
       var audioPicker = document.getElementById(item.id);
@@ -196,6 +212,8 @@ export default {
           }
         }
       });
+
+      this.reviewInputs()
     },
     async uploadIpfs(file) {
       const resp = this.axios
@@ -295,6 +313,7 @@ export default {
     },
     async nftSampleSelector() {
       this.disabledSave = true;
+      this.disabledSave2 = true
       if (this.$selector.getAccountId()) {
         if (this.$refs.form.validate()) {
           const trackCover = await this.uploadIpfs(this.cover);
@@ -350,12 +369,16 @@ export default {
                 },
               ],
             });
+
+            this.disabledSave = false;
+            this.disabledSave2 = false
           }
         }
       } else {
         this.$refs.ModalConnect.modalConnect = true;
+        this.disabledSave = false;
+        this.disabledSave2 = false
       }
-      this.disabledSave = false;
     },
     async nftSampleRamper() {
       this.disabledSave = true;
