@@ -14,7 +14,6 @@ export default function RamperApi() {
     network: process.env.VUE_APP_NETWORK,
     modules: [
       setupMyNearWallet(),
-      setupRamperWallet(),
       setupSender(),
       setupHereWallet(),
       setupCoin98Wallet(),
