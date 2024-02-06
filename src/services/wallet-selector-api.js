@@ -9,8 +9,8 @@ import { setupSender } from "@near-wallet-selector/sender";
 import { setupMintbaseWallet } from "@near-wallet-selector/mintbase-wallet";
 import { setupRamperWallet } from "@near-wallet-selector/ramper-wallet";
 
-export default function RamperApi() {
-  setupWalletSelector({
+export default async function SelectorApi() {
+  await setupWalletSelector({
     network: process.env.VUE_APP_NETWORK,
     modules: [
       setupMyNearWallet(),
@@ -41,7 +41,7 @@ export default function RamperApi() {
             }),
           };
 
-          Vue.prototype.$selector = item;
+          Vue.prototype.$selector2 = item;
         })
         .catch(() => {
           const item = {
@@ -52,10 +52,10 @@ export default function RamperApi() {
             }),
           };
 
-          Vue.prototype.$selector = item;
+          Vue.prototype.$selector2 = item;
         });
     })
     .catch(() => {
-      Vue.prototype.$selector = {};
+      Vue.prototype.$selector2 = {};
     });
 }
