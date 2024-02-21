@@ -456,7 +456,10 @@ export default {
             });
         }
       } else {
-        this.$refs.ModalConnect.modalConnect = true;
+        // this.$refs.ModalConnect.modalConnect = true;
+        localStorage.setItem('modeConnect', 'walletSelector')
+
+        this.$selector.modal.show();
       }
     },
     convertPrice(price) {

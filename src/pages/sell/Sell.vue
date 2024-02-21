@@ -301,14 +301,18 @@ export default {
       }
     },
     async nftSample() {
-      if (this.$ramper.getUser() || this.$selector?.getAccountId()) {
-        if (this.modeConnect === "walletSelector") {
-          this.nftSampleSelector();
-        } else if (this.modeConnect === "ramper") {
-          this.nftSampleRamper();
-        }
+      if (this.$selector?.getAccountId()) {
+        this.nftSampleSelector();
+        // if (this.modeConnect === "walletSelector") {
+        //   this.nftSampleSelector();
+        // } else if (this.modeConnect === "ramper") {
+        //   this.nftSampleRamper();
+        // }
       } else {
-        this.$refs.ModalConnect.modalConnect = true;
+        // this.$refs.ModalConnect.modalConnect = true;
+        localStorage.setItem('modeConnect', 'walletSelector')
+
+        this.$selector.modal.show();
       }
     },
     async nftSampleSelector() {
@@ -377,7 +381,10 @@ export default {
           }
         }
       } else {
-        this.$refs.ModalConnect.modalConnect = true;
+        // this.$refs.ModalConnect.modalConnect = true;
+        localStorage.setItem('modeConnect', 'walletSelector')
+
+        this.$selector.modal.show();
         this.disabledSave = false;
         this.disabledSave2 = false
       }
@@ -463,7 +470,10 @@ export default {
           }
         }
       } else {
-        this.$refs.ModalConnect.modalConnect = true;
+        // this.$refs.ModalConnect.modalConnect = true;
+        localStorage.setItem('modeConnect', 'walletSelector')
+
+        this.$selector.modal.show();
       }
       this.disabledSave = false;
     },

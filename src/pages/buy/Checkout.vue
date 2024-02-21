@@ -148,7 +148,10 @@ export default {
           this.buyRamper();
         }
       } else {
-        this.$refs.ModalConnect.modalConnect = true;
+        // this.$refs.ModalConnect.modalConnect = true;
+        localStorage.setItem('modeConnect', 'walletSelector')
+
+        this.$selector.modal.show();
       }
     },
     async buySelector() {
@@ -195,7 +198,10 @@ export default {
           ],
         });
       } else {
-        this.$refs.ModalConnect.modalConnect = true;
+        // this.$refs.ModalConnect.modalConnect = true;
+        localStorage.setItem('modeConnect', 'walletSelector')
+
+        this.$selector.modal.show();
       }
     },
     async buyRamper() {
@@ -265,7 +271,10 @@ export default {
           this.$router.push("/results");
         }
       } else {
-        this.$refs.ModalConnect.modalConnect = true;
+        // this.$refs.ModalConnect.modalConnect = true;
+        localStorage.setItem('modeConnect', 'walletSelector')
+
+        this.$selector.modal.show();
       }
     },
     async getSeriesPrice(seriesId) {
