@@ -386,7 +386,7 @@ export default {
         (this.dataUser.artistName = data.users[0].artist_name || null),
         (this.dataUser.description = data.users[0].description || null),
         (this.dataUser.publicUrl = data.users[0].public_url || null),
-        console.log(this.dataUser);
+        // console.log(this.dataUser);
 
       // this.$apollo
       //   .watchQuery({
@@ -490,7 +490,7 @@ export default {
           ],
           network: process.env.VUE_APP_NETWORK,
         });
-        console.log("resTx", resTx)
+      
         // if (
         //   (resTx && JSON.parse(localStorage.getItem("ramper_loggedInUser")).signupSource === "near_wallet" && resTx.txHashes.length > 0) ||
         //   resTx.result ||

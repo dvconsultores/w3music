@@ -562,7 +562,6 @@ export default {
         creator: this.mainCreatorId,
         like: this.like,
       }
-      console.log(data);
 
       // FIXME failed request
       this.createLikeTrack(data)

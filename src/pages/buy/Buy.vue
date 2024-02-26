@@ -368,7 +368,6 @@ export default {
       }
     },
     readMore(desc) {
-      console.log(desc);
       this.dialogDescAux = true;
       this.dialogDesc = desc;
     },
@@ -433,7 +432,6 @@ export default {
       }
     },
     createLikeTrack(item) {
-      console.log(item);
       if (this.$selector.getAccountId()) {
         let wallet = this.$selector.getAccountId();
         if (!item.like) {
@@ -488,7 +486,6 @@ export default {
             const element = res.data[i];
             totalPrice += Number(element.price);
           }
-          console.log("DATA CART", res.data);
           this.cart.totalPrice = String(totalPrice);
           this.cart.quantity = String(res.data.length);
         })
@@ -504,7 +501,6 @@ export default {
           tokenId: item.token_id,
         })
         .then((res) => {
-          console.log(res.data);
           item.status = "success";
           this.getShoppingCart();
           // setTimeout(item.status = null, 1500);
@@ -720,8 +716,6 @@ export default {
       });
 
       const data = res.data.series;
-
-      console.log("DATAAA", data)
 
       this.dataAfrofusion = [];
       const dataAfrofusionAux = [];

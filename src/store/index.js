@@ -97,8 +97,8 @@ export default new Vuex.Store({
       state.library = value;
     },
     updateArrow(state, value) {
-      console.log(value)
-      console.log(state.track)
+      // console.log(value)
+      // console.log(state.track)
       if (value === "next") {
         if (typeof state.track.index === "number") {
           let index = state.track.index + 1

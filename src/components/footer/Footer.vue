@@ -79,7 +79,6 @@ _<template>
 export default {
   computed: {
     track() {
-      console.log("TRACK", this.$store.getters.getTrack)
       if (typeof this.$store.getters.getTrack?.index !== "number") {
         this.disabledTrack = true
       } else {
@@ -160,7 +159,6 @@ export default {
     btnRight() {
       this.isPressedRight = !this.isPressedRight;
 
-      console.log(this.isPressedRight)
 
       if (this.isPressedRight) {
         this.isPressedLeft = false

@@ -171,7 +171,7 @@ export default {
       this.$router.push('/artist-details')
     },
     selectGenre(item) {
-      console.log(item)
+      // console.log(item)
     },
     async getGenders() {
       const getGendersUser = gql`
@@ -199,7 +199,7 @@ export default {
     getTracksPlays() {
       this.axios.get(process.env.VUE_APP_NODE_API + "/api/get-tracks-plays/")
         .then(async (res) => {
-          console.log(res.data)
+          // console.log(res.data)
           const tracksAux = []
           for (let i = 0; i < res.data.length; i++) {
             const track = res.data[i];

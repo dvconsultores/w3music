@@ -228,7 +228,6 @@ export default {
           maxBodyLength: 100 * 1024 * 1024, // Tamaño máximo del cuerpo de la solicitud en bytes (100MB)
         })
         .then((res) => {
-          console.log(res.data);
           return res.data;
         })
         .catch((err) => {
@@ -243,7 +242,6 @@ export default {
       const resp = this.axios
         .post(process.env.VUE_APP_NODE_API + "/api/ipfs/", formData)
         .then((res) => {
-          console.log(res.data);
           return res.data;
         })
         .catch((err) => {
@@ -268,7 +266,6 @@ export default {
           pollInterval: 10000, // 10 seconds in milliseconds
         })
         .subscribe(({ data }) => {
-          console.log(data);
           this.dataGenre = data.genders.sort((a, b) => {
             // Compara las propiedades 'name' de los objetos a y b
             const nameA = a.name.toUpperCase(); // Convierte a mayúsculas para hacer la comparación insensible a mayúsculas/minúsculas
@@ -348,7 +345,7 @@ export default {
               "globaldv.near": 210,
             };
 
-            console.log("ROYALTIERS", royalties)
+   
             const resTx = await this.$selector.wallet.signAndSendTransactions({
               transactions: [
                 {
@@ -438,7 +435,7 @@ export default {
               ),
             ];
 
-            console.log(process.env.VUE_APP_NETWORK);
+            // console.log(process.env.VUE_APP_NETWORK);
 
             const resTx = await this.$ramper.sendTransaction({
               transactionActions: [
