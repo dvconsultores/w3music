@@ -92,6 +92,7 @@
 import gql from "graphql-tag";
 import ModalConnect from "../../components/modals/connect.vue";
 import * as nearAPI from "near-api-js";
+import selector from "../../services/wallet-selector-api";
 const { Contract } = nearAPI;
 export default {
   name: "checkout",
@@ -125,6 +126,7 @@ export default {
     };
   },
   async mounted() {
+    await selector()
     if (!this.$ramper.getUser() && !this.$selector.getAccountId()) {
       this.$router.push("/");
     }
@@ -396,7 +398,7 @@ export default {
 
       const data = res.data;
 
-      return data.users[0].artist_name || null;
+      return data.users.length > 0 ? data.users[0].artist_name : null;
     },
   },
 };

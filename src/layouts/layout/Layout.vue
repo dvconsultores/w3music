@@ -11,6 +11,7 @@
 <script>
 import Header from "@/components/header/Header";
 import Footer from "@/components/footer/Footer";
+import selector from "../../services/wallet-selector-api";
 import "./Layout.scss";
 
 export default {
@@ -18,6 +19,9 @@ export default {
   components: { Header, Footer },
   data() {
     return { wrapperSpace: true, footerStyle: false }
+  },
+  async mounted() {
+    await selector()
   },
   methods: {
     RouteValidator() {

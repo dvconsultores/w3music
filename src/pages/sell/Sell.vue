@@ -124,6 +124,7 @@ import crypto from "crypto";
 import { VueEditor } from "vue2-editor";
 import * as nearAPI from "near-api-js";
 import gql from "graphql-tag";
+import selector from "../../services/wallet-selector-api";
 const { Contract } = nearAPI;
 export default {
   name: "sell",
@@ -168,6 +169,7 @@ export default {
     },
   },
   async mounted() {
+    await selector()
     this.$emit("RouteValidator");
 
     await this.getGenders();

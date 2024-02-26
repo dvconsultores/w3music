@@ -237,6 +237,7 @@ import moment from "moment";
 import { fire } from "../../services/firebase";
 import { VEmojiPicker } from "v-emoji-picker";
 import * as nearAPI from "near-api-js";
+import selector from "../../services/wallet-selector-api";
 const { Contract } = nearAPI;
 export default {
   name: "chats",
@@ -339,7 +340,8 @@ export default {
       ],
     };
   },
-  mounted() {
+  async mounted() {
+    await selector()
     this.$emit("RouteValidator");
     this.wallet = this.$ramper.getAccountId() || this.$selector.getAccountId();
     if (!this.wallet) {

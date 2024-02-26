@@ -10,7 +10,7 @@ import { setupMintbaseWallet } from "@near-wallet-selector/mintbase-wallet";
 import { setupRamperWallet } from "@near-wallet-selector/ramper-wallet";
 
 export default async function SelectorApi() {
-  await setupWalletSelector({
+  const resSetup = await setupWalletSelector({
     network: process.env.VUE_APP_NETWORK,
     modules: [
       setupMyNearWallet(),
@@ -24,38 +24,34 @@ export default async function SelectorApi() {
         deprecated: false,
       }),
     ],
-  })
-    .then(async (res) => {
-      const state = res.store.getState();
+  });
+  const state = resSetup.store.getState();
 
-      res
-        .wallet(state.selectedWalletId)
-        .then(async (wallet) => {
-          const accounts = await wallet.getAccounts();
-          const item = {
-            selector: res,
-            wallet: wallet,
-            getAccountId: () => (accounts.length > 0 ? accounts[0].accountId : null),
-            modal: setupModal(res, {
-              contractId: process.env.VUE_APP_CONTRACT_ID,
-            }),
-          };
+  try {
+    const wallet = await resSetup.wallet(state.selectedWalletId);
+    const accounts = await wallet.getAccounts();
+    const item = {
+      selector: resSetup,
+      wallet: wallet,
+      getAccountId: () => (accounts.length > 0 ? accounts[0].accountId : null),
+      modal: setupModal(resSetup, {
+        contractId: process.env.VUE_APP_CONTRACT_ID,
+      }),
+    };
 
-          Vue.prototype.$selector2 = item;
-        })
-        .catch(() => {
-          const item = {
-            selector: res,
-            getAccountId: () => null,
-            modal: setupModal(res, {
-              contractId: process.env.VUE_APP_CONTRACT_ID,
-            }),
-          };
+    Vue.prototype.$selector = item;
+    return item;
+  } catch (error) {
+    const item = {
+      selector: resSetup,
+      getAccountId: () => null,
+      modal: setupModal(resSetup, {
+        contractId: process.env.VUE_APP_CONTRACT_ID,
+      }),
+    };
 
-          Vue.prototype.$selector2 = item;
-        });
-    })
-    .catch(() => {
-      Vue.prototype.$selector2 = {};
-    });
+    Vue.prototype.$selector = item;
+
+    return item;
+  }
 }

@@ -77,22 +77,13 @@
 </template>
 
 <script>
-import Vue from "vue";
-import { setupWalletSelector } from "@near-wallet-selector/core";
-import { setupNearWallet } from "@near-wallet-selector/near-wallet";
-import { setupMyNearWallet } from "@near-wallet-selector/my-near-wallet";
-import { setupHereWallet } from "@near-wallet-selector/here-wallet";
-import { setupCoin98Wallet } from "@near-wallet-selector/coin98-wallet";
-import { setupModal } from "@near-wallet-selector/modal-ui";
-import { setupSender } from "@near-wallet-selector/sender";
-import { setupMintbaseWallet } from "@near-wallet-selector/mintbase-wallet";
-import { setupRamperWallet } from "@near-wallet-selector/ramper-wallet";
 import gql from "graphql-tag";
 import ModalConnect from "../modals/connect.vue"
 import "@near-wallet-selector/modal-ui/styles.css"
 import MenuHeader from "./MenuHeader.vue"
 import * as nearAPI from "near-api-js";
 import { eventBus } from '@/main';
+import selector from "../../services/wallet-selector-api";
 const { Contract } = nearAPI;
 
 const theme = localStorage.getItem("theme");
@@ -131,7 +122,8 @@ export default {
       ]
     };
   },
-  created() {
+  async created() {
+    await selector()
     const queryString = window.location.search; // tomo mi url
     const urlParams = new URLSearchParams(queryString)
     if (urlParams.get("transactionHashes") !== null) {
@@ -155,53 +147,7 @@ export default {
     }
   },
   async mounted() {
-    const walletSelector = await setupWalletSelector({
-      network: process.env.VUE_APP_NETWORK,
-      modules: [
-        setupMyNearWallet(),
-        setupSender(),
-        setupHereWallet(),
-        setupCoin98Wallet(),
-        setupMintbaseWallet({
-          networkId: "mainnet",
-          walletUrl: "https://wallet.mintbase.xyz",
-          callbackUrl: "https://www.mywebsite.com",
-          deprecated: false,
-        }),
-      ],
-    })
-
-    console.log("ACCOU1")
-
-    const state = walletSelector.store.getState();
-
-    console.log("ACCOU1")
-
-    try {
-      const wallet = await walletSelector.wallet(state.selectedWalletId)
-      const accounts = await wallet.getAccounts();
-      const item = {
-        selector: walletSelector,
-        wallet: wallet,
-        getAccountId: () => (accounts.length > 0 ? accounts[0].accountId : null),
-        modal: setupModal(walletSelector, {
-          contractId: process.env.VUE_APP_CONTRACT_ID,
-        })
-      }
-      Vue.prototype.$selector = item;
-    } catch (error) {
-      const item = {
-        selector: walletSelector,
-        getAccountId: () => null,
-        modal: setupModal(walletSelector, {
-          contractId: process.env.VUE_APP_CONTRACT_ID,
-        }),
-      };
-      Vue.prototype.$selector = item;
-    }
-
-    // console.log("AQUI")
-    // console.log(this.$selector)
+    await selector()
     // console.log(await this.$selector.selector.isSignedIn())
     // console.log(this.$ramper.getUser())
     if (this.$selector.selector.isSignedIn()) {
@@ -337,7 +283,7 @@ export default {
       
       const getDataUser = gql`
         query MyQuery($wallet: String!) {
-          users(where: {wallet: $wallet}) {
+          users(where: { wallet: $wallet }) {
             artist_name
             wallet
           }
@@ -346,12 +292,12 @@ export default {
 
       const res = await this.$apollo.query({
         query: getDataUser,
-        variables: {wallet: wallet},
-      })
+        variables: { wallet: wallet },
+      });
 
-      const data = res.data
+      const data = res.data;
 
-      return data.users[0].artist_name || null
+      return data.users.length > 0 ? data.users[0].artist_name : null;
     },
     initUser(wallet) {
       this.axios.post(process.env.VUE_APP_NODE_API + "/api/get-user-by-wallet/", {wallet})

@@ -87,6 +87,7 @@
 
 <script>
 import gql from "graphql-tag";
+import selector from "../../services/wallet-selector-api";
 
 export default {
   name: "library",
@@ -112,7 +113,8 @@ export default {
       dataCollectionAux: [],
     };
   },
-  mounted() {
+  async mounted() {
+    await selector()
     // if (!this.$ramper.getUser()) {this.$router.push("/")}
     this.$emit("RouteValidator");
     this.getCollection();
@@ -217,7 +219,7 @@ export default {
 
       const data = res.data;
 
-      return data.users[0].artist_name || null;
+      return data.users.length > 0 ? data.users[0].artist_name : null;
     },
   },
 };

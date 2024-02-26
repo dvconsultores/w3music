@@ -27,6 +27,8 @@ Vue.use(VueAxios, axios);
 Vue.use(ramper);
 Vue.use(selector);
 
+selector()
+
 // Cache implementation
 const cache = new InMemoryCache();
 

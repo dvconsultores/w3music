@@ -223,6 +223,7 @@ import gql from "graphql-tag";
 import axios from "axios";
 import ModalConnect from "../../components/modals/connect.vue";
 import * as nearAPI from "near-api-js";
+import selector from "../../services/wallet-selector-api";
 const { Contract } = nearAPI;
 
 export default {
@@ -350,6 +351,7 @@ export default {
     },
   },
   async mounted() {
+    await selector()
     this.$emit("RouteValidator");
     this.getNearPrice();
     this.likesTrack = await this.getAllLikeTrack();
@@ -358,7 +360,7 @@ export default {
   },
   methods: {
     goToCheckout() {
-      let wallet = this.$ramper.getAccountId() || this.$selector.getAccountId();
+      let wallet = this.$selector;
       if (wallet) {
         this.$router.push("/buy/checkout");
       } else {
@@ -398,8 +400,8 @@ export default {
       this.$router.push("/artist-details");
     },
     getAllLikeTrack() {
-      if (this.$ramper.getAccountId() || this.$selector.getAccountId()) {
-        let wallet = this.$ramper.getAccountId() || this.$selector.getAccountId();
+      if (this.$selector.getAccountId()) {
+        let wallet = this.$selector.getAccountId();
         const resp = this.axios
           .post(process.env.VUE_APP_NODE_API + "/api/get-all-like-track/", { wallet })
           .then((res) => {
@@ -432,8 +434,8 @@ export default {
     },
     createLikeTrack(item) {
       console.log(item);
-      if (this.$ramper.getAccountId() || this.$selector.getAccountId()) {
-        let wallet = this.$ramper.getAccountId() || this.$selector.getAccountId();
+      if (this.$selector.getAccountId()) {
+        let wallet = this.$selector.getAccountId();
         if (!item.like) {
           this.axios
             .post(process.env.VUE_APP_NODE_API + "/api/create-like-track/", { wallet, tokenId: item.token_id, creatorId: item.creator })
@@ -466,7 +468,7 @@ export default {
       return (price / this.nearPrice).toFixed(3) || 0;
     },
     async getNearPrice() {
-      const account = await this.$near.account(this.$ramper.getAccountId() || this.$selector.getAccountId());
+      const account = await this.$near.account(this.$selector.getAccountId());
       const contract = new Contract(account, process.env.VUE_APP_CONTRACT_NFT, {
         viewMethods: ["get_tasa"],
         sender: account,
@@ -478,7 +480,7 @@ export default {
     getShoppingCart() {
       this.axios
         .post(process.env.VUE_APP_NODE_API + "/api/get-all-shopping-cart/", {
-          wallet: this.$ramper.getAccountId() || this.$selector.getAccountId() || "test",
+          wallet: this.$selector.getAccountId() || "test",
         })
         .then((res) => {
           let totalPrice = 0;
@@ -498,7 +500,7 @@ export default {
       item.disabled = true;
       this.axios
         .post(process.env.VUE_APP_NODE_API + "/api/add-shopping-cart/", {
-          wallet: this.$ramper.getAccountId() || this.$selector.getAccountId(),
+          wallet: this.$selector.getAccountId(),
           tokenId: item.token_id,
         })
         .then((res) => {
@@ -524,7 +526,7 @@ export default {
       this.track = item;
       if (item.play) {
         this.$store.dispatch("updateTrack", item);
-        let wallet = this.$ramper.getAccountId() || this.$selector.getAccountId();
+        let wallet = this.$selector.getAccountId();
         this.axios.post(process.env.VUE_APP_NODE_API + "/api/play-track/", { wallet, tokenId: item.token_id, creatorId: item.creator });
       } else {
         this.$store.dispatch("updateTrack", item);
@@ -719,7 +721,7 @@ export default {
 
       const data = res.data.series;
 
-      // console.log("DATAAA", data)
+      console.log("DATAAA", data)
 
       this.dataAfrofusion = [];
       const dataAfrofusionAux = [];
@@ -781,7 +783,7 @@ export default {
 
       const data = res.data;
 
-      return data.users[0].artist_name || null;
+      return data.users.length > 0 ? data.users[0].artist_name : null;
     },
     compararPorLike(a, b) {
       if (a.like && !b.like) {

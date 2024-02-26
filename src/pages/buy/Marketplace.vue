@@ -32,6 +32,8 @@
 </template>
 
 <script>
+import selector from "../../services/wallet-selector-api";
+
 export default {
   name: "marketplace",
   data() {
@@ -42,7 +44,8 @@ export default {
       },
     };
   },
-  mounted() {
+  async mounted() {
+    await selector()
     this.$emit("RouteValidator");
     this.getShoppingCart();
   },
@@ -52,7 +55,7 @@ export default {
     },
     getShoppingCart() {
       this.axios
-        .post(process.env.VUE_APP_NODE_API + "/api/get-all-shopping-cart/", { wallet: this.$ramper.getAccountId() || this.$selector.getAccountId() })
+        .post(process.env.VUE_APP_NODE_API + "/api/get-all-shopping-cart/", { wallet: this.$selector.getAccountId() })
         .then((res) => {
           let totalPrice = 0;
           for (let i = 0; i < res.data.length; i++) {

@@ -119,6 +119,7 @@
 import gql from "graphql-tag";
 import ModalConnect from "../../components/modals/connect.vue"
 import * as nearAPI from "near-api-js";
+import selector from "../../services/wallet-selector-api";
 const { Contract } = nearAPI;
 
 export default {
@@ -249,6 +250,7 @@ export default {
     }
   },
   async mounted() {
+    await selector()
     this.likesTrack = await this.getAllLikeTrack()
     this.getArtists()
     this.getTracksPlays()
@@ -508,7 +510,7 @@ export default {
       
       const getDataUser = gql`
         query MyQuery($wallet: String!) {
-          users(where: {wallet: $wallet}) {
+          users(where: { wallet: $wallet }) {
             artist_name
             wallet
           }
@@ -517,12 +519,12 @@ export default {
 
       const res = await this.$apollo.query({
         query: getDataUser,
-        variables: {wallet: wallet},
-      })
+        variables: { wallet: wallet },
+      });
 
-      const data = res.data
+      const data = res.data;
 
-      return data.users[0].artist_name || null
+      return data.users.length > 0 ? data.users[0].artist_name : null;
     },
     async getSeriesTrack(tokenId) {
       const getSeries = gql`

@@ -244,6 +244,7 @@
 import { fire } from "../../services/firebase";
 import gql from "graphql-tag";
 import { VueEditor } from "vue2-editor";
+import selector from "../../services/wallet-selector-api";
 
 export default {
   name: "profile",
@@ -310,6 +311,7 @@ export default {
     },
   },
   async mounted() {
+    await selector()
     if (!this.$ramper.getUser() && !this.$selector?.getAccountId()) {
       this.$router.push("/");
     }
@@ -317,7 +319,7 @@ export default {
 
     await this.getGenders();
 
-    this.walletNear = this.$ramper.getAccountId() || this.$selector.getAccountId();
+    this.walletNear = this.$selector.getAccountId();
 
     this.getData();
   },
@@ -367,7 +369,7 @@ export default {
         }
       `;
 
-      const user = this.$ramper.getAccountId() || this.$selector.getAccountId();
+      const user = this.$selector.getAccountId();
 
       const res = await this.$apollo.query({
         query: getDataUser,

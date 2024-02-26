@@ -102,6 +102,7 @@
 </template>
 
 <script>
+import selector from "../../services/wallet-selector-api";
 import gql from "graphql-tag";
 
 export default {
@@ -158,7 +159,8 @@ export default {
       ],
     }
   },
-  mounted() {
+  async mounted() {
+    await selector()
     this.getGenders()
     this.getTracksPlays()
     this.$emit('RouteValidator')
@@ -259,7 +261,7 @@ export default {
       
       const getDataUser = gql`
         query MyQuery($wallet: String!) {
-          users(where: {wallet: $wallet}) {
+          users(where: { wallet: $wallet }) {
             artist_name
             wallet
           }
@@ -268,12 +270,12 @@ export default {
 
       const res = await this.$apollo.query({
         query: getDataUser,
-        variables: {wallet: wallet},
-      })
+        variables: { wallet: wallet },
+      });
 
-      const data = res.data
+      const data = res.data;
 
-      return data.users[0].artist_name || null
+      return data.users.length > 0 ? data.users[0].artist_name : null;
     },
     async getSeriesTrack(tokenId) {
       const getSeries = gql`
@@ -309,7 +311,7 @@ export default {
       this.track = item
       if (item.play) {
         this.$store.dispatch('updateTrack', item);
-        let wallet = this.$ramper.getAccountId() || this.$selector.getAccountId()
+        let wallet = this.$selector.getAccountId()
         this.axios.post(process.env.VUE_APP_NODE_API + "/api/play-track/", {wallet, tokenId: item.token_id, creatorId: item.creator})
       } else {
         this.$store.dispatch('updateTrack', item);

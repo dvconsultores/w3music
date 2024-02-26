@@ -133,6 +133,7 @@ import gql from "graphql-tag";
 import moment from 'moment'
 import * as nearAPI from "near-api-js";
 import { eventBus } from '@/main';
+import selector from "../../services/wallet-selector-api";
 const { Contract } = nearAPI;
 
 export default {
@@ -235,6 +236,7 @@ export default {
     });
   },
   async mounted() {
+    await selector()
     this.getArtist()
     
     this.$emit('RouteValidator')
