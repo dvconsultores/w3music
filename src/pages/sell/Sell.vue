@@ -217,6 +217,32 @@ export default {
 
       this.reviewInputs()
     },
+    async uploadS3Node() {
+      const cover = this.cover
+      const trackPreview = this.trackPreview
+      const trackFull = this.trackFull
+
+      if (!cover || !trackPreview || !trackFull) { 
+        return
+      }
+      const formData = new FormData();
+
+      formData.append("cover", cover);
+      formData.append("trackPreview", trackPreview);
+      formData.append("trackFull", trackFull);
+
+      const resp = this.axios
+        .post(process.env.VUE_APP_NODE_API + "/api/upload/", formData)
+        .then((res) => {
+          console.log("S3", res.data)
+          return res.data;
+        })
+        .catch((err) => {
+          console.log(err);
+          return false;
+        });
+      return resp;
+    },
     async uploadIpfs(file) {
       const resp = this.axios
         .post("https://api.nft.storage/upload", file, {
@@ -300,6 +326,7 @@ export default {
       }
     },
     async nftSample() {
+      this.uploadS3Node()
       if (this.$selector?.getAccountId()) {
         this.nftSampleSelector();
         // if (this.modeConnect === "walletSelector") {

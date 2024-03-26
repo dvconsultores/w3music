@@ -727,12 +727,15 @@ export default {
           return element.trait_type === "track_preview";
         });
 
-        const sonido = document.createElement("audio");
+        //const sonido = document.createElement("audio");
+        //sonido.src = trackPreview.value;
+        //sonido.setAttribute("preload", "auto");
+        //sonido.setAttribute("controls", "none");
+        //sonido.style.display = "none"; // <-- oculto
+        //document.body.appendChild(sonido);
+        
+        const sonido = document.createElement("video");
         sonido.src = trackPreview.value;
-        sonido.setAttribute("preload", "auto");
-        sonido.setAttribute("controls", "none");
-        sonido.style.display = "none"; // <-- oculto
-        document.body.appendChild(sonido);
 
         const item = {
           token_id: element.id,

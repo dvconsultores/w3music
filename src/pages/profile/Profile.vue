@@ -378,6 +378,8 @@ export default {
 
       const data = res.data;
 
+      if (data.users.length === 0) return
+
       (this.dataUser.youAre = data.users[0].youare || null),
         (this.dataUser.location = data.users[0].location || null),
         (this.dataUser.musicGenre = String(data.users[0].music_genre) || "0"),
@@ -385,7 +387,7 @@ export default {
         (this.dataUser.email = data.users[0].email || null),
         (this.dataUser.artistName = data.users[0].artist_name || null),
         (this.dataUser.description = data.users[0].description || null),
-        (this.dataUser.publicUrl = data.users[0].public_url || null),
+        (this.dataUser.publicUrl = data.users[0].public_url || null)
         // console.log(this.dataUser);
 
       // this.$apollo
