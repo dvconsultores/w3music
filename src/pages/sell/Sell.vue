@@ -218,16 +218,13 @@ export default {
       this.reviewInputs()
     },
     async uploadS3Node() {
-      const cover = this.cover
       const trackPreview = this.trackPreview
       const trackFull = this.trackFull
 
-      if (!cover || !trackPreview || !trackFull) { 
-        return
+      if ( !trackPreview || !trackFull) { 
+        return console.error("Error upload s3")
       }
       const formData = new FormData();
-
-      formData.append("cover", cover);
       formData.append("trackPreview", trackPreview);
       formData.append("trackFull", trackFull);
 
@@ -235,7 +232,10 @@ export default {
         .post(process.env.VUE_APP_NODE_API + "/api/upload/", formData)
         .then((res) => {
           console.log("S3", res.data)
-          return res.data;
+          if (!res.data.trackPreview || !res.data.trackFull) { 
+            return console.error("Error upload s3")
+          }
+          return {trackPreview: res.data.trackPreview[0].key, trackFull: res.data.trackFull[0].key};
         })
         .catch((err) => {
           console.log(err);
@@ -326,7 +326,6 @@ export default {
       }
     },
     async nftSample() {
-      this.uploadS3Node()
       if (this.$selector?.getAccountId()) {
         this.nftSampleSelector();
         // if (this.modeConnect === "walletSelector") {
@@ -347,20 +346,25 @@ export default {
       if (this.$selector.getAccountId()) {
         if (this.$refs.form.validate()) {
           const trackCover = await this.uploadIpfs(this.cover);
-          const trackPreview = await this.uploadIpfs(this.trackPreview);
-          const trackFull = await this.uploadIpfs(this.trackFull);
+          const trackKeys = await this.uploadS3Node()
 
-          const trackFullCrypto = await this.encryptRSA("https://" + trackFull.value.cid + process.env.VUE_APP_IPFS);
+          if (!trackKeys) {
+            console.error("error to get tracks s3")
+          }
+          // const trackPreview = await this.uploadIpfs(this.trackPreview);
+          // const trackFull = await this.uploadIpfs(this.trackFull);
 
-          if (trackCover && trackPreview && trackFullCrypto) {
+          // const trackFullCrypto = await this.encryptRSA("https://" + trackFull.value.cid + process.env.VUE_APP_IPFS);
+
+          if (trackCover && trackKeys.trackPreview && trackKeys.trackFull) {
             let extra = [
               {
                 trait_type: "track_preview",
-                value: "https://" + trackPreview.value.cid + process.env.VUE_APP_IPFS,
+                value: trackKeys.trackPreview //"https://" + trackPreview.value.cid + process.env.VUE_APP_IPFS,
               },
               {
                 trait_type: "track_full",
-                value: trackFullCrypto,
+                value: await this.encryptRSA(trackKeys.trackFull)
               },
             ];
             localStorage.setItem("typeResult", "sell");
