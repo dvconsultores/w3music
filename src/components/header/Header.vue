@@ -254,6 +254,7 @@ export default {
             const nft = nfts[i];
             const sonido = document.createElement("audio");
             sonido.src = nft.trackFull;
+            sonido.src = "https://glogaldv.nyc3.cdn.digitaloceanspaces.com/" + trackPreview.trackFull;
             sonido.setAttribute("preload", "auto");
             sonido.setAttribute("controls", "none");
             sonido.style.display = "none"; // <-- oculto

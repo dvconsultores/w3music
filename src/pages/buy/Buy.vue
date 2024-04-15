@@ -735,7 +735,10 @@ export default {
         //document.body.appendChild(sonido);
         
         const sonido = document.createElement("video");
-        sonido.src = "https://develop.globaldv.tech/w3service/" + trackPreview.value;
+        sonido.src = "https://glogaldv.nyc3.cdn.digitaloceanspaces.com/" + trackPreview.value;
+
+        console.log(element.title)
+        console.log(sonido.src)
 
         const item = {
           token_id: element.id,

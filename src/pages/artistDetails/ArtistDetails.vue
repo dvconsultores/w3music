@@ -339,7 +339,8 @@ export default {
         const trackPreview = extra.find(element => { return element.trait_type === "track_preview"})
 
         const sonido = document.createElement("audio");
-        sonido.src = trackPreview.value;
+        // sonido.src = trackPreview.value;
+        sonido.src = "https://glogaldv.nyc3.cdn.digitaloceanspaces.com/" + trackPreview.value;
         sonido.setAttribute("preload", "auto");
         sonido.setAttribute("controls", "none");
         sonido.style.display = "none"; // <-- oculto
