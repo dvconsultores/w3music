@@ -317,6 +317,8 @@ export default {
     }
     this.$emit("RouteValidator");
 
+    this.getDataSales()
+
     await this.getGenders();
 
     this.walletNear = this.$selector.getAccountId();
@@ -324,6 +326,106 @@ export default {
     this.getData();
   },
   methods: {
+    async getDataSales() {
+      const queryData = gql`
+        query MyQuery($creator_id: String!) {
+          series(where: { creator_id: $creator_id, is_mintable: true }) {
+            aproved_event
+            aproved_objects
+            copies
+            creator_id
+            description
+            expires_at
+            extra
+            fecha
+            id
+            is_mintable
+            issued_at
+            media
+            nft_amount_sold
+            nftsold
+            object_event
+            price
+            price_near
+            redeemerevents
+            redeemerobjects
+            reference
+            starts_at
+            supply
+            title
+            typetoken_id
+            updated_at
+          }
+        }
+      `;
+
+      const wallet = this.$selector.getAccountId();
+
+      const res = await this.$apollo.query({
+        query: queryData,
+        variables: { creator_id: wallet },
+      });
+
+      const data = res.data.series;
+
+      console.log("SALESS",data)
+
+      this.dataTable = []
+
+      for (const serie of data) {
+        this.dataTable.push({
+          img: serie.media,
+          price: serie.price,
+          genre: serie.description,
+          name: serie.title,
+          plays: 4.679,
+          play: false,
+          to: serie.creator_id,
+          time: serie.fecha,
+        })
+      }
+        // {
+        //   img: require("@/assets/miscellaneous/track.jpg"),
+        //   price: "-----",
+        //   genre: "DANCE POP",
+        //   name: "DANCE POP",
+        //   plays: 4.679,
+        //   play: false,
+        //   to: "patysb.near",
+        //   time: "3 days",
+        // },
+        
+    
+
+//       {
+//     "aproved_event": "0",
+//     "aproved_objects": "0",
+//     "copies": null,
+//     "creator_id": "049df53399cc4c22e077cf9460e13b18ba5cfa501e56fec37f481e50abe32734",
+//     "description": "<p>Test brrr</p>",
+//     "expires_at": null,
+//     "extra": "[{\"trait_type\":\"track_preview\",\"value\":\"https://bafybeifp3hb67z5jirxkuznqgu2cxhrlnpcnsyovol7q2vexgp7wjxumzy.ipfs.nftstorage.link\"},{\"trait_type\":\"track_full\",\"value\":\"dPcUwevFNKvM6pI7wBQAvP4sVJS/27yhBWnj4KFqMJEhjcHLi+5lrMYU9iuWAeVyGzze+NGsNoYfjmDdZyWI/C3k/AUSfD1BqS2QY/11orM/tTX3hiC32DEsEHOJw02bBC3GFf7tj2UXSO+ZydPXxVnMT6tUUuTfmfljL8YHmKYo2bAxT2T0nHCP+1RUej0zdkY+M421SrjlvL3ZQ244JBiqV2Wx8BEDbv1tnvx23CjGvyDThg/x9ZKgJrxxUmyOzGXcqduPT93hcIQh/4pyyTYcT4TOWLRv2CXbdGxpVzZ8c6luiGNXA1enDaWUYFDDrAhc8Hfme2BhIq+L46WTlw==\"}]",
+//     "fecha": "1696882841465284545",
+//     "id": "1|17",
+//     "is_mintable": true,
+//     "issued_at": null,
+//     "media": "https://bafkreihw2prqdcr52jhwyuaffoh4vm3ogu64nzxd4ijanuvjukkcjwmanm.ipfs.nftstorage.link",
+//     "nft_amount_sold": "1821596244131455306154640",
+//     "nftsold": "2",
+//     "object_event": false,
+//     "price": "1",
+//     "price_near": "0",
+//     "redeemerevents": "0",
+//     "redeemerobjects": "0",
+//     "reference": "Pop",
+//     "starts_at": null,
+//     "supply": "2",
+//     "title": "Test",
+//     "typetoken_id": "1",
+//     "updated_at": null,
+//     "__typename": "Serie"
+// }
+    },
     goToSocial() {
       if (process.env.VUE_APP_NETWORK === "mainnet") {
         window.open("https://near.social/#/");
